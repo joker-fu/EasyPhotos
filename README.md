@@ -1,4 +1,7 @@
 # EasyPhotos    
+
+#### 向原[EasyPhotos](https://github.com/HuanTanSheng/EasyPhotos)作者致敬！！！
+
 [ ![Download](https://api.bintray.com/packages/wrap0673/maven/EasyPhotos/images/download.svg) ](https://bintray.com/wrap0673/maven/EasyPhotos/_latestVersion)
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 ![](https://img.shields.io/badge/platform-android-blue.svg) 
