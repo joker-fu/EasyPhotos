@@ -1,0 +1,213 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/easy_photos_bg_primary"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/m_root_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.huantansheng.easyphotos.models.puzzle.PuzzleView
+            android:id="@+id/puzzle_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white_easy_photos" />
+
+        <RelativeLayout
+            android:id="@+id/m_bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/easy_photos_bar_primary_translation">
+
+            <com.huantansheng.easyphotos.models.puzzle.DegreeSeekBar
+                android:id="@+id/degree_seek_bar"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/ll_menu"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:paddingTop="8dp"
+                android:layout_below="@+id/degree_seek_bar"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/iv_replace"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:padding="2dp"
+                    app:srcCompat="@drawable/ic_puzzle_replace_easy_photos" />
+
+                <ImageView
+                    android:id="@+id/iv_rotate"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_puzzle_rotate_easy_photos" />
+
+                <ImageView
+                    android:id="@+id/iv_mirror"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_puzzle_mirror_easy_photos" />
+
+                <ImageView
+                    android:id="@+id/iv_flip"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:padding="1dp"
+                    app:srcCompat="@drawable/ic_puzzle_flip_easy_photos" />
+
+
+                <ImageView
+                    android:id="@+id/iv_corner"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_puzzle_corner_easy_photos" />
+
+                <ImageView
+                    android:id="@+id/iv_padding"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_puzzle_padding_easy_photos" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_puzzle_template"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_menu"
+                android:paddingBottom="8dp"
+                android:paddingTop="6dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rv_puzzle_template"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_template"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="@string/template_easy_photos"
+                    android:textColor="@color/easy_photos_fg_accent"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_text_sticker"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="@string/text_sticker_easy_photos"
+                    android:textColor="@color/easy_photos_fg_primary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/m_bottom_layout"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_margin="16dp"
+            android:visibility="visible"
+            app:backgroundTint="@color/easy_photos_bar_primary_translation"
+            app:borderWidth="0dp"
+            app:elevation="8dp"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_arrow_down_easy_photos" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/m_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_alignParentTop="true">
+
+        <com.huantansheng.easyphotos.ui.widget.PressedTextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center"
+            android:paddingEnd="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingStart="16dp"
+            android:text="@string/cancel_easy_photos"
+            android:textColor="@color/easy_photos_fg_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/tv_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:gravity="center"
+            android:maxWidth="200dp"
+            android:minWidth="56dp"
+            android:padding="6dp"
+            android:text="@string/done_easy_photos"
+            android:textColor="@color/easy_photos_fg_accent"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
+
+
+    <FrameLayout
+        android:id="@+id/progress_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="invisible" />
+
+</RelativeLayout>

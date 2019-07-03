@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.huantansheng.easyphotos">
+
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
+        tools:ignore="ProtectedPermissions" />
+
+
+    <application
+        android:allowBackup="true"
+        android:supportsRtl="true">
+        <provider
+            android:name="com.huantansheng.easyphotos.utils.provider.EasyPhotosFileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths_public" />
+        </provider>
+
+        <activity
+            android:name=".ui.EasyPhotosActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/EasyPhotosTheme" />
+        <activity
+            android:name=".ui.PreviewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/EasyPhotosFullscreenTheme" />
+        <activity
+            android:name=".ui.PuzzleActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/EasyPhotosTheme"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.PuzzleSelectorActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/EasyPhotosTheme" />
+        <activity
+            android:name=".ui.EasyCameraActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/EasyPhotosTheme">
+            <meta-data
+                android:name="android.max_aspect"
+                android:value="2.4" />
+            <!--适配华为（huawei）刘海屏-->
+            <meta-data
+                android:name="android.notch_support"
+                android:value="true" />
+            <!--适配小米（xiaomi）刘海屏-->
+            <meta-data
+                android:name="notch.config"
+                android:value="portrait|landscape" />
+        </activity>
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+    </application>
+
+</manifest>
