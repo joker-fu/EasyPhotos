@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.huantansheng.easyphotos.EasyPhotos;
 import com.huantansheng.easyphotos.callback.PuzzleCallback;
@@ -71,7 +72,12 @@ public class HolderFragment extends Fragment {
                         mPuzzleCallback.onResult(puzzlePhoto, puzzlePath);
                     }
                     break;
+                default:
+                    Log.e("EasyPhotos", "requestCode error : " + requestCode);
+                    break;
             }
+        } else {
+            Log.e("EasyPhotos", "resultCode is not RESULT_OK: " + resultCode);
         }
     }
 }
