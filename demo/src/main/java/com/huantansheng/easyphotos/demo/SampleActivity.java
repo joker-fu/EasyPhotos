@@ -40,6 +40,7 @@ public class SampleActivity extends AppCompatActivity
      * 选择的图片集
      */
     private ArrayList<Photo> selectedPhotoList = new ArrayList<>();
+    private ArrayList<String> selectedPhotoPathList = new ArrayList<>();
     private MainAdapter adapter;
     private RecyclerView rvImage;
 
@@ -133,6 +134,8 @@ public class SampleActivity extends AppCompatActivity
         public void onResult(ArrayList<Photo> photos, ArrayList<String> paths, boolean isOriginal) {
             selectedPhotoList.clear();
             selectedPhotoList.addAll(photos);
+            selectedPhotoPathList.clear();
+            selectedPhotoPathList.addAll(paths);
             adapter.notifyDataSetChanged();
             rvImage.smoothScrollToPosition(0);
         }
@@ -246,8 +249,10 @@ public class SampleActivity extends AppCompatActivity
                 EasyPhotos.createAlbum(this, true, GlideEngine.getInstance())
                         .setPuzzleMenu(false)
                         .setCount(9)
+                        //推荐使用这种方式，因为传地址的方式为保证返回的时候Photo的属性齐全，做了一次for(所有图片){ for(默认选中图片){}}循环
+                        //所有图片越多 默认选中图片越多越耗时 如果后期没想到更好办法解决 将对setSelectedPhotoPaths进行过时处理
                         .setSelectedPhotos(selectedPhotoList)
-//                        .setSelectedPhotoPaths(selectedPhotoPathList)两种方式参数类型不同，根据情况任选
+//                        .setSelectedPhotoPaths(selectedPhotoPathList)//两种方式参数类型不同，根据情况任选
                         .start(callback);
                 break;
 

@@ -32,6 +32,7 @@ public class Setting {
     public static boolean photoAdIsOk = false;
     public static boolean albumItemsAdIsOk = false;
     public static ArrayList<Photo> selectedPhotos = new ArrayList<>();
+    public static boolean isSelectedPhotoPaths = false;
     public static boolean showOriginalMenu = false;
     public static boolean originalMenuUsable = false;
     public static String originalMenuUnusableHint = "";
@@ -84,6 +85,7 @@ public class Setting {
         photoAdIsOk = false;
         albumItemsAdIsOk = false;
         selectedPhotos.clear();
+        isSelectedPhotoPaths = false;
         showOriginalMenu = false;
         originalMenuUsable = false;
         originalMenuUnusableHint = "";

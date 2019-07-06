@@ -22,8 +22,7 @@ public class Result {
      */
     public static int addPhoto(Photo photo) {
         String path = photo.path;
-        String type = photo.type;
-        if (TextUtils.isEmpty(path) || TextUtils.isEmpty(type)) {
+        if (TextUtils.isEmpty(path)) {
             return -3;
         }
         final File file = new File(path);

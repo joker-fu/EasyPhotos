@@ -25,6 +25,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -161,6 +162,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         }
         if (!Setting.selectedPhotos.isEmpty()) {
             for (Photo selectedPhoto : Setting.selectedPhotos) {
+                selectedPhoto.selectedOriginal = Setting.selectedOriginal;
                 Result.addPhoto(selectedPhoto);
             }
         }
@@ -748,7 +750,30 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         }
     }
 
+    private void preDone() {
+        if (Setting.isSelectedPhotoPaths) {
+            ArrayList<Photo> allPhotos = albumModel.getCurrAlbumItemPhotos(0);
+            for (Photo photo : allPhotos) {
+                for (Photo selectPhoto : Result.photos) {
+                    if (selectPhoto.path.equals(photo.path) && TextUtils.isEmpty(selectPhoto.name)) {
+                        selectPhoto.name = photo.name;
+                        selectPhoto.path = photo.path;
+                        selectPhoto.cropPath = photo.cropPath;
+                        selectPhoto.type = photo.type;
+                        selectPhoto.width = photo.width;
+                        selectPhoto.height = photo.height;
+                        selectPhoto.size = photo.size;
+                        selectPhoto.duration = photo.duration;
+                        selectPhoto.time = photo.time;
+                        selectPhoto.selectedOriginal = photo.selectedOriginal;
+                    }
+                }
+            }
+        }
+    }
+
     private void done() {
+        preDone();
         Intent intent = new Intent();
         Result.processOriginal();
         resultList.clear();

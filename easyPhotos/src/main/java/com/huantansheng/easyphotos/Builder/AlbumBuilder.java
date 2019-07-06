@@ -218,6 +218,10 @@ public class AlbumBuilder {
      * @return AlbumBuilder
      */
     public AlbumBuilder setSelectedPhotoPaths(ArrayList<String> selectedPhotoPaths) {
+        if (selectedPhotoPaths.isEmpty()) {
+            return AlbumBuilder.this;
+        }
+        Setting.isSelectedPhotoPaths = true;
         Setting.selectedPhotos.clear();
         ArrayList<Photo> selectedPhotos = new ArrayList<>();
         for (String path : selectedPhotoPaths) {
