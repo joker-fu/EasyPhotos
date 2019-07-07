@@ -130,13 +130,15 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志    
+**2.4.6_beta7：** 
+- 优化根据路径默认选中代码
+- 优化代码中一些命名 
+
 **2.4.6_beta6：** 
 - 修复setSelectedPhotoPaths不能默认选中问题
 **注意：**
 ```
- //推荐使用 setSelectedPhotos 方式，因为传 etSelectedPhotoPaths 的方式为保证返回的时候Photo的属性齐全，
- //做了一次for(所有图片){ for(默认选中图片){}}循环
- //所有图片越多 默认选中图片越多越耗时 如果后期没想到更好办法解决 将对 setSelectedPhotoPaths 进行过时处理
+ //推荐使用 setSelectedPhotos 方式
 ```
 
 **2.4.6_beta5：** 

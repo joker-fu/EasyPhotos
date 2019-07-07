@@ -96,21 +96,6 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     private TextView tvPermission;
     private View mBottomBar;
 
-    public static void start(Activity activity, int requestCode) {
-        Intent intent = new Intent(activity, EasyPhotosActivity.class);
-        activity.startActivityForResult(intent, requestCode);
-    }
-
-    public static void start(Fragment fragment, int requestCode) {
-        Intent intent = new Intent(fragment.getActivity(), EasyPhotosActivity.class);
-        fragment.startActivityForResult(intent, requestCode);
-    }
-
-    public static void start(android.support.v4.app.Fragment fragment, int requestCode) {
-        Intent intent = new Intent(fragment.getContext(), EasyPhotosActivity.class);
-        fragment.startActivityForResult(intent, requestCode);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +113,27 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         } else {
             permissionView.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Setting.clear();
+    }
+
+    public static void start(Activity activity, int requestCode) {
+        Intent intent = new Intent(activity, EasyPhotosActivity.class);
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    public static void start(Fragment fragment, int requestCode) {
+        Intent intent = new Intent(fragment.getActivity(), EasyPhotosActivity.class);
+        fragment.startActivityForResult(intent, requestCode);
+    }
+
+    public static void start(android.support.v4.app.Fragment fragment, int requestCode) {
+        Intent intent = new Intent(fragment.getContext(), EasyPhotosActivity.class);
+        fragment.startActivityForResult(intent, requestCode);
     }
 
     private void adaptationStatusBar() {
@@ -160,12 +166,6 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         if (Setting.selectedPhotos.size() > Setting.count) {
             throw new RuntimeException("AlbumBuilder: 默认勾选的图片张数不能大于设置的选择数！" + "|默认勾选张数：" + Setting.selectedPhotos.size() + "|设置的选择数：" + Setting.count);
         }
-        if (!Setting.selectedPhotos.isEmpty()) {
-            for (Photo selectedPhoto : Setting.selectedPhotos) {
-                selectedPhoto.selectedOriginal = Setting.selectedOriginal;
-                Result.addPhoto(selectedPhoto);
-            }
-        }
         AlbumModel.CallBack albumModelCallBack = new AlbumModel.CallBack() {
             @Override
             public void onAlbumWorkedCallBack() {
@@ -179,23 +179,26 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         };
         albumModel = AlbumModel.getInstance();
         albumModel.query(this, albumModelCallBack);
+        if (!Setting.selectedPhotos.isEmpty()) {
+            for (Photo selectedPhoto : Setting.selectedPhotos) {
+                if (TextUtils.isEmpty(selectedPhoto.name)) {
+                    albumModel.fillPhoto(this, selectedPhoto);
+                }
+                selectedPhoto.selectedOriginal = Setting.selectedOriginal;
+                Result.addPhoto(selectedPhoto);
+            }
+        }
     }
 
     protected String[] getNeedPermissions() {
         if (Setting.isShowCamera) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                if (Setting.captureType.equals(Capture.IMAGE)) {
-                    return new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
-                } else {
-                    return new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
-                }
+            if (Setting.captureType.equals(Capture.IMAGE)) {
+                return new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+            } else {
+                return new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
             }
-            return new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                return new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
-            }
-            return new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            return new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
         }
     }
 
@@ -750,30 +753,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         }
     }
 
-    private void preDone() {
-        if (Setting.isSelectedPhotoPaths) {
-            ArrayList<Photo> allPhotos = albumModel.getCurrAlbumItemPhotos(0);
-            for (Photo photo : allPhotos) {
-                for (Photo selectPhoto : Result.photos) {
-                    if (selectPhoto.path.equals(photo.path) && TextUtils.isEmpty(selectPhoto.name)) {
-                        selectPhoto.name = photo.name;
-                        selectPhoto.path = photo.path;
-                        selectPhoto.cropPath = photo.cropPath;
-                        selectPhoto.type = photo.type;
-                        selectPhoto.width = photo.width;
-                        selectPhoto.height = photo.height;
-                        selectPhoto.size = photo.size;
-                        selectPhoto.duration = photo.duration;
-                        selectPhoto.time = photo.time;
-                        selectPhoto.selectedOriginal = photo.selectedOriginal;
-                    }
-                }
-            }
-        }
-    }
-
     private void done() {
-        preDone();
         Intent intent = new Intent();
         Result.processOriginal();
         resultList.clear();
@@ -929,12 +909,6 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         shouldShowMenuDone();
     }
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Setting.clear();
-    }
 
     @Override
     public void onBackPressed() {

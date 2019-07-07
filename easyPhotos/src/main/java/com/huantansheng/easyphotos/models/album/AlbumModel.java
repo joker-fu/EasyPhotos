@@ -142,22 +142,22 @@ public class AlbumModel {
             final String albumItem_video_name = context.getString(R.string.selector_folder_video_easy_photos);
             final int pathCol = cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
             final int nameCol = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
-            final int DateCol = cursor.getColumnIndex(MediaStore.MediaColumns.DATE_MODIFIED);
+            final int dateCol = cursor.getColumnIndex(MediaStore.MediaColumns.DATE_MODIFIED);
             final int mimeTypeCol = cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE);
             final int sizeCol = cursor.getColumnIndex(MediaStore.MediaColumns.SIZE);
             final int durationCol = cursor.getColumnIndex(MediaStore.Video.Media.DURATION);
-            final int WidthCol = cursor.getColumnIndex(MediaStore.MediaColumns.WIDTH);
-            final int HeightCol = cursor.getColumnIndex(MediaStore.MediaColumns.HEIGHT);
+            final int widthCol = cursor.getColumnIndex(MediaStore.MediaColumns.WIDTH);
+            final int heightCol = cursor.getColumnIndex(MediaStore.MediaColumns.HEIGHT);
 
             boolean equalsAlbumName = albumItem_video_name.equals(albumItem_all_name);
             do {
                 final String path = cursor.getString(pathCol);
                 final String type = cursor.getString(mimeTypeCol);
                 final long size = cursor.getLong(sizeCol);
-                final int width = cursor.getInt(WidthCol);
-                final int height = cursor.getInt(HeightCol);
+                final int width = cursor.getInt(widthCol);
+                final int height = cursor.getInt(heightCol);
                 final String name = cursor.getString(nameCol);
-                final long dateTime = cursor.getLong(DateCol);
+                final long dateTime = cursor.getLong(dateCol);
                 final long duration = cursor.getLong(durationCol);
                 final Photo imageItem = new Photo(name, path, dateTime, width, height, size, duration, type);
                 // 把图片全部放进“全部”专辑
@@ -223,4 +223,36 @@ public class AlbumModel {
         void onAlbumWorkedCallBack();
     }
 
+    public void fillPhoto(Context context, Photo photo) {
+        String filePath = photo.path;
+        final File file = new File(photo.path);
+        if (!file.exists()) return;
+        String where;
+        String[] selectionArgs = null;
+        if (filePath.startsWith("content://media/")) {
+            where = null;
+        } else {
+            where = MediaStore.MediaColumns.DATA + "=?";
+            selectionArgs = new String[]{filePath};
+        }
+        Cursor cursor = context.getContentResolver().query(CONTENT_URI, PROJECTIONS, where, selectionArgs, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            final int pathCol = cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
+            final int nameCol = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
+            final int dateCol = cursor.getColumnIndex(MediaStore.MediaColumns.DATE_MODIFIED);
+            final int mimeTypeCol = cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE);
+            final int sizeCol = cursor.getColumnIndex(MediaStore.MediaColumns.SIZE);
+            final int durationCol = cursor.getColumnIndex(MediaStore.Video.Media.DURATION);
+            final int widthCol = cursor.getColumnIndex(MediaStore.MediaColumns.WIDTH);
+            final int heightCol = cursor.getColumnIndex(MediaStore.MediaColumns.HEIGHT);
+            photo.path = cursor.getString(pathCol);
+            photo.type = cursor.getString(mimeTypeCol);
+            photo.size = cursor.getLong(sizeCol);
+            photo.width = cursor.getInt(widthCol);
+            photo.height = cursor.getInt(heightCol);
+            photo.name = cursor.getString(nameCol);
+            photo.time = cursor.getLong(dateCol);
+            photo.duration = cursor.getLong(durationCol);
+        }
+    }
 }
