@@ -281,7 +281,7 @@ public class CaptureButton extends View {
             }
         });
         set.playTogether(outside_anim, inside_anim);
-        set.setDuration(150);
+        set.setDuration(200);
         set.start();
     }
 
@@ -289,7 +289,7 @@ public class CaptureButton extends View {
     //更新进度条
     private void updateProgress(long millisUntilFinished) {
         recorded_time = (int) (duration - millisUntilFinished);
-        if (recorded_time >= duration) {
+        if (recorded_time >= duration - 100f) {
             progress = 360f;
         } else {
             progress = 360f - millisUntilFinished / (float) duration * 360f;

@@ -80,8 +80,8 @@ public class EasyCameraActivity extends AppCompatActivity {
         jCameraView.setSaveVideoPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + File.separator + applicationName);
         jCameraView.setFeatures(getFeature());
         jCameraView.setMediaQuality(JCameraView.MEDIA_QUALITY_MIDDLE);
-        //fixme 录像时间+1s 修复录像时间少1s问题
-        jCameraView.setDuration(Setting.recordDuration + 1000);
+        //fixme 录像时间+800ms 修复录像时间少1s问题
+        jCameraView.setDuration(Setting.recordDuration + 800);
         jCameraView.setErrorLisenter(new ErrorListener() {
             @Override
             public void onError() {

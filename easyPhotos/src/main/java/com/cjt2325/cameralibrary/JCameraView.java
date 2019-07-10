@@ -195,6 +195,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
             @Override
             public void recordStart() {
+                mCaptureLayout.setTextWithAnimation("");
                 mSwitchCamera.setVisibility(INVISIBLE);
                 mFlashLamp.setVisibility(INVISIBLE);
                 machine.record(mVideoView.getHolder().getSurface(), screenProp);
@@ -215,6 +216,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
             @Override
             public void recordEnd(long time) {
+                mCaptureLayout.setTextWithAnimation("");
                 machine.stopRecord(false, time);
             }
 

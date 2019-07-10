@@ -330,10 +330,10 @@ public class CaptureLayout extends FrameLayout {
     }
 
     public void setTextWithAnimation(String tip) {
-        txt_tip.setText(tip);
         ObjectAnimator animator_txt_tip = ObjectAnimator.ofFloat(txt_tip, "alpha", 0f, 1f, 1f, 0f);
         animator_txt_tip.setDuration(2500);
         animator_txt_tip.start();
+        txt_tip.setText(tip);
     }
 
     public void setDuration(int duration) {

@@ -513,13 +513,17 @@ public class CameraInterface implements Camera.PreviewCallback {
     public void startRecord(Surface surface, float screenProp, ErrorCallback callback) {
         mCamera.setPreviewCallback(null);
         final int nowAngle = (angle + 90) % 360;
-        //获取第一帧图片
-        Camera.Parameters parameters = mCamera.getParameters();
-        int width = parameters.getPreviewSize().width;
-        int height = parameters.getPreviewSize().height;
-        YuvImage yuv = new YuvImage(firstFrame_data, parameters.getPreviewFormat(), width, height, null);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
+        try {
+            //获取第一帧图片
+            Camera.Parameters parameters = mCamera.getParameters();
+            int width = parameters.getPreviewSize().width;
+            int height = parameters.getPreviewSize().height;
+            YuvImage yuv = new YuvImage(firstFrame_data, parameters.getPreviewFormat(), width, height, null);
+            yuv.compressToJpeg(new Rect(0, 0, width, height), 50, out);
+        } catch (Exception e) {
+            Log.e("CJT", e.toString());
+        }
         byte[] bytes = out.toByteArray();
         videoFirstFrame = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         Matrix matrix = new Matrix();
