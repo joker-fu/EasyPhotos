@@ -21,13 +21,16 @@ public class Result {
      * @return 0：添加成功 -3：文件不存在 -2：超过视频选择数 -1：超过图片选择数
      */
     public static int addPhoto(Photo photo) {
-        String path = photo.path;
+        final String path = photo.path;
         if (TextUtils.isEmpty(path)) {
             return -3;
         }
         final File file = new File(path);
         if (!file.exists() || !file.isFile()) {
             return -3;
+        }
+        if (photos.size() > 0 && !photo.type.equals(photos.get(0).type)) {
+            return -4;
         }
         if (Setting.videoCount != -1 || Setting.pictureCount != -1) {
             int number = getVideoNumber();

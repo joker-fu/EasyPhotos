@@ -174,6 +174,17 @@ public class AlbumBuilder {
     }
 
     /**
+     * 设置图片和视频选择是否相互排斥
+     *
+     * @param exclusion 默认false
+     * @return AlbumBuilder
+     */
+    public AlbumBuilder setSelectMutualExclusion(boolean exclusion) {
+        Setting.selectMutualExclusion = exclusion;
+        return AlbumBuilder.this;
+    }
+
+    /**
      * 设置显示照片的最小宽度
      *
      * @param minWidth 照片的最小宽度，单位Px
@@ -221,7 +232,6 @@ public class AlbumBuilder {
         if (selectedPhotoPaths.isEmpty()) {
             return AlbumBuilder.this;
         }
-        Setting.isSelectedPhotoPaths = true;
         Setting.selectedPhotos.clear();
         ArrayList<Photo> selectedPhotos = new ArrayList<>();
         for (String path : selectedPhotoPaths) {

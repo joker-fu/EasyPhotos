@@ -386,6 +386,9 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
                     case -3:
                         Toast.makeText(this, getString(R.string.msg_no_file_easy_photos), Toast.LENGTH_SHORT).show();
                         break;
+                    case -4:
+                        Toast.makeText(this, getString(R.string.selector_mutual_exclusion_easy_photos), Toast.LENGTH_SHORT).show();
+                        break;
                 }
                 return;
             }

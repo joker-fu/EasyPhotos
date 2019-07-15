@@ -24,6 +24,8 @@ public class Setting {
     public static int minWidth = 1;
     public static int minHeight = 1;
     public static long minSize = 1;
+    public static long maxSize = Long.MAX_VALUE;
+    public static boolean selectMutualExclusion = false;
     public static int count = 1;
     public static int pictureCount = -1;
     public static int videoCount = -1;
@@ -32,7 +34,6 @@ public class Setting {
     public static boolean photoAdIsOk = false;
     public static boolean albumItemsAdIsOk = false;
     public static ArrayList<Photo> selectedPhotos = new ArrayList<>();
-    public static boolean isSelectedPhotoPaths = false;
     public static boolean showOriginalMenu = false;
     public static boolean originalMenuUsable = false;
     public static String originalMenuUnusableHint = "";
@@ -56,7 +57,6 @@ public class Setting {
     public static int recordDuration = 15000;
     public static WeakReference<View> cameraCoverView = null;
     public static boolean enableCameraTip = true;
-
     // 裁剪相关参数
     public static boolean isCrop = false;
     public static int compressQuality = 90;
@@ -77,6 +77,8 @@ public class Setting {
         minWidth = 1;
         minHeight = 1;
         minSize = 1;
+        maxSize = Long.MAX_VALUE;
+        selectMutualExclusion = false;
         count = 1;
         pictureCount = -1;
         videoCount = -1;
@@ -85,7 +87,6 @@ public class Setting {
         photoAdIsOk = false;
         albumItemsAdIsOk = false;
         selectedPhotos.clear();
-        isSelectedPhotoPaths = false;
         showOriginalMenu = false;
         originalMenuUsable = false;
         originalMenuUnusableHint = "";
