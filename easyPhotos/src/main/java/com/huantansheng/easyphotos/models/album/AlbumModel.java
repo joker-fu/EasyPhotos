@@ -100,15 +100,21 @@ public class AlbumModel {
         String[] selectionArgs;
         if (Setting.isOnlyGif() && Setting.showGif) {
             //进gif
-            selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "=?" + " AND " + MediaStore.MediaColumns.SIZE + "> " + Setting.minSize
+            selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "=?"
+                    + " AND " + MediaStore.MediaColumns.SIZE + "> " + Setting.minSize
+                    + " AND " + MediaStore.MediaColumns.SIZE + "< " + Setting.maxSize
                     + " AND " + MediaStore.MediaColumns.MIME_TYPE + IS_GIF;
             selectionArgs = new String[]{String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)};
         } else if (Setting.isOnlyImage()) {
             //仅图片
             if (Setting.showGif) {
-                selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "=?" + " AND " + MediaStore.MediaColumns.SIZE + "> " + Setting.minSize;
+                selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "=?"
+                        + " AND " + MediaStore.MediaColumns.SIZE + "> " + Setting.minSize
+                        + " AND " + MediaStore.MediaColumns.SIZE + "< " + Setting.maxSize;
             } else {
-                selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "=?" + " AND " + MediaStore.MediaColumns.SIZE + "> " + Setting.minSize
+                selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "=?"
+                        + " AND " + MediaStore.MediaColumns.SIZE + "> " + Setting.minSize
+                        + " AND " + MediaStore.MediaColumns.SIZE + "< " + Setting.maxSize
                         + " AND " + MediaStore.MediaColumns.MIME_TYPE + NOT_GIF;
             }
             selectionArgs = new String[]{String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)};
@@ -116,6 +122,7 @@ public class AlbumModel {
             //仅视频
             selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "=?"
                     + " AND " + MediaStore.MediaColumns.SIZE + "> " + Setting.minSize
+                    + " AND " + MediaStore.MediaColumns.SIZE + "< " + Setting.maxSize
                     + " AND " + getDurationCondition();
             selectionArgs = new String[]{String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)};
         } else if (Setting.isAll()) {
@@ -124,8 +131,8 @@ public class AlbumModel {
                     + (Setting.showGif ? "" : " AND " + MediaStore.MediaColumns.MIME_TYPE + NOT_GIF)
                     + " OR "
                     + (MediaStore.Files.FileColumns.MEDIA_TYPE + "=? AND " + getDurationCondition()) + ")"
-                    + " AND "
-                    + MediaStore.MediaColumns.SIZE + "> " + Setting.minSize;
+                    + " AND " + MediaStore.MediaColumns.SIZE + "> " + Setting.minSize
+                    + " AND " + MediaStore.MediaColumns.SIZE + "< " + Setting.maxSize;
             selectionArgs = SELECTION_ALL_ARGS;
         } else {
             throw new RuntimeException("filter types error, please check your filter method! ");

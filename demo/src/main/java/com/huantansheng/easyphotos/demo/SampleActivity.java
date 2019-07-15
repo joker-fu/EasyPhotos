@@ -196,6 +196,7 @@ public class SampleActivity extends AppCompatActivity
                         .setMinWidth(500)
                         .setMinHeight(500)
                         .setMinFileSize(1024 * 10)
+                        .setMaxFileSize(1024 * 100)
                         .start(callback);
                 break;
 
@@ -218,6 +219,7 @@ public class SampleActivity extends AppCompatActivity
                 EasyPhotos.createAlbum(this, true, GlideEngine.getInstance())
                         .setCount(9)
                         .filter(Type.all())
+                        //.setSelectMutualExclusion(true) //选择结果互斥（不能同时选择图片或视频）
                         .setGif(true)
                         .start(callback);
                 break;

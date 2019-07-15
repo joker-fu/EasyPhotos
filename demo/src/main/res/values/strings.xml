@@ -35,6 +35,7 @@
     <string name="selector_reach_max_hint_easy_photos">You can only select up to %d images or videos</string>
     <string name="selector_reach_max_image_hint_easy_photos">You have selected %d images already!</string>
     <string name="selector_reach_max_video_hint_easy_photos">Can only select up to %d videos</string>
+    <string name="selector_mutual_exclusion_easy_photos">Cannot select an image or video at the same time</string>
     <string name="msg_no_file_easy_photos">The file does not exist or is damaged!</string>
     <string name="msg_no_camera_easy_photos">Can\'t Launch Camera!</string>
     <string name="camera_temp_file_error_easy_photos">Temp File Error!</string>

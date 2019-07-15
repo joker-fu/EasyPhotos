@@ -18,7 +18,7 @@ public class Result {
     public static ArrayList<Photo> photos = new ArrayList<>();
 
     /**
-     * @return 0：添加成功 -3：文件不存在 -2：超过视频选择数 -1：超过图片选择数
+     * @return 0：添加成功 -4：选择结果互斥 -3：文件不存在 -2：超过视频选择数 -1：超过图片选择数
      */
     public static int addPhoto(Photo photo) {
         final String path = photo.path;
@@ -29,8 +29,10 @@ public class Result {
         if (!file.exists() || !file.isFile()) {
             return -3;
         }
-        if (photos.size() > 0 && !photo.type.equals(photos.get(0).type)) {
-            return -4;
+        if (Setting.selectMutualExclusion && photos.size() > 0) {
+            if (photo.type.contains(Type.VIDEO) != photos.get(0).type.contains(Type.VIDEO)) {
+                return -4;
+            }
         }
         if (Setting.videoCount != -1 || Setting.pictureCount != -1) {
             int number = getVideoNumber();

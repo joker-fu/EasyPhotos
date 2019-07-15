@@ -35,6 +35,7 @@
     <string name="selector_reach_max_hint_easy_photos">最多只能选择%d张图片或视频</string>
     <string name="selector_reach_max_image_hint_easy_photos">最多只能选择%d张图片</string>
     <string name="selector_reach_max_video_hint_easy_photos">最多只能选择%d个视频</string>
+    <string name="selector_mutual_exclusion_easy_photos">不能同时选择图片或视频</string>
     <string name="msg_no_file_easy_photos">文件不存在或损坏！</string>
     <string name="msg_no_camera_easy_photos">无法启动相机！</string>
     <string name="camera_temp_file_error_easy_photos">图片错误</string>

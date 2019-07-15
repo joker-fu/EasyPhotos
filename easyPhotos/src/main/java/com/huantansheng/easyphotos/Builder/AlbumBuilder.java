@@ -163,13 +163,24 @@ public class AlbumBuilder {
     }
 
     /**
-     * 设置显示照片的最小文件大小
+     * 设置显示的最小文件大小
      *
      * @param minFileSize 最小文件大小，单位Bytes
      * @return AlbumBuilder
      */
     public AlbumBuilder setMinFileSize(long minFileSize) {
         Setting.minSize = minFileSize;
+        return AlbumBuilder.this;
+    }
+
+    /**
+     * 设置显示的最大文件大小
+     *
+     * @param maxFileSize 最小文件大小，单位Bytes
+     * @return AlbumBuilder
+     */
+    public AlbumBuilder setMaxFileSize(long maxFileSize) {
+        Setting.maxSize = maxFileSize;
         return AlbumBuilder.this;
     }
 

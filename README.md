@@ -130,6 +130,14 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志    
+
+**2.4.6_beta8：**
+- 支持文件最大Size限制 setMaxFileSize
+- 支持互斥选择（不能同时选择图片或视频） setSelectMutualExclusion
+```xml
+新增互斥选择文案：
+<string name="selector_mutual_exclusion_easy_photos">不能同时选择图片或视频</string>
+```
 **2.4.6_beta7：** 
 - 优化根据路径默认选中代码
 - 优化代码中一些命名 
