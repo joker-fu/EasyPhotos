@@ -6,13 +6,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PagerSnapHelper;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
@@ -34,6 +31,8 @@ import com.huantansheng.easyphotos.result.Result;
 import com.huantansheng.easyphotos.setting.Setting;
 import com.huantansheng.easyphotos.ui.adapter.PreviewPhotosAdapter;
 import com.huantansheng.easyphotos.ui.widget.PressedTextView;
+import com.huantansheng.easyphotos.ui.widget.PreviewViewPager;
+import com.huantansheng.easyphotos.ui.widget.imagezoom.ImageViewTouch;
 import com.huantansheng.easyphotos.utils.color.ColorUtils;
 import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
@@ -42,7 +41,7 @@ import java.util.ArrayList;
 /**
  * 预览页
  */
-public class PreviewActivity extends AppCompatActivity implements PreviewPhotosAdapter.OnClickListener, View.OnClickListener, PreviewFragment.OnPreviewFragmentClickListener {
+public class PreviewActivity extends AppCompatActivity implements PreviewPhotosAdapter.OnClickListener, View.OnClickListener, PreviewFragment.OnPreviewFragmentClickListener, ViewPager.OnPageChangeListener {
 
     public static void start(Activity act, int albumItemIndex, int currIndex) {
         Intent intent = new Intent(act, PreviewActivity.class);
@@ -79,10 +78,8 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
     private TextView tvOriginal, tvNumber;
     private PressedTextView tvDone;
     private ImageView ivSelector;
-    private RecyclerView rvPhotos;
+    private PreviewViewPager rvPhotos;
     private PreviewPhotosAdapter adapter;
-    private PagerSnapHelper snapHelper;
-    private LinearLayoutManager lm;
     private int index;
     private ArrayList<Photo> photos = new ArrayList<>();
     private int resultCode = RESULT_CANCELED;
@@ -188,9 +185,7 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
 
     private void show() {
         // Show the system bar
-        if (Build.VERSION.SDK_INT >= 16) {
-            SystemUtils.getInstance().systemUiShow(this, decorView);
-        }
+        SystemUtils.getInstance().systemUiShow(this, decorView);
 
         mVisible = true;
 
@@ -254,44 +249,43 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
     }
 
     private void initRecyclerView() {
-        rvPhotos = (RecyclerView) findViewById(R.id.rv_photos);
+        rvPhotos = (PreviewViewPager) findViewById(R.id.rv_photos);
         adapter = new PreviewPhotosAdapter(this, photos, this);
-        lm = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        rvPhotos.setLayoutManager(lm);
         rvPhotos.setAdapter(adapter);
-        rvPhotos.scrollToPosition(index);
+        rvPhotos.setCurrentItem(index);
         toggleSelector();
-        snapHelper = new PagerSnapHelper();
-        snapHelper.attachToRecyclerView(rvPhotos);
-        rvPhotos.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-                View view = snapHelper.findSnapView(lm);
-                if (view == null) {
-                    return;
-                }
-                int position = lm.getPosition(view);
-                if (lastPosition == position) {
-                    return;
-                }
-                lastPosition = position;
-                previewFragment.setSelectedPosition(-1);
-                tvNumber.setText(getString(R.string.preview_current_number_easy_photos, lastPosition + 1, photos.size()));
-                toggleSelector();
-                PreviewPhotosAdapter.PreviewPhotosViewHolder holder = (PreviewPhotosAdapter.PreviewPhotosViewHolder) rvPhotos.getChildViewHolder(view);
-                if (holder == null || holder.ivPhoto == null) {
-                    return;
-                }
-                if (holder.ivPhoto.getScale() != 1f) {
-                    holder.ivPhoto.setScale(1f, true);
-
-
-                }
-            }
-        });
+        rvPhotos.addOnPageChangeListener(this);
         tvNumber.setText(getString(R.string.preview_current_number_easy_photos, index + 1, photos.size()));
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (lastPosition == position) {
+            return;
+        }
+        previewFragment.setSelectedPosition(-1);
+        tvNumber.setText(getString(R.string.preview_current_number_easy_photos, lastPosition + 1, photos.size()));
+        toggleSelector();
+        final View view = (View) adapter.instantiateItem(rvPhotos, lastPosition);
+        final ImageViewTouch ivPhoto = view.findViewById(R.id.iv_photo);
+        if (ivPhoto == null) {
+            return;
+        }
+        if (ivPhoto.getScale() != 1f) {
+            ivPhoto.resetMatrix();
+            //holder.ivPhoto.resetDisplay();
+        }
+        lastPosition = position;
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int position) {
+
     }
 
     @Override
@@ -447,7 +441,7 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
         String path = Result.getPhotoPath(position);
         for (int i = 0; i < photos.size(); i++) {
             if (TextUtils.equals(path, photos.get(i).path)) {
-                rvPhotos.scrollToPosition(i);
+                rvPhotos.setCurrentItem(i);
                 lastPosition = i;
                 tvNumber.setText(getString(R.string.preview_current_number_easy_photos, lastPosition + 1, photos.size()));
                 previewFragment.setSelectedPosition(position);
