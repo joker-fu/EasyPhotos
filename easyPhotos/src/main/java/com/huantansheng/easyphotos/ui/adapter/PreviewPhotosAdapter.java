@@ -68,7 +68,7 @@ public class PreviewPhotosAdapter extends PagerAdapter {
 
     private Object bindItem(ViewGroup container, int position) {
         View view = inflater.inflate(R.layout.item_preview_photo_easy_photos, container, false);
-        PreviewPhotosViewHolder holder = new PreviewPhotosViewHolder(view);
+        final PreviewPhotosViewHolder holder = new PreviewPhotosViewHolder(view);
 
         final String path = photos.get(position).path;
         final String type = photos.get(position).type;
@@ -88,12 +88,18 @@ public class PreviewPhotosAdapter extends PagerAdapter {
         } else {
             Setting.imageEngine.loadPhoto(holder.ivPhoto.getContext(), path, holder.ivPhoto);
         }
-        holder.ivPhoto.setDisplayType(ImageViewTouchBase.DisplayType.FIT_WIDTH);
+        holder.ivPhoto.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
         holder.ivPhoto.setOnScaleChangeListener(new ImageViewTouchBase.OnScaleChangeListener() {
             @Override
             public void onScaleChanged(Float scale, float centerX, float centerY) {
                 //暂时去掉
                 //listener.onPhotoScaleChanged();
+            }
+        });
+        holder.ivPhoto.setDoubleTapListener(new ImageViewTouch.OnImageViewTouchDoubleTapListener() {
+            @Override
+            public void onDoubleTap() {
+                listener.onPhotoClick();
             }
         });
         holder.ivPhoto.setSingleTapListener(new ImageViewTouch.OnImageViewTouchSingleTapListener() {

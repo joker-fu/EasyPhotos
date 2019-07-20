@@ -266,7 +266,10 @@ public class ImageViewTouch extends ImageViewTouchBase {
         if (null == bitmapRect) {
             return false;
         }
-        if (bitmapRect.width() < imageViewRect.width() || bitmapRect.left == 0) {
+        if (bitmapRect.width() < imageViewRect.width()) {
+            return false;
+        }
+        if (Math.abs(bitmapRect.left) <= 5) {
             return false;
         }
         if (bitmapRect.right + 0.5 >= imageViewRect.right) {
