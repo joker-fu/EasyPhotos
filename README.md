@@ -130,6 +130,8 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志    
+**2.4.6_beta9：**
+- 更换图片预览实现，支持长图预览
 
 **2.4.6_beta8：**
 - 支持文件最大Size限制 setMaxFileSize
