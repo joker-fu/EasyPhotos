@@ -28,17 +28,16 @@ import java.util.ArrayList;
  * Created by huan on 2017/10/26.
  */
 public class PreviewPhotosAdapter extends PagerAdapter {
-
     private ArrayList<Photo> photos;
     private OnClickListener listener;
     private LayoutInflater inflater;
+    private View mCurrentView;
 
     public interface OnClickListener {
         void onPhotoClick();
 
         void onPhotoScaleChanged();
     }
-
 
     public PreviewPhotosAdapter(Context cxt, ArrayList<Photo> photos, OnClickListener listener) {
         this.photos = photos;
@@ -89,12 +88,12 @@ public class PreviewPhotosAdapter extends PagerAdapter {
         } else {
             Setting.imageEngine.loadPhoto(holder.ivPhoto.getContext(), path, holder.ivPhoto);
         }
-        holder.ivPhoto.setDisplayType(ImageViewTouchBase.DisplayType.FIT_IF_BIGGER);
+        holder.ivPhoto.setDisplayType(ImageViewTouchBase.DisplayType.FIT_WIDTH);
         holder.ivPhoto.setOnScaleChangeListener(new ImageViewTouchBase.OnScaleChangeListener() {
             @Override
             public void onScaleChanged(Float scale, float centerX, float centerY) {
                 //暂时去掉
-                listener.onPhotoScaleChanged();
+                //listener.onPhotoScaleChanged();
             }
         });
         holder.ivPhoto.setSingleTapListener(new ImageViewTouch.OnImageViewTouchSingleTapListener() {
@@ -128,6 +127,14 @@ public class PreviewPhotosAdapter extends PagerAdapter {
         }
     }
 
+    @Override
+    public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+        mCurrentView = (View)object;
+    }
+
+    public View getPrimaryItem() {
+        return mCurrentView;
+    }
 
     public class PreviewPhotosViewHolder {
 

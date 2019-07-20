@@ -266,8 +266,10 @@ public class ImageViewTouch extends ImageViewTouchBase {
         if (null == bitmapRect) {
             return false;
         }
-
-        if (bitmapRect.right >= imageViewRect.right) {
+        if (bitmapRect.width() < imageViewRect.width() || bitmapRect.left == 0) {
+            return false;
+        }
+        if (bitmapRect.right + 0.5 >= imageViewRect.right) {
             if (direction < 0) {
                 return Math.abs(bitmapRect.right - imageViewRect.right) > SCROLL_DELTA_THRESHOLD;
             }

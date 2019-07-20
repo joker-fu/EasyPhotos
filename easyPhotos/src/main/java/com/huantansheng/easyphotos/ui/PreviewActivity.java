@@ -220,21 +220,21 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
     private void initView() {
         setClick(R.id.iv_back, R.id.tv_edit, R.id.tv_selector);
 
-        mToolBar = (FrameLayout) findViewById(R.id.m_top_bar_layout);
+        mToolBar = findViewById(R.id.m_top_bar_layout);
         if (!SystemUtils.getInstance().hasNavigationBar(this)) {
-            FrameLayout mRootView = (FrameLayout) findViewById(R.id.m_root_view);
+            FrameLayout mRootView = findViewById(R.id.m_root_view);
             mRootView.setFitsSystemWindows(true);
             mToolBar.setPadding(0, SystemUtils.getInstance().getStatusBarHeight(this), 0, 0);
             if (ColorUtils.isWhiteColor(statusColor)) {
                 SystemUtils.getInstance().setStatusDark(this, true);
             }
         }
-        mBottomBar = (RelativeLayout) findViewById(R.id.m_bottom_bar);
-        ivSelector = (ImageView) findViewById(R.id.iv_selector);
-        tvNumber = (TextView) findViewById(R.id.tv_number);
-        tvDone = (PressedTextView) findViewById(R.id.tv_done);
-        tvOriginal = (TextView) findViewById(R.id.tv_original);
-        flFragment = (FrameLayout) findViewById(R.id.fl_fragment);
+        mBottomBar = findViewById(R.id.m_bottom_bar);
+        ivSelector = findViewById(R.id.iv_selector);
+        tvNumber = findViewById(R.id.tv_number);
+        tvDone = findViewById(R.id.tv_done);
+        tvOriginal = findViewById(R.id.tv_original);
+        flFragment = findViewById(R.id.fl_fragment);
         previewFragment = (PreviewFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_preview);
         if (Setting.showOriginalMenu) {
             processOriginalMenu();
@@ -249,7 +249,7 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
     }
 
     private void initRecyclerView() {
-        rvPhotos = (PreviewViewPager) findViewById(R.id.rv_photos);
+        rvPhotos = findViewById(R.id.rv_photos);
         adapter = new PreviewPhotosAdapter(this, photos, this);
         rvPhotos.setAdapter(adapter);
         rvPhotos.setCurrentItem(index);
@@ -268,11 +268,12 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
         if (lastPosition == position) {
             return;
         }
+        final View view = adapter.getPrimaryItem();
+        final ImageViewTouch ivPhoto = view.findViewById(R.id.iv_photo);
+        lastPosition = position;
         previewFragment.setSelectedPosition(-1);
         tvNumber.setText(getString(R.string.preview_current_number_easy_photos, lastPosition + 1, photos.size()));
         toggleSelector();
-        final View view = (View) adapter.instantiateItem(rvPhotos, lastPosition);
-        final ImageViewTouch ivPhoto = view.findViewById(R.id.iv_photo);
         if (ivPhoto == null) {
             return;
         }
@@ -280,7 +281,6 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
             ivPhoto.resetMatrix();
             //holder.ivPhoto.resetDisplay();
         }
-        lastPosition = position;
     }
 
     @Override
