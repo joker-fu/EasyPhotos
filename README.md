@@ -130,6 +130,9 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志    
+**2.4.6：**
+- 优化图片预览
+
 **2.4.6_beta9：**
 - 更换图片预览实现，支持长图预览
 
@@ -146,6 +149,7 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 **2.4.6_beta6：** 
 - 修复setSelectedPhotoPaths不能默认选中问题
+
 **注意：**
 ```
  //推荐使用 setSelectedPhotos 方式
