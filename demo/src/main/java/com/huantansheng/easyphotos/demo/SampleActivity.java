@@ -32,6 +32,7 @@ import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.setting.Setting;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SampleActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -219,7 +220,7 @@ public class SampleActivity extends AppCompatActivity
                 EasyPhotos.createAlbum(this, true, GlideEngine.getInstance())
                         .setCount(9)
                         .filter(Type.all())
-                        //.setSelectMutualExclusion(true) //选择结果互斥（不能同时选择图片或视频）
+                        .setSelectMutualExclusion(true) //选择结果互斥（不能同时选择图片或视频）
                         .setGif(true)
                         .start(callback);
                 break;
@@ -296,8 +297,8 @@ public class SampleActivity extends AppCompatActivity
                             }
                         });
 
-            case R.id.face_detection://人脸检测，目前仅支持正脸检测
-                //暂时不做了。会导致lib过大，而且并不稳定
+            case R.id.previewPictures:
+                Toast.makeText(this, "开发中", Toast.LENGTH_LONG).show();
                 break;
             default:
                 break;

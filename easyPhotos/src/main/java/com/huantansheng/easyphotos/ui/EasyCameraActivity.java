@@ -93,7 +93,7 @@ public class EasyCameraActivity extends AppCompatActivity {
 
             @Override
             public void AudioPermissionError() {
-                Toast.makeText(EasyCameraActivity.this, "没有录音权限", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EasyCameraActivity.this, getString(R.string.missing_audio_permission), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
                 setResult(RESULT_CANCELED, intent);
                 finish();

@@ -26,6 +26,7 @@ public class Setting {
     public static long minSize = 1;
     public static long maxSize = Long.MAX_VALUE;
     public static boolean selectMutualExclusion = false;
+    public static boolean distinguishCount = true;
     public static int count = 1;
     public static int pictureCount = -1;
     public static int videoCount = -1;
@@ -79,6 +80,7 @@ public class Setting {
         minSize = 1;
         maxSize = Long.MAX_VALUE;
         selectMutualExclusion = false;
+        distinguishCount = true;
         count = 1;
         pictureCount = -1;
         videoCount = -1;

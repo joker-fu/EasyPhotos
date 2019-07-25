@@ -42,6 +42,7 @@ import com.huantansheng.easyphotos.R;
 import com.huantansheng.easyphotos.constant.Capture;
 import com.huantansheng.easyphotos.constant.Code;
 import com.huantansheng.easyphotos.constant.Key;
+import com.huantansheng.easyphotos.constant.Type;
 import com.huantansheng.easyphotos.models.ad.AdListener;
 import com.huantansheng.easyphotos.models.album.AlbumModel;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
@@ -154,6 +155,9 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         tvPermission = findViewById(R.id.tv_permission);
         rootViewAlbumItems = findViewById(R.id.root_view_album_items);
         findViewById(R.id.iv_second_menu).setVisibility(Setting.showPuzzleMenu || Setting.showCleanMenu || Setting.showOriginalMenu ? View.VISIBLE : View.GONE);
+        if (Setting.isOnlyVideo()) {
+            ((TextView) findViewById(R.id.tv_title)).setText(R.string.video_selection_easy_photos);
+        }
         setClick(R.id.iv_back);
     }
 
@@ -872,7 +876,18 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
             tvDone.setVisibility(View.VISIBLE);
             tvPreview.setVisibility(View.VISIBLE);
         }
-        tvDone.setText(getString(R.string.selector_action_done_easy_photos, Result.count(), Setting.count));
+        if (Setting.distinguishCount && Setting.selectMutualExclusion && Result.photos.size() > 0) {
+            final String photoType = Result.photos.get(0).type;
+            if (photoType.contains(Type.VIDEO) && Setting.videoCount != -1) {
+                tvDone.setText(getString(R.string.selector_action_done_easy_photos, Result.count(), Setting.videoCount));
+            } else if (photoType.contains(Type.IMAGE) && Setting.pictureCount != -1) {
+                tvDone.setText(getString(R.string.selector_action_done_easy_photos, Result.count(), Setting.pictureCount));
+            } else {
+                tvDone.setText(getString(R.string.selector_action_done_easy_photos, Result.count(), Setting.count));
+            }
+        } else {
+            tvDone.setText(getString(R.string.selector_action_done_easy_photos, Result.count(), Setting.count));
+        }
     }
 
     @Override

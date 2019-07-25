@@ -34,6 +34,12 @@ public class Photo implements Parcelable {
         this.selectedOriginal = false;
     }
 
+    public Photo(String name, String path) {
+        this.name = name;
+        this.path = path;
+        this.selectedOriginal = false;
+    }
+
     @Override
     public boolean equals(Object o) {
         try {

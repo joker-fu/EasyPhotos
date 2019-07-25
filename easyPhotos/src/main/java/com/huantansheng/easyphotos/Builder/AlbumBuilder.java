@@ -196,6 +196,20 @@ public class AlbumBuilder {
     }
 
     /**
+     * 设置图片和视频选择是否相互排斥
+     * 右上角按钮区分显示 如：设置可选7张图片和2个视频 当选中图片的时候显示 n/7 选中视频时显示 n/2
+     *
+     * @param exclusion   默认false
+     * @param distinguish 默认true
+     * @return AlbumBuilder
+     */
+    public AlbumBuilder setSelectMutualExclusion(boolean exclusion, boolean distinguish) {
+        Setting.selectMutualExclusion = exclusion;
+        Setting.distinguishCount = distinguish;
+        return AlbumBuilder.this;
+    }
+
+    /**
      * 设置显示照片的最小宽度
      *
      * @param minWidth 照片的最小宽度，单位Px

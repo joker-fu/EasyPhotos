@@ -19,7 +19,7 @@
     <string name="album_ad">Photo album (with advertisement)</string>
     <string name="camera">Camera</string>
     <string name="addWatermark">Add watermark to picture</string>
-    <string name="face_detection">Face detection</string>
+    <string name="preview_pictures">preview pictures</string>
     <string name="puzzle">Jigsaw puzzle (used as a single function)</string>
 
     <!--以下是EasyPhotos的-->
@@ -57,6 +57,7 @@
     <string name="text_sticker_hint_easy_photos">Double-click</string>
     <string name="text_sticker_hint_name_easy_photos">Custom</string>
     <string name="picture_selection_easy_photos">Photos</string>
+    <string name="video_selection_easy_photos">Videos</string>
     <string name="puzzle_easy_photos">Puzzle</string>
     <string name="select_puzzle_photos">Please select 2 \- 9 photos</string>
     <string name="gif_easy_photos">gif</string>
@@ -65,4 +66,5 @@
     <string name="long_press_camera">Long press camera</string>
     <string name="tap_take_photo_long_press_camera_split">, </string>
     <string name="recording_too_short">Recording is too short</string>
+    <string name="missing_audio_permission">Missing audio permission</string>
 </resources>

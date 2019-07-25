@@ -86,9 +86,8 @@
                     android:title="@string/puzzle" />
 
                 <item
-                    android:id="@+id/face_detection"
-                    android:title="@string/face_detection"
-                    android:visible="false" />
+                    android:id="@+id/previewPictures"
+                    android:title="@string/preview_pictures" />
 
             </group>
         </menu>
