@@ -80,7 +80,7 @@ dependencies {
 
 ```gradle  
 dependencies {
-    //把3.3.2改成你对应的版本即可，如果不清楚对应版本可以看看你其他正常项目的这里是怎么写的  
+    //把3.4.2改成你对应的版本即可，如果不清楚对应版本可以看看你其他正常项目的这里是怎么写的  
     classpath 'com.android.tools.build:gradle:3.4.2'
 }
 
