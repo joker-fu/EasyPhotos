@@ -46,15 +46,16 @@
 - 广告填充（可配置开关）     
 - 过滤图片（图片宽度、图片高度、文件大小三个维度任意选择和搭配）
 - 默认勾选图片（可配置）    
-- 图片预览（可全屏，可缩放）    
+- 图片预览（可全屏，可缩放，支持长图）    
 - 支持动图gif显示，并支持仅选择动图gif
 - 支持视频video显示，并支持仅选择Video
 - UI色值高度浓缩，仅为10种，自定义超简单     
 - 对Gif动图的处理（可配置开关是否显示，列表中以静态图+动图标识显示，预览大图时自动播放）    
 - 自带Bitmap相关方法（如添加水印、把View画成Bitmap、保存Bitmap等）    
 - 自带媒体库相关方法（如媒体文件更新到媒体库）    
-- 支持仿微信拍照和视频录制，并支持添加覆盖层
+- 支持仿微信拍照和视频录制，并支持添加覆盖蒙层（指示层），适用于拍证件等
 - 支持单图裁剪
+- 外部可调用EsayPhotos进行预览
 
 
 ## 获取EasyPhotos（通过Gradle方式）
@@ -75,12 +76,12 @@ dependencies {
 }
 ```    
     
-**如果你的 `android studio` 版本不同于3.3.2正式版，有可能会打不开我的Demo，只需要修改Demo里面 `build.gradle（project）` 文件中的：**     
+**如果你的 `android studio` 版本不同于3.4.2正式版，有可能会打不开我的Demo，只需要修改Demo里面 `build.gradle（project）` 文件中的：**     
 
 ```gradle  
 dependencies {
     //把3.3.2改成你对应的版本即可，如果不清楚对应版本可以看看你其他正常项目的这里是怎么写的  
-    classpath 'com.android.tools.build:gradle:3.3.2'
+    classpath 'com.android.tools.build:gradle:3.4.2'
 }
 
 ```    
@@ -115,13 +116,15 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 	   
 ## 感谢    
      
-[PhotoView](https://github.com/chrisbanes/PhotoView)：一个强大的图片缩放库，由[chrisbanes](https://github.com/chrisbanes) 大神编写    
+[ImageViewZoom](https://github.com/sephiroth74/ImageViewZoom)：一个强大的图片缩放库，由[sephiroth74](https://github.com/sephiroth74) 编写。 
     
 [PuzzleView](https://github.com/wuapnjie/PuzzleView)：一个强大的拼图库，我的拼图功能是在此基础上实现，这个库由[wuapnjie](https://github.com/wuapnjie) 编写。    
     
-[CameraView](https://github.com/CJT2325/CameraView)：一个仿微信点击拍照长按录像，由[CJT2325](https://github.com/CJT2325)编写
+[CameraView](https://github.com/CJT2325/CameraView)：一个仿微信点击拍照长按录像，由[CJT2325](https://github.com/CJT2325)编写.
 
  [uCrop](https://github.com/Yalantis/uCrop)：一个知名强大的图片裁剪库，由[Yalantis](https://github.com/Yalantis)编写
+
+> 除uCrop外，其他都依赖源码修改实现，大可不必担心有冲突情况
  
 ## 编者语    
 
@@ -130,6 +133,11 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志    
+**2.4.7_beta1：**
+- 提供EasyPhotos预览供外部使用
+- 互斥选择支持分开计数（感谢[hubin920218](https://github.com/hubin920218)）
+- 优化部分代码和Strings.xml
+
 **2.4.6：**
 - 优化图片预览
 
