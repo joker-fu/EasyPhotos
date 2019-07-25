@@ -37,6 +37,7 @@ import com.huantansheng.easyphotos.ui.widget.imagezoom.ImageViewTouch;
 import com.huantansheng.easyphotos.utils.color.ColorUtils;
 import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -49,6 +50,13 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
         intent.putExtra(Key.PREVIEW_ALBUM_ITEM_INDEX, albumItemIndex);
         intent.putExtra(Key.PREVIEW_PHOTO_INDEX, currIndex);
         act.startActivityForResult(intent, Code.REQUEST_PREVIEW_ACTIVITY);
+    }
+
+    public static void start(Activity act, ArrayList<Photo> photos, boolean bottomPreview) {
+        Intent intent = new Intent(act, PreviewActivity.class);
+        intent.putExtra(Key.PREVIEW_EXTERNAL_PHOTOS, photos);
+        intent.putExtra(Key.PREVIEW_EXTERNAL_PHOTOS_BOTTOM_PREVIEW, bottomPreview);
+        act.startActivity(intent);
     }
 
 
@@ -91,6 +99,7 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
     private FrameLayout flFragment;
     private PreviewFragment previewFragment;
     private int statusColor;
+    private boolean hasExternalPhotos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,11 +111,16 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
 
         hideActionBar();
         adaptationStatusBar();
-        if (null == AlbumModel.instance) {
-            finish();
-            return;
+        hasExternalPhotos = getIntent().hasExtra(Key.PREVIEW_EXTERNAL_PHOTOS);
+        if (hasExternalPhotos) {
+            initExternalData();
+        } else {
+            if (null == AlbumModel.instance) {
+                finish();
+                return;
+            }
+            initData();
         }
-        initData();
         initView();
     }
 
@@ -141,6 +155,29 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
 
         lastPosition = index;
         mVisible = true;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initExternalData() {
+        Intent intent = getIntent();
+        ArrayList<Photo> photos = (ArrayList<Photo>) intent.getSerializableExtra(Key.PREVIEW_EXTERNAL_PHOTOS);
+        this.photos.clear();
+        this.photos.addAll(photos);
+
+        boolean isShow = getIntent().getBooleanExtra(Key.PREVIEW_EXTERNAL_PHOTOS_BOTTOM_PREVIEW, false);
+        if (isShow) Result.photos = photos;
+
+        index = intent.getIntExtra(Key.PREVIEW_PHOTO_INDEX, 0);
+        lastPosition = index;
+        mVisible = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (hasExternalPhotos) {
+            Setting.clear();
+        }
+        super.onDestroy();
     }
 
     private void toggle() {
@@ -247,6 +284,13 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
 
         initRecyclerView();
         shouldShowMenuDone();
+        if (hasExternalPhotos) {
+            tvOriginal.setVisibility(View.GONE);
+            tvDone.setVisibility(View.GONE);
+            ivSelector.setVisibility(View.GONE);
+            findViewById(R.id.tv_edit).setVisibility(View.GONE);
+            findViewById(R.id.tv_selector).setVisibility(View.GONE);
+        }
     }
 
     private void initRecyclerView() {
@@ -344,7 +388,7 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
             ivSelector.setImageResource(R.drawable.ic_selector_easy_photos);
         }
         previewFragment.notifyDataSetChanged();
-        shouldShowMenuDone();
+        if (!hasExternalPhotos) shouldShowMenuDone();
     }
 
 

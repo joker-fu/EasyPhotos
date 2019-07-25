@@ -135,7 +135,7 @@ public class PreviewPhotosAdapter extends PagerAdapter {
 
     @Override
     public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        mCurrentView = (View)object;
+        mCurrentView = (View) object;
     }
 
     public View getPrimaryItem() {

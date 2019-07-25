@@ -34,10 +34,10 @@ public class Photo implements Parcelable {
         this.selectedOriginal = false;
     }
 
-    public Photo(String name, String path) {
+    public Photo(String name, String path, String type) {
         this.name = name;
         this.path = path;
-        this.selectedOriginal = false;
+        this.type = type;
     }
 
     @Override

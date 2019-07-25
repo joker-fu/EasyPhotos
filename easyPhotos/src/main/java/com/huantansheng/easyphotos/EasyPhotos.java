@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.huantansheng.easyphotos.Builder.AlbumBuilder;
@@ -15,6 +16,8 @@ import com.huantansheng.easyphotos.models.ad.AdListener;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.models.sticker.StickerModel;
 import com.huantansheng.easyphotos.models.sticker.entity.TextStickerData;
+import com.huantansheng.easyphotos.setting.Setting;
+import com.huantansheng.easyphotos.ui.PreviewActivity;
 import com.huantansheng.easyphotos.utils.bitmap.BitmapUtils;
 import com.huantansheng.easyphotos.utils.bitmap.SaveBitmapCallBack;
 import com.huantansheng.easyphotos.utils.media.MediaScannerConnectionUtils;
@@ -214,6 +217,37 @@ public class EasyPhotos {
      */
     public static void startPuzzleWithPaths(FragmentActivity act, ArrayList<String> paths, String puzzleSaveDirPath, String puzzleSaveNamePrefix, boolean replaceCustom, @NonNull ImageEngine imageEngine, PuzzleCallback callback) {
         EasyResult.get(act).startPuzzleWithPaths(paths, puzzleSaveDirPath, puzzleSaveNamePrefix, replaceCustom, imageEngine, callback);
+    }
+
+    /**
+     * 提供外部预览图片（网络图片请开启网络权限）
+     *
+     * @param act           上下文
+     * @param imageEngine   图片加载引擎
+     * @param photos        图片Photo集合
+     * @param bottomPreview 是否显示底部预览效果
+     */
+    public static void startPreviewPhotos(FragmentActivity act, @NonNull ImageEngine imageEngine, @NonNull ArrayList<Photo> photos, boolean bottomPreview) {
+        Setting.imageEngine = imageEngine;
+        PreviewActivity.start(act, photos, bottomPreview);
+    }
+
+    /**
+     * 提供外部预览图片（网络图片请开启网络权限）
+     *
+     * @param act           上下文
+     * @param imageEngine   图片加载引擎
+     * @param paths         图片路径集合
+     * @param bottomPreview 是否显示底部预览效果
+     */
+    public static void startPreviewPaths(FragmentActivity act, @NonNull ImageEngine imageEngine, @NonNull ArrayList<String> paths, boolean bottomPreview) {
+        Setting.imageEngine = imageEngine;
+        ArrayList<Photo> photos = new ArrayList<>();
+        for (String path : paths) {
+            Photo photo = new Photo(null, path, 0, 0, 0, 0, 0, "");
+            photos.add(photo);
+        }
+        PreviewActivity.start(act, photos, bottomPreview);
     }
 
     //**************更新媒体库***********************

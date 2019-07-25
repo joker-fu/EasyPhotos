@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.huantansheng.easyphotos.demo">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name="com.huantansheng.easyphotos.demo.MyApplication"
         android:allowBackup="true"
