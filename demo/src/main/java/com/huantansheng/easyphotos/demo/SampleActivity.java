@@ -296,6 +296,7 @@ public class SampleActivity extends AppCompatActivity
                                 });
                             }
                         });
+                break;
 
             case R.id.previewPictures:
 //                ArrayList<Photo> photos = new ArrayList<>();
