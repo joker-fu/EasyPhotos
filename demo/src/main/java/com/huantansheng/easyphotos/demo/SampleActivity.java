@@ -32,7 +32,6 @@ import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.setting.Setting;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SampleActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -300,11 +299,11 @@ public class SampleActivity extends AppCompatActivity
 
             case R.id.previewPictures:
 //                ArrayList<Photo> photos = new ArrayList<>();
-//                photos.add(new Photo("1", "/storage/emulated/0/DCIM/hschefu/picture/IMG20190723_092507_cropped1563845115003.jpg", "jpg"));
-//                photos.add(new Photo("2", "/storage/emulated/0/DCIM/hschefu/picture/IMG20190723_092507.jpg", "png"));
-//                photos.add(new Photo("3", "/storage/emulated/0/DCIM/hschefu/picture/IMG20190722_154809_cropped1563781696014.jpg", "jpg"));
+//                photos.add(new Photo("1", "/storage/emulated/0/DCIM/hschefu/picture/IMG20190723_092507_cropped1563845115003.jpg", "image/jpg"));
+//                photos.add(new Photo("2", "/storage/emulated/0/DCIM/hschefu/picture/IMG20190723_092507.jpg", "image/png"));
+//                photos.add(new Photo("3", "/storage/emulated/0/DCIM/hschefu/picture/IMG20190722_154809_cropped1563781696014.jpg", "image/jpg"));
 //                photos.add(new Photo("4", "/storage/emulated/0/DCIM/EasyPhotosDemo/VIDEO_20190715_11:01:59.mp4", "video/mp4"));
-//                photos.add(new Photo("5", "/storage/emulated/0/DCIM/Screenshots/Screenshot_20190522-175523_-TS_cropped1558518949108_cropped1558669931684_cropped1559025812762_cropped1559112789402_cropped1559271958299_cropped1559629722074_cropped1562830607837_cropped1563781429432.jpg", "jpg"));
+//                photos.add(new Photo("5", "/storage/emulated/0/DCIM/Screenshots/Screenshot_20190522-175523_-TS_cropped1558518949108_cropped1558669931684_cropped1559025812762_cropped1559112789402_cropped1559271958299_cropped1559629722074_cropped1562830607837_cropped1563781429432.jpg", "image/jpg"));
 //                EasyPhotos.startPreviewPhotos(this, GlideEngine.getInstance(), photos,false);
                 ArrayList<String> paths = new ArrayList<>();
                 paths.add("https://www.baidu.com/img/bd_logo1.png?where=super");

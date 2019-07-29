@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 import com.huantansheng.easyphotos.callback.SelectCallback;
+import com.huantansheng.easyphotos.callback.VideoPreviewCallback;
 import com.huantansheng.easyphotos.constant.Capture;
 import com.huantansheng.easyphotos.constant.Type;
 import com.huantansheng.easyphotos.engine.ImageEngine;
@@ -286,6 +287,17 @@ public class AlbumBuilder {
 
 
     /**
+     * 设置视频预览回调（适用用户自己处理视频预览）
+     *
+     * @param callback 预览回调
+     * @return AlbumBuilder
+     */
+    public AlbumBuilder setVideoPreviewCallback(VideoPreviewCallback callback) {
+        Setting.videoPreviewCallback = callback;
+        return AlbumBuilder.this;
+    }
+
+    /**
      * 是否显示拼图按钮
      *
      * @param shouldShow 是否显示
@@ -359,6 +371,17 @@ public class AlbumBuilder {
      */
     public AlbumBuilder enableCameraTips(boolean enable) {
         Setting.enableCameraTip = enable;
+        return AlbumBuilder.this;
+    }
+
+    /**
+     * 相机视频录制比特率
+     *
+     * @param rate 比特率：默认 JCameraView.MEDIA_QUALITY_MIDDLE
+     * @return AlbumBuilder
+     */
+    public AlbumBuilder setRecordingBitRate(int rate) {
+        Setting.RECORDING_BIT_RATE = rate;
         return AlbumBuilder.this;
     }
 
@@ -608,7 +631,8 @@ public class AlbumBuilder {
             return;
         }
         Setting.photoAdIsOk = true;
-        instance.adListener.get().onPhotosAdLoaded();
+        if (instance.adListener.get() != null)
+            instance.adListener.get().onPhotosAdLoaded();
     }
 
     /**
@@ -642,7 +666,8 @@ public class AlbumBuilder {
             return;
         }
         Setting.albumItemsAdIsOk = true;
-        instance.adListener.get().onAlbumItemsAdLoaded();
+        if (instance.adListener.get() != null)
+            instance.adListener.get().onAlbumItemsAdLoaded();
     }
 
 }

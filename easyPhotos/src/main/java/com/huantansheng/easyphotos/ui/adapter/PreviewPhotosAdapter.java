@@ -115,11 +115,15 @@ public class PreviewPhotosAdapter extends PagerAdapter {
     }
 
     private void toPlayVideo(View v, String path, String type) {
-        Context context = v.getContext();
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri uri = getUri(context, path, intent);
-        intent.setDataAndType(uri, type);
-        context.startActivity(intent);
+        if (Setting.videoPreviewCallback != null) {
+            Setting.videoPreviewCallback.callback(v, path, type);
+        } else {
+            Context context = v.getContext();
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            Uri uri = getUri(context, path, intent);
+            intent.setDataAndType(uri, type);
+            context.startActivity(intent);
+        }
     }
 
     private Uri getUri(Context context, String path, Intent intent) {

@@ -79,7 +79,7 @@ public class EasyCameraActivity extends AppCompatActivity {
         //视频存储路径
         jCameraView.setSaveVideoPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + File.separator + applicationName);
         jCameraView.setFeatures(getFeature());
-        jCameraView.setMediaQuality(JCameraView.MEDIA_QUALITY_MIDDLE);
+        jCameraView.setMediaQuality(Setting.RECORDING_BIT_RATE);
         //fixme 录像时间+800ms 修复录像时间少1s问题
         jCameraView.setDuration(Setting.recordDuration + 800);
         jCameraView.setErrorLisenter(new ErrorListener() {
@@ -166,7 +166,7 @@ public class EasyCameraActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        Setting.clear();
         super.onDestroy();
-        Setting.cameraCoverView = null;
     }
 }

@@ -2,11 +2,8 @@ package com.huantansheng.easyphotos.utils.media;
 
 import android.media.MediaMetadataRetriever;
 import android.text.format.DateUtils;
+import android.util.Log;
 
-/**
- * DurationUtils
- * Create By lishilin On 2019/3/25
- */
 public class DurationUtils {
 
     /**
@@ -22,7 +19,7 @@ public class DurationUtils {
             mmr.setDataSource(path);
             return Long.parseLong(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
         } catch (Exception e) {
-//            e.printStackTrace();
+            Log.e("EasyPhotos", e.toString());
         } finally {
             if (mmr != null) {
                 mmr.release();
@@ -38,11 +35,8 @@ public class DurationUtils {
      * @return "MM:SS" or "H:MM:SS"
      */
     public static String format(long duration) {
-        long seconds = duration / 1000;
-        if (seconds == 0) {
-            seconds++;
-        }
-        return DateUtils.formatElapsedTime(seconds);
+        double seconds = duration / 1000.0;
+        return DateUtils.formatElapsedTime((long) (seconds + 0.5));
     }
 
 }

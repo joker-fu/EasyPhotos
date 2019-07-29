@@ -118,8 +118,8 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         Setting.clear();
+        super.onDestroy();
     }
 
     public static void start(Activity activity, int requestCode) {
@@ -389,7 +389,11 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
                         intent.putExtra(EasyPhotos.RESULT_SELECTED_ORIGINAL, Setting.selectedOriginal);
                         ArrayList<String> resultPaths = new ArrayList<>();
                         for (Photo photo : resultList) {
-                            resultPaths.add(photo.path);
+                            if (!TextUtils.isEmpty(photo.cropPath)) {
+                                resultPaths.add(photo.path);
+                            } else {
+                                resultPaths.add(photo.cropPath);
+                            }
                         }
                         intent.putStringArrayListExtra(EasyPhotos.RESULT_PATHS, resultPaths);
                         setResult(RESULT_OK, intent);
@@ -765,7 +769,11 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         intent.putParcelableArrayListExtra(EasyPhotos.RESULT_PHOTOS, resultList);
         ArrayList<String> resultPaths = new ArrayList<>();
         for (Photo photo : resultList) {
-            resultPaths.add(photo.path);
+            if (!TextUtils.isEmpty(photo.cropPath)) {
+                resultPaths.add(photo.path);
+            } else {
+                resultPaths.add(photo.cropPath);
+            }
         }
         intent.putStringArrayListExtra(EasyPhotos.RESULT_PATHS, resultPaths);
         intent.putExtra(EasyPhotos.RESULT_SELECTED_ORIGINAL, Setting.selectedOriginal);
@@ -949,7 +957,8 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                photosAdapter.change();
+                if (photosAdapter != null)
+                    photosAdapter.change();
             }
         });
     }
@@ -959,7 +968,8 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                albumItemsAdapter.notifyDataSetChanged();
+                if (albumItemsAdapter != null)
+                    albumItemsAdapter.notifyDataSetChanged();
             }
         });
     }

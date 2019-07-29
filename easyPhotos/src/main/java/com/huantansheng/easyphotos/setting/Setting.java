@@ -3,6 +3,8 @@ package com.huantansheng.easyphotos.setting;
 import android.support.annotation.IntDef;
 import android.view.View;
 
+import com.cjt2325.cameralibrary.JCameraView;
+import com.huantansheng.easyphotos.callback.VideoPreviewCallback;
 import com.huantansheng.easyphotos.constant.Capture;
 import com.huantansheng.easyphotos.constant.Type;
 import com.huantansheng.easyphotos.engine.ImageEngine;
@@ -49,6 +51,7 @@ public class Setting {
     public static long videoMinSecond = 0L;
     public static long videoMaxSecond = Long.MAX_VALUE;
     public static ImageEngine imageEngine = null;
+    public static VideoPreviewCallback videoPreviewCallback;
     // 相机按钮位置
     public static final int LIST_FIRST = 0;
     public static final int BOTTOM_RIGHT = 1;
@@ -58,6 +61,7 @@ public class Setting {
     public static int recordDuration = 15000;
     public static WeakReference<View> cameraCoverView = null;
     public static boolean enableCameraTip = true;
+    public static int RECORDING_BIT_RATE = JCameraView.MEDIA_QUALITY_MIDDLE;
     // 裁剪相关参数
     public static boolean isCrop = false;
     public static int compressQuality = 90;
@@ -84,7 +88,9 @@ public class Setting {
         count = 1;
         pictureCount = -1;
         videoCount = -1;
+        if (photosAdView != null) photosAdView.clear();
         photosAdView = null;
+        if (albumItemsAdView != null) albumItemsAdView.clear();
         albumItemsAdView = null;
         photoAdIsOk = false;
         albumItemsAdIsOk = false;
@@ -93,6 +99,7 @@ public class Setting {
         originalMenuUsable = false;
         originalMenuUnusableHint = "";
         selectedOriginal = false;
+        videoPreviewCallback = null;
         cameraLocation = BOTTOM_RIGHT;
         isShowCamera = false;
         onlyStartCamera = false;
@@ -104,8 +111,10 @@ public class Setting {
         videoMaxSecond = Long.MAX_VALUE;
         captureType = Capture.ALL;
         recordDuration = 15000;
+        if (cameraCoverView != null) cameraCoverView.clear();
         cameraCoverView = null;
         enableCameraTip = true;
+        RECORDING_BIT_RATE = JCameraView.MEDIA_QUALITY_MIDDLE;
         isCrop = false;
         compressQuality = 90;
         isCircle = false;
