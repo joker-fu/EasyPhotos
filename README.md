@@ -57,6 +57,7 @@
 - 支持单图裁剪
 - 外部可调用EsayPhotos进行预览
 - 支持压缩操作（具体由外部实现压缩逻辑）
+- 支持Support和AndroidX
 
 
 ## 获取EasyPhotos（通过Gradle方式）
@@ -74,6 +75,10 @@ allprojects {
 ```gradle
 dependencies {  
    implementation 'com.joker.HuanTanSheng:EasyPhotos:_latestVersion'  
+   
+   //例如：
+   //support：implementation 'com.joker.HuanTanSheng:EasyPhotos:2.4.7'
+   //androidX：implementation 'com.joker.HuanTanSheng:EasyPhotos:andX-2.4.7'
 }
 ```    
     
@@ -138,6 +143,11 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志    
+**2.4.7：**
+- 发布2.4.7正式版
+- 支持AndroidX
+- 2.4.8开始调整版本顺序为 x.x.x->x.x.x_betax
+
 **2.4.7_beta3：**
 - bugfix
 
