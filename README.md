@@ -56,6 +56,7 @@
 - 支持仿微信拍照和视频录制，并支持添加覆盖蒙层（指示层），适用于拍证件等
 - 支持单图裁剪
 - 外部可调用EsayPhotos进行预览
+- 支持压缩操作（具体由外部实现压缩逻辑）
 
 
 ## 获取EasyPhotos（通过Gradle方式）
@@ -133,6 +134,11 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志    
+**2.4.7_beta2：**
+- 优化代码
+- 增加压缩引擎CompressEngine接口（具体由外部实现压缩逻辑）
+- 增加压缩相关API（isCompress(bool)、setCompressEngine(CompressEngine)）
+
 **2.4.7_beta1：**
 - 提供EasyPhotos预览供外部使用
 - 互斥选择支持分开计数（感谢[hubin920218](https://github.com/hubin920218)）

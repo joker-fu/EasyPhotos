@@ -48,7 +48,7 @@ public class LubanCompressEngine implements CompressEngine {
 
     @Override
     public void compress(final Context context, final ArrayList<Photo> photos, final CompressCallback callback) {
-        //TODO demo 演示使用，根据实际使用情况修改
+        //TODO 演示使用只简单进行图片压缩，根据实际使用情况修改
         callback.onStart();
         new Thread(new Runnable() {
             @Override
@@ -56,11 +56,16 @@ public class LubanCompressEngine implements CompressEngine {
                 try {
                     ArrayList<String> paths = new ArrayList<>();
                     for (Photo photo : photos) {
+                        if (photo.selectedOriginal) continue;
                         if (TextUtils.isEmpty(photo.cropPath)) {
                             paths.add(photo.path);
                         } else {
                             paths.add(photo.cropPath);
                         }
+                    }
+                    if (paths.isEmpty()) {
+                        callback.onSuccess(photos);
+                        return;
                     }
 
                     List<File> files = Luban.with(context).load(paths)
