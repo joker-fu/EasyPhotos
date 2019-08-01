@@ -109,8 +109,12 @@ dependencies {
 - [10-自定义UI样式](https://github.com/joker-fu/EasyPhotos/wiki/10-%E8%87%AA%E5%AE%9A%E4%B9%89UI%E6%A0%B7%E5%BC%8F)
 - [11-多语言](https://github.com/joker-fu/EasyPhotos/wiki/11-%E5%A4%9A%E8%AF%AD%E8%A8%80)
 - [12-配置ImageEngine，支持所有图片加载库](https://github.com/joker-fu/EasyPhotos/wiki/12-%E9%85%8D%E7%BD%AEImageEngine%EF%BC%8C%E6%94%AF%E6%8C%81%E6%89%80%E6%9C%89%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E5%BA%93%EF%BC%88fresco%E9%99%A4%E5%A4%96%EF%BC%89)
-    
-QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)    
+- [13-配置CompressEngine，根据使用者需求可实现图片、视频压缩](https://github.com/joker-fu/EasyPhotos/wiki/13-%E9%85%8D%E7%BD%AECompressEngine%EF%BC%8C%E6%A0%B9%E6%8D%AE%E4%BD%BF%E7%94%A8%E8%80%85%E9%9C%80%E6%B1%82%E5%8F%AF%E5%AE%9E%E7%8E%B0%E5%9B%BE%E7%89%87%E3%80%81%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9)
+
+
+
+QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe) )
+       
     
        
            
@@ -134,6 +138,9 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志    
+**2.4.7_beta3：**
+- bugfix
+
 **2.4.7_beta2：**
 - 优化代码
 - 增加压缩引擎CompressEngine接口（具体由外部实现压缩逻辑）
