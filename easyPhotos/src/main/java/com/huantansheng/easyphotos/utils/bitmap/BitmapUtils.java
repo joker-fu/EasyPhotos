@@ -5,15 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.view.View;
 
 import com.huantansheng.easyphotos.EasyPhotos;
-import com.huantansheng.easyphotos.models.puzzle.PuzzleView;
 
 import java.io.File;
 import java.io.FileOutputStream;
