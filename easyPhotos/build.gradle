@@ -33,7 +33,7 @@ publish {
     repoName = "maven"  //仓库名
     groupId = 'com.joker.HuanTanSheng'  //compile引用时的第1部分groupId
     artifactId = 'EasyPhotos'  //compile引用时的第2部分项目名
-    publishVersion = "2.4.7"  //compile引用时的第3部分版本号
+    publishVersion = "andX-2.4.7"  //compile引用时的第3部分版本号
     desc = 'Select Photo For Android'
     website = 'https://github.com/joker-fu/EasyPhotos'
 }
