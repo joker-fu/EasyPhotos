@@ -14,6 +14,7 @@ public class Photo implements Parcelable {
     public String name;//图片名称
     public String path;//图片全路径
     public String cropPath;//图片裁剪路径
+    public String compressPath; //图片压缩路径
     public String type;//图片类型
     public int width;//图片宽度
     public int height;//图片高度
@@ -56,6 +57,8 @@ public class Photo implements Parcelable {
         return "Photo{" +
                 "name='" + name + '\'' +
                 ", path='" + path + '\'' +
+                ", cropPath='" + cropPath + '\'' +
+                ", compressPath='" + compressPath + '\'' +
                 ", time=" + time + '\'' +
                 ", minWidth=" + width + '\'' +
                 ", minHeight=" + height +
@@ -72,6 +75,7 @@ public class Photo implements Parcelable {
         dest.writeString(this.name);
         dest.writeString(this.path);
         dest.writeString(this.cropPath);
+        dest.writeString(this.compressPath);
         dest.writeString(this.type);
         dest.writeInt(this.width);
         dest.writeInt(this.height);
@@ -85,6 +89,7 @@ public class Photo implements Parcelable {
         this.name = in.readString();
         this.path = in.readString();
         this.cropPath = in.readString();
+        this.compressPath = in.readString();
         this.type = in.readString();
         this.width = in.readInt();
         this.height = in.readInt();

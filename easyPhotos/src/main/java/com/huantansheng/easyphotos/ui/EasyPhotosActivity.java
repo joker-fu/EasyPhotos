@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.ScaleAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -39,6 +40,7 @@ import android.widget.Toast;
 
 import com.huantansheng.easyphotos.EasyPhotos;
 import com.huantansheng.easyphotos.R;
+import com.huantansheng.easyphotos.callback.CompressCallback;
 import com.huantansheng.easyphotos.constant.Capture;
 import com.huantansheng.easyphotos.constant.Code;
 import com.huantansheng.easyphotos.constant.Key;
@@ -177,11 +179,13 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
                     @Override
                     public void run() {
                         onAlbumWorkedDo();
+                        showProgress(false);
                     }
                 });
             }
         };
         albumModel = AlbumModel.getInstance();
+        showProgress(true);
         albumModel.query(this, albumModelCallBack);
         if (!Setting.selectedPhotos.isEmpty()) {
             for (Photo selectedPhoto : Setting.selectedPhotos) {
@@ -383,21 +387,25 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
                 if (UCrop.REQUEST_CROP == requestCode) {
                     final Uri resultUri = UCrop.getOutput(data);
                     if (resultUri != null) {
-                        Intent intent = new Intent();
                         resultList.get(0).cropPath = resultUri.getPath();
-                        intent.putParcelableArrayListExtra(EasyPhotos.RESULT_PHOTOS, resultList);
-                        intent.putExtra(EasyPhotos.RESULT_SELECTED_ORIGINAL, Setting.selectedOriginal);
-                        ArrayList<String> resultPaths = new ArrayList<>();
-                        for (Photo photo : resultList) {
-                            if (!TextUtils.isEmpty(photo.cropPath)) {
-                                resultPaths.add(photo.path);
-                            } else {
-                                resultPaths.add(photo.cropPath);
-                            }
-                        }
-                        intent.putStringArrayListExtra(EasyPhotos.RESULT_PATHS, resultPaths);
-                        setResult(RESULT_OK, intent);
-                        finish();
+                        done();
+//                        Intent intent = new Intent();
+//                        intent.putParcelableArrayListExtra(EasyPhotos.RESULT_PHOTOS, resultList);
+//                        intent.putExtra(EasyPhotos.RESULT_SELECTED_ORIGINAL, Setting.selectedOriginal);
+//                        ArrayList<String> resultPaths = new ArrayList<>();
+//                        for (Photo photo : resultList) {
+//                            if (!TextUtils.isEmpty(photo.compressPath)) {
+//                                resultPaths.add(photo.compressPath);
+//                            } else if (!TextUtils.isEmpty(photo.cropPath)) {
+//                                resultPaths.add(photo.path);
+//                            } else {
+//                                resultPaths.add(photo.cropPath);
+//                            }
+//                        }
+//                        intent.putStringArrayListExtra(EasyPhotos.RESULT_PATHS, resultPaths);
+//                        setResult(RESULT_OK, intent);
+//                        finish();
+
                     }
                     return;
                 }
@@ -613,8 +621,11 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
 
         if (albumModel.getAlbumItems().isEmpty()) {
             Toast.makeText(this, R.string.no_photos_easy_photos, Toast.LENGTH_LONG).show();
-            if (Setting.isShowCamera) launchCamera(Code.REQUEST_CAMERA);
-            else finish();
+            if (Setting.isShowCamera) {
+                launchCamera(Code.REQUEST_CAMERA);
+            } else {
+                finish();
+            }
             return;
         }
 
@@ -769,7 +780,9 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         intent.putParcelableArrayListExtra(EasyPhotos.RESULT_PHOTOS, resultList);
         ArrayList<String> resultPaths = new ArrayList<>();
         for (Photo photo : resultList) {
-            if (!TextUtils.isEmpty(photo.cropPath)) {
+            if (!TextUtils.isEmpty(photo.compressPath)) {
+                resultPaths.add(photo.compressPath);
+            } else if (!TextUtils.isEmpty(photo.cropPath)) {
                 resultPaths.add(photo.path);
             } else {
                 resultPaths.add(photo.cropPath);
@@ -777,12 +790,43 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         }
         intent.putStringArrayListExtra(EasyPhotos.RESULT_PATHS, resultPaths);
         intent.putExtra(EasyPhotos.RESULT_SELECTED_ORIGINAL, Setting.selectedOriginal);
-        if (Setting.isCrop) {
+        if (Setting.isCrop && TextUtils.isEmpty(resultList.get(0).cropPath)) {
             startCrop(this, resultList.get(0).path, intent);
+        } else if (!isCompressed && Setting.compressEngine != null && Setting.isCompress) {
+            isCompressed = true;
+            compress();
         } else {
             setResult(RESULT_OK, intent);
             finish();
         }
+    }
+
+    private boolean isCompressed = false;
+
+    private void compress() {
+        Setting.compressEngine.compress(this, resultList, new CompressCallback() {
+            @Override
+            public void onStart() {
+                showProgress(true, EasyPhotosActivity.this.getString(R.string.compressing_picture));
+            }
+
+            @Override
+            public void onSuccess(ArrayList<Photo> photos) {
+                showProgress(false);
+                done();
+            }
+
+            @Override
+            public void onFailed(ArrayList<Photo> photos, final String message) {
+                showProgress(false);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(EasyPhotosActivity.this, message, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 
     private void processOriginalMenu() {
@@ -1010,5 +1054,28 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
             }
         }
         return isCanUse;
+    }
+
+    private void showProgress(final boolean show, final String... msgs) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final FrameLayout flProgress = findViewById(R.id.frame_progress);
+                if (show) {
+                    flProgress.setOnClickListener(EasyPhotosActivity.this);
+                    flProgress.setVisibility(View.VISIBLE);
+                    final TextView tvMessage = findViewById(R.id.tv_progress_message);
+                    if (msgs == null || msgs.length == 0) {
+                        tvMessage.setVisibility(View.GONE);
+                    } else {
+                        tvMessage.setText(msgs[0]);
+                        tvMessage.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    flProgress.setOnClickListener(null);
+                    flProgress.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 }

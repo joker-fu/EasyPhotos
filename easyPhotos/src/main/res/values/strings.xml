@@ -84,5 +84,7 @@
 
     <string name="missing_audio_permission">没有录音权限</string>
 
+    <string name="compressing_picture">压缩中…</string>
+
 
 </resources>

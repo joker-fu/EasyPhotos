@@ -11,6 +11,7 @@ import com.huantansheng.easyphotos.callback.SelectCallback;
 import com.huantansheng.easyphotos.callback.VideoPreviewCallback;
 import com.huantansheng.easyphotos.constant.Capture;
 import com.huantansheng.easyphotos.constant.Type;
+import com.huantansheng.easyphotos.engine.CompressEngine;
 import com.huantansheng.easyphotos.engine.ImageEngine;
 import com.huantansheng.easyphotos.models.ad.AdListener;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
@@ -285,6 +286,27 @@ public class AlbumBuilder {
         return AlbumBuilder.this;
     }
 
+    /**
+     * 设置是否压缩
+     *
+     * @param isCompress 是否压缩
+     * @return AlbumBuilder
+     */
+    public AlbumBuilder isCompress(boolean isCompress) {
+        Setting.isCompress = isCompress;
+        return AlbumBuilder.this;
+    }
+
+    /**
+     * 设置压缩引擎
+     *
+     * @param compressEngine 压缩引擎
+     * @return AlbumBuilder
+     */
+    public AlbumBuilder setCompressEngine(CompressEngine compressEngine) {
+        Setting.compressEngine = compressEngine;
+        return AlbumBuilder.this;
+    }
 
     /**
      * 设置视频预览回调（适用用户自己处理视频预览）

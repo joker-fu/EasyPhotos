@@ -7,6 +7,7 @@ import com.cjt2325.cameralibrary.JCameraView;
 import com.huantansheng.easyphotos.callback.VideoPreviewCallback;
 import com.huantansheng.easyphotos.constant.Capture;
 import com.huantansheng.easyphotos.constant.Type;
+import com.huantansheng.easyphotos.engine.CompressEngine;
 import com.huantansheng.easyphotos.engine.ImageEngine;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
 
@@ -51,6 +52,8 @@ public class Setting {
     public static long videoMinSecond = 0L;
     public static long videoMaxSecond = Long.MAX_VALUE;
     public static ImageEngine imageEngine = null;
+    public static CompressEngine compressEngine = null;
+    public static boolean isCompress = false;
     public static VideoPreviewCallback videoPreviewCallback;
     // 相机按钮位置
     public static final int LIST_FIRST = 0;
@@ -99,6 +102,8 @@ public class Setting {
         originalMenuUsable = false;
         originalMenuUnusableHint = "";
         selectedOriginal = false;
+        compressEngine = null;
+        isCompress = false;
         videoPreviewCallback = null;
         cameraLocation = BOTTOM_RIGHT;
         isShowCamera = false;
