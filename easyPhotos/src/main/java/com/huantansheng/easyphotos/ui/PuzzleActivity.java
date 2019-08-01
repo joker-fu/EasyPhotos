@@ -416,6 +416,9 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         } catch (Exception e) {
             bitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(path), deviceWidth / 2, deviceHeight / 2, true);
         }
+        if (bitmap == null) {
+            throw new RuntimeException("The desired image is empty, please check your image engine's getCacheBitmap method");
+        }
         return bitmap;
     }
 
