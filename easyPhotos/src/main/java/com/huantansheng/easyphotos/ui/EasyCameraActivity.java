@@ -166,7 +166,8 @@ public class EasyCameraActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Setting.clear();
+        if (Setting.cameraCoverView != null) Setting.cameraCoverView.clear();
+        Setting.cameraCoverView = null;
         super.onDestroy();
     }
 }
