@@ -138,6 +138,9 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志    
+**2.4.7_beta3：**
+- bugfix
+
 **2.4.7_beta2：**
 - 优化代码
 - 增加压缩引擎CompressEngine接口（具体由外部实现压缩逻辑）
