@@ -53,13 +53,13 @@
     </LinearLayout>
 
 
-    <com.cjt2325.cameralibrary.CaptureLayout
+    <com.huantansheng.cameralibrary.CaptureLayout
         android:id="@+id/capture_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" />
 
-    <com.cjt2325.cameralibrary.FoucsView
+    <com.huantansheng.cameralibrary.FoucsView
         android:id="@+id/fouce_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

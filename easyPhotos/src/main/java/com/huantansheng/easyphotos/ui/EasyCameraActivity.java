@@ -16,11 +16,11 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.cjt2325.cameralibrary.JCameraView;
-import com.cjt2325.cameralibrary.listener.ClickListener;
-import com.cjt2325.cameralibrary.listener.ErrorListener;
-import com.cjt2325.cameralibrary.listener.JCameraListener;
-import com.cjt2325.cameralibrary.util.FileUtil;
+import com.huantansheng.cameralibrary.JCameraView;
+import com.huantansheng.cameralibrary.listener.ClickListener;
+import com.huantansheng.cameralibrary.listener.ErrorListener;
+import com.huantansheng.cameralibrary.listener.JCameraListener;
+import com.huantansheng.cameralibrary.util.FileUtil;
 import com.huantansheng.easyphotos.R;
 import com.huantansheng.easyphotos.constant.Capture;
 import com.huantansheng.easyphotos.constant.Key;

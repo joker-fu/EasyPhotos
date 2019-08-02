@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.cjt2325.cameralibrary.JCameraView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.huantansheng.cameralibrary.JCameraView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/jCameraView"
     android:layout_width="match_parent"
