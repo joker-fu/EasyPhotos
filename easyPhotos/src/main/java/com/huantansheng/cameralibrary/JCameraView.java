@@ -66,13 +66,11 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     public static final int TYPE_DEFAULT = 0x004;
 
     //录制视频比特率
-    public static final int MEDIA_QUALITY_HIGH = 20 * 100000;
-    public static final int MEDIA_QUALITY_MIDDLE = 16 * 100000;
-    public static final int MEDIA_QUALITY_LOW = 12 * 100000;
+    public static final int MEDIA_QUALITY_SUPER = 84 * 100000;
+    public static final int MEDIA_QUALITY_HIGH = 52 * 100000;
+    public static final int MEDIA_QUALITY_MIDDLE = 28 * 100000;
+    public static final int MEDIA_QUALITY_LOW = 14 * 100000;
     public static final int MEDIA_QUALITY_POOR = 8 * 100000;
-    public static final int MEDIA_QUALITY_FUNNY = 4 * 100000;
-    public static final int MEDIA_QUALITY_DESPAIR = 2 * 100000;
-    public static final int MEDIA_QUALITY_SORRY = 1 * 80000;
 
 
     public static final int BUTTON_STATE_ONLY_CAPTURE = 0x101;      //只能拍照

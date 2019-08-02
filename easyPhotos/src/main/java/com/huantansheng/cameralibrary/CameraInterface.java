@@ -389,8 +389,8 @@ public class CameraInterface implements Camera.PreviewCallback {
         if (mCamera != null) {
             try {
                 mParams = mCamera.getParameters();
-                Camera.Size previewSize = CameraParamUtil.getInstance().getPreviewSize(mParams.getSupportedPreviewSizes(), 480, screenProp);
-                Camera.Size pictureSize = CameraParamUtil.getInstance().getPictureSize(mParams.getSupportedPictureSizes(), 480, screenProp);
+                Camera.Size previewSize = CameraParamUtil.getInstance().getPreviewSize(mParams.getSupportedPreviewSizes(), 800, screenProp);
+                Camera.Size pictureSize = CameraParamUtil.getInstance().getPictureSize(mParams.getSupportedPictureSizes(), 800, screenProp);
 
                 mParams.setPreviewSize(previewSize.width, previewSize.height);
 
@@ -566,9 +566,9 @@ public class CameraInterface implements Camera.PreviewCallback {
 
         Camera.Size videoSize;
         if (mParams.getSupportedVideoSizes() == null) {
-            videoSize = CameraParamUtil.getInstance().getPreviewSize(mParams.getSupportedPreviewSizes(), 480, screenProp);
+            videoSize = CameraParamUtil.getInstance().getPreviewSize(mParams.getSupportedPreviewSizes(), 800, screenProp);
         } else {
-            videoSize = CameraParamUtil.getInstance().getPreviewSize(mParams.getSupportedVideoSizes(), 480, screenProp);
+            videoSize = CameraParamUtil.getInstance().getPreviewSize(mParams.getSupportedVideoSizes(), 800, screenProp);
         }
         Log.i(TAG, "setVideoSize    width = " + videoSize.width + "height = " + videoSize.height);
         if (videoSize.width == videoSize.height) {
@@ -607,12 +607,12 @@ public class CameraInterface implements Camera.PreviewCallback {
             mediaRecorder.setOrientationHint(nowAngle);
         }
 
-
-        if (DeviceUtil.isHuaWeiRongyao()) {
-            mediaRecorder.setVideoEncodingBitRate(4 * 100000);
-        } else {
-            mediaRecorder.setVideoEncodingBitRate(mediaQuality);
-        }
+//        fixme 暂时去掉 后期有问题再处理 没注释也不知道为啥要特殊处理华为
+//        if (DeviceUtil.isHuaWeiRongyao()) {
+//            mediaRecorder.setVideoEncodingBitRate(4 * 100000);
+//        } else {
+        mediaRecorder.setVideoEncodingBitRate(mediaQuality);
+//        }
         mediaRecorder.setPreviewDisplay(surface);
 
         videoFileName = "video_" + System.currentTimeMillis() + ".mp4";
