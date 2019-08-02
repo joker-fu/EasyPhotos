@@ -3,7 +3,7 @@ package com.huantansheng.easyphotos.setting;
 import android.support.annotation.IntDef;
 import android.view.View;
 
-import com.cjt2325.cameralibrary.JCameraView;
+import com.huantansheng.cameralibrary.JCameraView;
 import com.huantansheng.easyphotos.callback.VideoPreviewCallback;
 import com.huantansheng.easyphotos.constant.Capture;
 import com.huantansheng.easyphotos.constant.Type;
