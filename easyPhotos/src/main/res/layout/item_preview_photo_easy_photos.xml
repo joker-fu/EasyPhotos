@@ -4,8 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.huantansheng.easyphotos.ui.widget.imagezoom.ImageViewTouch
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/iv_photo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.huantansheng.easyphotos.ui.widget.subscaleview.SubsamplingScaleImageView
+        android:id="@+id/iv_big_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

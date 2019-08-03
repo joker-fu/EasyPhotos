@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/easy_photos_bg_primary">
 
-    <com.huantansheng.easyphotos.ui.widget.PreviewViewPager
+    <com.huantansheng.easyphotos.ui.widget.PreviewRecyclerView
         android:id="@+id/rv_photos"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
