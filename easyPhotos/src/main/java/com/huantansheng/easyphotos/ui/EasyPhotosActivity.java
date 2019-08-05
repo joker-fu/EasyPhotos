@@ -783,9 +783,9 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
             if (!TextUtils.isEmpty(photo.compressPath)) {
                 resultPaths.add(photo.compressPath);
             } else if (!TextUtils.isEmpty(photo.cropPath)) {
-                resultPaths.add(photo.path);
-            } else {
                 resultPaths.add(photo.cropPath);
+            } else {
+                resultPaths.add(photo.path);
             }
         }
         intent.putStringArrayListExtra(EasyPhotos.RESULT_PATHS, resultPaths);
