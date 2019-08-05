@@ -57,10 +57,10 @@ public class LubanCompressEngine implements CompressEngine {
                     ArrayList<String> paths = new ArrayList<>();
                     for (Photo photo : photos) {
                         if (photo.selectedOriginal) continue;
-                        if (TextUtils.isEmpty(photo.cropPath)) {
-                            paths.add(photo.path);
-                        } else {
+                        if (!TextUtils.isEmpty(photo.cropPath)) {
                             paths.add(photo.cropPath);
+                        } else {
+                            paths.add(photo.path);
                         }
                     }
                     if (paths.isEmpty()) {
