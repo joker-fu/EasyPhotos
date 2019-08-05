@@ -2,22 +2,26 @@ package com.huantansheng.easyphotos.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
-import androidx.viewpager.widget.PagerAdapter;
+import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.github.chrisbanes.photoview.OnScaleChangedListener;
+import com.github.chrisbanes.photoview.OnViewTapListener;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.huantansheng.easyphotos.R;
 import com.huantansheng.easyphotos.constant.Type;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.setting.Setting;
-import com.huantansheng.easyphotos.ui.widget.imagezoom.ImageViewTouch;
-import com.huantansheng.easyphotos.ui.widget.imagezoom.ImageViewTouchBase;
+import com.huantansheng.easyphotos.ui.widget.subscaleview.ImageSource;
+import com.huantansheng.easyphotos.ui.widget.subscaleview.SubsamplingScaleImageView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,11 +31,10 @@ import java.util.ArrayList;
  * 大图预览界面图片集合的适配器
  * Created by huan on 2017/10/26.
  */
-public class PreviewPhotosAdapter extends PagerAdapter {
+public class PreviewPhotosAdapter extends RecyclerView.Adapter<PreviewPhotosAdapter.PreviewPhotosViewHolder> {
     private ArrayList<Photo> photos;
     private OnClickListener listener;
     private LayoutInflater inflater;
-    private View mCurrentView;
 
     public interface OnClickListener {
         void onPhotoClick();
@@ -45,37 +48,27 @@ public class PreviewPhotosAdapter extends PagerAdapter {
         this.listener = listener;
     }
 
-    @Override
-    public int getCount() {
-        return photos.size();
-    }
-
     @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        return bindItem(container, position);
+    public PreviewPhotosViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new PreviewPhotosViewHolder(inflater.inflate(R.layout.item_preview_photo_easy_photos, parent, false));
     }
 
     @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return view == object;
-    }
-
-    @Override
-    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        container.removeView((View) object);
-    }
-
-    private Object bindItem(ViewGroup container, int position) {
-        View view = inflater.inflate(R.layout.item_preview_photo_easy_photos, container, false);
-        final PreviewPhotosViewHolder holder = new PreviewPhotosViewHolder(view);
-
+    public void onBindViewHolder(@NonNull final PreviewPhotosViewHolder holder, int position) {
         final String path = photos.get(position).path;
         final String type = photos.get(position).type;
+        final double ratio =
+                (double) photos.get(position).height / (double) photos.get(position).width;
 
         holder.ivPlay.setVisibility(View.GONE);
+        holder.ivPhoto.setVisibility(View.GONE);
+        holder.ivBigPhoto.setVisibility(View.GONE);
+
         if (type.contains(Type.VIDEO)) {
-            Setting.imageEngine.loadPhoto(holder.ivPhoto.getContext(), path, holder.ivPhoto);
+            holder.ivPhoto.setVisibility(View.VISIBLE);
+            Setting.imageEngine.loadPhoto(holder.ivPhoto.getContext(), path,
+                    holder.ivPhoto);
             holder.ivPlay.setVisibility(View.VISIBLE);
             holder.ivPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -84,46 +77,56 @@ public class PreviewPhotosAdapter extends PagerAdapter {
                 }
             });
         } else if (path.endsWith(Type.GIF) || type.endsWith(Type.GIF)) {
+            holder.ivPhoto.setVisibility(View.VISIBLE);
             Setting.imageEngine.loadGif(holder.ivPhoto.getContext(), path, holder.ivPhoto);
         } else {
-            Setting.imageEngine.loadPhoto(holder.ivPhoto.getContext(), path, holder.ivPhoto);
+            if (ratio > 3 || ratio < 0.34) {
+                holder.ivBigPhoto.setVisibility(View.VISIBLE);
+                holder.ivBigPhoto.setImage(ImageSource.uri(path));
+            } else {
+                holder.ivPhoto.setVisibility(View.VISIBLE);
+                Setting.imageEngine.loadPhoto(holder.ivPhoto.getContext(), path, holder.ivPhoto);
+            }
         }
-        holder.ivPhoto.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
-        holder.ivPhoto.setOnScaleChangeListener(new ImageViewTouchBase.OnScaleChangeListener() {
+
+        holder.ivBigPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onScaleChanged(Float scale, float centerX, float centerY) {
-                //暂时去掉
-                //listener.onPhotoScaleChanged();
-            }
-        });
-        holder.ivPhoto.setDoubleTapListener(new ImageViewTouch.OnImageViewTouchDoubleTapListener() {
-            @Override
-            public void onDoubleTap() {
+            public void onClick(View v) {
                 listener.onPhotoClick();
             }
         });
-        holder.ivPhoto.setSingleTapListener(new ImageViewTouch.OnImageViewTouchSingleTapListener() {
+        holder.ivBigPhoto.setOnStateChangedListener(new SubsamplingScaleImageView.OnStateChangedListener() {
             @Override
-            public void onSingleTapConfirmed() {
+            public void onScaleChanged(float newScale, int origin) {
+                listener.onPhotoScaleChanged();
+            }
+
+            @Override
+            public void onCenterChanged(PointF newCenter, int origin) {
+
+            }
+        });
+        holder.ivPhoto.setScale(1f);
+        holder.ivPhoto.setOnViewTapListener(new OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float x, float y) {
                 listener.onPhotoClick();
             }
         });
-
-        container.addView(view);
-
-        return view;
+        holder.ivPhoto.setOnScaleChangeListener(new OnScaleChangedListener() {
+            @Override
+            public void onScaleChange(float scaleFactor, float focusX, float focusY) {
+                listener.onPhotoScaleChanged();
+            }
+        });
     }
 
     private void toPlayVideo(View v, String path, String type) {
-        if (Setting.videoPreviewCallback != null) {
-            Setting.videoPreviewCallback.callback(v, path, type);
-        } else {
-            Context context = v.getContext();
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            Uri uri = getUri(context, path, intent);
-            intent.setDataAndType(uri, type);
-            context.startActivity(intent);
-        }
+        Context context = v.getContext();
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = getUri(context, path, intent);
+        intent.setDataAndType(uri, type);
+        context.startActivity(intent);
     }
 
     private Uri getUri(Context context, String path, Intent intent) {
@@ -138,22 +141,27 @@ public class PreviewPhotosAdapter extends PagerAdapter {
     }
 
     @Override
-    public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        mCurrentView = (View) object;
+    public int getItemCount() {
+        return photos.size();
     }
 
-    public View getPrimaryItem() {
-        return mCurrentView;
-    }
-
-    public class PreviewPhotosViewHolder {
-
-        public ImageViewTouch ivPhoto;
+    public class PreviewPhotosViewHolder extends RecyclerView.ViewHolder {
+        public PhotoView ivPhoto;
+        public SubsamplingScaleImageView ivBigPhoto;
         ImageView ivPlay;
 
         PreviewPhotosViewHolder(View itemView) {
+            super(itemView);
             ivPhoto = itemView.findViewById(R.id.iv_photo);
+            ivBigPhoto = itemView.findViewById(R.id.iv_big_photo);
             ivPlay = itemView.findViewById(R.id.iv_play);
+            ivPhoto.setMaximumScale(5f);
+            ivPhoto.setMediumScale(2.9f);
+            ivPhoto.setMinimumScale(0.8f);
+
+            ivBigPhoto.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
+            ivBigPhoto.setMaxScale(5f);
+            ivBigPhoto.setMinScale(0.8f);
         }
     }
 }
