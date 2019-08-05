@@ -25,6 +25,7 @@ dependencies {
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.android.support:exifinterface:28.0.0'
+    //noinspection GradleDependency
     implementation 'com.github.chrisbanes:PhotoView:2.1.4'
 
     //noinspection GradleDependency
@@ -36,7 +37,7 @@ publish {
     repoName = "maven"  //仓库名
     groupId = 'com.joker.HuanTanSheng'  //compile引用时的第1部分groupId
     artifactId = 'EasyPhotos'  //compile引用时的第2部分项目名
-    publishVersion = "2.4.8"  //compile引用时的第3部分版本号
+    publishVersion = "2.4.8_beta1"  //compile引用时的第3部分版本号
     desc = 'Select Photo For Android'
     website = 'https://github.com/joker-fu/EasyPhotos'
 }
