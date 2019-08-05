@@ -55,7 +55,7 @@
 - 自带媒体库相关方法（如媒体文件更新到媒体库）    
 - 支持仿微信拍照和视频录制，并支持添加覆盖蒙层（指示层），适用于拍证件等
 - 支持单图裁剪
-- 外部可调用EsayPhotos进行预览
+- 外部可调用EasyPhotos进行预览
 - 支持压缩操作（具体由外部实现压缩逻辑）
 - 支持Support和AndroidX
 
@@ -121,20 +121,6 @@ dependencies {
 QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe) )
        
     
-       
-           
-	   
-## 感谢    
-     
-[ImageViewZoom](https://github.com/sephiroth74/ImageViewZoom)：一个强大的图片缩放库，由[sephiroth74](https://github.com/sephiroth74) 编写。 
-    
-[PuzzleView](https://github.com/wuapnjie/PuzzleView)：一个强大的拼图库，我的拼图功能是在此基础上实现，这个库由[wuapnjie](https://github.com/wuapnjie) 编写。    
-    
-[CameraView](https://github.com/CJT2325/CameraView)：一个仿微信点击拍照长按录像，由[CJT2325](https://github.com/CJT2325)编写.
-
- [uCrop](https://github.com/Yalantis/uCrop)：一个知名强大的图片裁剪库，由[Yalantis](https://github.com/Yalantis)编写
-
-> 除uCrop外，其他都依赖源码修改实现，大可不必担心有冲突情况
  
 ## 编者语    
 
@@ -143,6 +129,10 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志    
+**2.4.8_beta1：**
+- 修改预览问题
+- 优化部分代码
+
 **2.4.8：**
 - 优化相机参数/调整录制比特率
 - 整理项目包结构
@@ -460,6 +450,21 @@ EasyPhotos.RESULT_PUZZLE_PATH这两个Key。      
 - 根据图片宽高进行过滤 
 - 修复无图片显示时的异常    
 - 内部处理权限问题，无需配置，无需处理运行时权限
+
+
+## 感谢    
+
+[subsampling-scale-image-view](https://github.com/davemorrissey/subsampling-scale-image-view)：一个强大的大图长图缩放库，由[davemorrissey](https://github.com/davemorrissey 编写。 
+
+[PhotoView](https://github.com/chrisbanes/PhotoView)：一个强大的图片缩放库，由[chrisbanes](https://github.com/chrisbanes 编写。 
+
+[PuzzleView](https://github.com/wuapnjie/PuzzleView)：一个强大的拼图库，我的拼图功能是在此基础上实现，这个库由[wuapnjie](https://github.com/wuapnjie) 编写。    
+
+[CameraView](https://github.com/CJT2325/CameraView)：一个仿微信点击拍照长按录像，由[CJT2325](https://github.com/CJT2325)编写.
+
+[uCrop](https://github.com/Yalantis/uCrop)：一个知名强大的图片裁剪库，由[Yalantis](https://github.com/Yalantis)编写
+
+> 除uCrop PhotoView外，其他都依赖源码修改实现，大可不必担心有冲突情况
     
     
     

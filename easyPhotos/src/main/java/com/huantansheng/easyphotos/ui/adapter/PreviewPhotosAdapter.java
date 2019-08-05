@@ -155,13 +155,13 @@ public class PreviewPhotosAdapter extends RecyclerView.Adapter<PreviewPhotosAdap
             ivPhoto = itemView.findViewById(R.id.iv_photo);
             ivBigPhoto = itemView.findViewById(R.id.iv_big_photo);
             ivPlay = itemView.findViewById(R.id.iv_play);
-            ivPhoto.setMaximumScale(3f);
-            ivPhoto.setMediumScale(1.5f);
-            ivPhoto.setMinimumScale(1f);
+            ivPhoto.setMaximumScale(5f);
+            ivPhoto.setMediumScale(2.9f);
+            ivPhoto.setMinimumScale(0.8f);
 
             ivBigPhoto.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
-            ivBigPhoto.setMaxScale(3f);
-            ivBigPhoto.setMinScale(1f);
+            ivBigPhoto.setMaxScale(5f);
+            ivBigPhoto.setMinScale(0.8f);
         }
     }
 }
