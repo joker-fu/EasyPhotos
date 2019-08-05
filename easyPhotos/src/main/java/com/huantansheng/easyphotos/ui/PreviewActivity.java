@@ -169,7 +169,7 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
         this.photos.addAll(photos);
 
         boolean isShow = getIntent().getBooleanExtra(Key.PREVIEW_EXTERNAL_PHOTOS_BOTTOM_PREVIEW, false);
-        if (isShow) Result.photos = photos;
+        if (isShow) Result.photos = photos; else Result.photos.clear();
 
         index = intent.getIntExtra(Key.PREVIEW_PHOTO_INDEX, 0);
         lastPosition = index;
