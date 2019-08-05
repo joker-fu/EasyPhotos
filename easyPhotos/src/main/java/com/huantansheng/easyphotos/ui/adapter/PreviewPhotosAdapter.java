@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -156,8 +158,8 @@ public class PreviewPhotosAdapter extends RecyclerView.Adapter<PreviewPhotosAdap
             ivBigPhoto = itemView.findViewById(R.id.iv_big_photo);
             ivPlay = itemView.findViewById(R.id.iv_play);
             ivPhoto.setMaximumScale(5f);
-            ivPhoto.setMediumScale(2.9f);
-            ivPhoto.setMinimumScale(0.8f);
+            ivPhoto.setMediumScale(3f);
+            ivPhoto.setMinimumScale(1f);
 
             ivBigPhoto.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
             ivBigPhoto.setMaxScale(5f);

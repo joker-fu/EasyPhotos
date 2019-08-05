@@ -1,11 +1,9 @@
 package com.huantansheng.easyphotos.ui.widget.subscaleview.decoder;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
 
-import com.huantansheng.easyphotos.ui.widget.subscaleview.decoder.DecoderFactory;
-import com.huantansheng.easyphotos.ui.widget.subscaleview.decoder.ImageDecoder;
-import com.huantansheng.easyphotos.ui.widget.subscaleview.decoder.ImageRegionDecoder;
+
+import androidx.annotation.NonNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
