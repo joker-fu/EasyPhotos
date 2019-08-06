@@ -60,6 +60,7 @@ public class Setting {
     public static final int BOTTOM_RIGHT = 1;
     public static int cameraLocation = BOTTOM_RIGHT;
     // 相机功能
+    public static boolean useSystemCamera = false;
     public static String captureType = Capture.ALL;
     public static int recordDuration = 15000;
     public static WeakReference<View> cameraCoverView = null;
@@ -114,6 +115,7 @@ public class Setting {
         showCleanMenu = true;
         videoMinSecond = 0L;
         videoMaxSecond = Long.MAX_VALUE;
+        useSystemCamera = false;
         captureType = Capture.ALL;
         recordDuration = 15000;
         if (cameraCoverView != null) cameraCoverView.clear();

@@ -353,6 +353,17 @@ public class AlbumBuilder {
     }
 
     /**
+     * 是否使用系统相机
+     *
+     * @param bool 是否使用 默认：不使用（false）
+     * @return AlbumBuilder
+     */
+    public AlbumBuilder setCapture(boolean bool) {
+        Setting.useSystemCamera = bool;
+        return AlbumBuilder.this;
+    }
+
+    /**
      * 设置相机功能
      *
      * @param capture 相机功能 默认Capture.ALL
@@ -546,11 +557,14 @@ public class AlbumBuilder {
             case ALBUM_CAMERA:
                 Setting.isShowCamera = true;
                 if (Setting.isOnlyVideo()) {
+                    Setting.isShowCamera = !Setting.useSystemCamera;
                     Setting.captureType = Capture.VIDEO;
                     setPuzzleMenu(false);
                     Setting.isCrop = false;
                 }
-                if (Setting.isOnlyImage()) Setting.captureType = Capture.IMAGE;
+                if (Setting.isOnlyImage()) {
+                    Setting.captureType = Capture.IMAGE;
+                }
                 break;
         }
         if (Setting.pictureCount != -1 || Setting.videoCount != -1) {
