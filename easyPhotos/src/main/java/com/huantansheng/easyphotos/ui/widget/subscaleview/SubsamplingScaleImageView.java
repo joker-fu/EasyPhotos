@@ -1008,13 +1008,16 @@ public class SubsamplingScaleImageView extends View {
             }
         }
         float doubleTapZoomScale = Math.min(maxScale, SubsamplingScaleImageView.this.doubleTapZoomScale);
-        boolean zoomIn = (scale <= doubleTapZoomScale * 0.9) || scale == minScale;
-        float targetScale = zoomIn ? doubleTapZoomScale : minScale();
-        //fixme 保持和PhotoView效果一致
+//        boolean zoomIn = (scale <= doubleTapZoomScale * 0.9) || scale == minScale;
+//        float targetScale = zoomIn ? doubleTapZoomScale : minScale();
+        //start fixme 保持和PhotoView效果一致
+        boolean zoomIn = (scale <= maxScale * 0.9) || scale == minScale;
+        float targetScale = zoomIn ? maxScale : minScale();
         float middleScale = (maxScale + minScale()) / 2;
         if (scale < middleScale) {
             targetScale = middleScale;
         }
+        //end
         if (doubleTapZoomStyle == ZOOM_FOCUS_CENTER_IMMEDIATE) {
             setScaleAndCenter(targetScale, sCenter);
         } else if (doubleTapZoomStyle == ZOOM_FOCUS_CENTER || !zoomIn || !panEnabled) {
