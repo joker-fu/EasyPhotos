@@ -115,7 +115,7 @@ public class Setting {
         showCleanMenu = true;
         videoMinSecond = 0L;
         videoMaxSecond = Long.MAX_VALUE;
-        useSystemCamera = true;
+        useSystemCamera = false;
         captureType = Capture.ALL;
         recordDuration = 15000;
         if (cameraCoverView != null) cameraCoverView.clear();
