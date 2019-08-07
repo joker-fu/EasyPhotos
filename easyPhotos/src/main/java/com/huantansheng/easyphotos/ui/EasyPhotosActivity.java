@@ -269,72 +269,9 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
             });
             return;
         }
-        toAndroidCamera(requestCode);
-    }
-
-    /**
-     * 启动系统相机
-     *
-     * @param requestCode 请求相机的请求码
-     */
-    private void toAndroidCamera(int requestCode) {
         Intent intent = new Intent(this, EasyCameraActivity.class);
         startActivityForResult(intent, requestCode);
-//系统相机功能屏蔽
-//        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-//            createCameraTempImageFile();
-//            if (mTempImageFile != null && mTempImageFile.exists()) {
-//
-//                Uri imageUri;
-//                if (Build.VERSION.SDK_INT >= 24) {
-//                    imageUri = FileProvider.getUriForFile(this, Setting.fileProviderAuthority,
-//                            mTempImageFile);//通过FileProvider创建一个content类型的Uri
-//                } else {
-//                    imageUri = Uri.fromFile(mTempImageFile);
-//                }
-//                cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); //对目标应用临时授权该Uri所代表的文件
-//
-//                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);//将拍取的照片保存到指定URI
-//                startActivityForResult(cameraIntent, requestCode);
-//            } else {
-//                Toast.makeText(this, R.string.camera_temp_file_error_easy_photos, Toast
-//                        .LENGTH_SHORT).show();
-//            }
-//        } else {
-//            Toast.makeText(this, R.string.msg_no_camera_easy_photos, Toast.LENGTH_SHORT).show();
-//        }
     }
-
-//    private void createCameraTempImageFile() {
-//        File dir = new File(Environment.getExternalStorageDirectory(), File.separator + "DCIM" +
-//                File.separator + "Camera" + File.separator);
-//        if (!dir.exists() || !dir.isDirectory()) {
-//            if (!dir.mkdirs()) {
-//                dir = getExternalFilesDir(null);
-//                if (null == dir || !dir.exists()) {
-//                    dir = getFilesDir();
-//                    if (null == dir || !dir.exists()) {
-//                        String cacheDirPath = File.separator + "data" + File.separator + "data" +
-//                                File.separator + getPackageName() + File.separator + "cache" +
-//                                File.separator;
-//                        dir = new File(cacheDirPath);
-//                        if (!dir.exists()) {
-//                            dir.mkdirs();
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        try {
-//            mTempImageFile = File.createTempFile("IMG", ".jpg", dir);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            mTempImageFile = null;
-//        }
-//
-//    }
 
 
     @Override
@@ -389,23 +326,6 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
                     if (resultUri != null) {
                         resultList.get(0).cropPath = resultUri.getPath();
                         done();
-//                        Intent intent = new Intent();
-//                        intent.putParcelableArrayListExtra(EasyPhotos.RESULT_PHOTOS, resultList);
-//                        intent.putExtra(EasyPhotos.RESULT_SELECTED_ORIGINAL, Setting.selectedOriginal);
-//                        ArrayList<String> resultPaths = new ArrayList<>();
-//                        for (Photo photo : resultList) {
-//                            if (!TextUtils.isEmpty(photo.compressPath)) {
-//                                resultPaths.add(photo.compressPath);
-//                            } else if (!TextUtils.isEmpty(photo.cropPath)) {
-//                                resultPaths.add(photo.path);
-//                            } else {
-//                                resultPaths.add(photo.cropPath);
-//                            }
-//                        }
-//                        intent.putStringArrayListExtra(EasyPhotos.RESULT_PATHS, resultPaths);
-//                        setResult(RESULT_OK, intent);
-//                        finish();
-
                     }
                     return;
                 }
@@ -490,7 +410,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         //隐藏底部控制栏
         options.setHideBottomControls(Setting.isHideUCropControls);
 
-        File cacheFile = new File(context.getCacheDir(), destinationFileName);
+        File cacheFile = new File(context.getFilesDir(), destinationFileName);
         UCrop.of(Uri.fromFile(new File(source)), Uri.fromFile(cacheFile))
                 .withAspectRatio(Setting.aspectRatio[0], Setting.aspectRatio[1])
                 .withOptions(options)

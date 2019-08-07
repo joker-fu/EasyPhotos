@@ -6,6 +6,8 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +37,7 @@ import com.huantansheng.easyphotos.ui.widget.PressedTextView;
 import com.huantansheng.easyphotos.utils.color.ColorUtils;
 import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class PuzzleSelectorActivity extends AppCompatActivity implements View.OnClickListener, AlbumItemsAdapter.OnClickListener, PuzzleSelectorAdapter.OnClickListener, PuzzleSelectorPreviewAdapter.OnClickListener {
@@ -69,8 +72,8 @@ public class PuzzleSelectorActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_puzzle_selector_easy_photos);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int statusColor = getWindow().getStatusBarColor();
-            if(statusColor == Color.TRANSPARENT){
-                statusColor =  ContextCompat.getColor(this, R.color.easy_photos_status_bar);
+            if (statusColor == Color.TRANSPARENT) {
+                statusColor = ContextCompat.getColor(this, R.color.easy_photos_status_bar);
             }
             if (ColorUtils.isWhiteColor(statusColor)) {
                 SystemUtils.getInstance().setStatusDark(this, true);
@@ -78,7 +81,7 @@ public class PuzzleSelectorActivity extends AppCompatActivity implements View.On
         }
         albumModel = AlbumModel.getInstance();
 //        albumModel.query(this, null);
-        if (null == albumModel||albumModel.getAlbumItems().isEmpty()) {
+        if (null == albumModel || albumModel.getAlbumItems().isEmpty()) {
             finish();
             return;
         }
@@ -149,8 +152,14 @@ public class PuzzleSelectorActivity extends AppCompatActivity implements View.On
         } else if (R.id.root_view_album_items == id) {
             showAlbumItems(false);
         } else if (R.id.tv_done == id) {
-            PuzzleActivity.startWithPhotos(this, selectedPhotos, Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + getString(R.string.app_name), "IMG", Code.REQUEST_PUZZLE, false, Setting.imageEngine);
-
+            try {
+                PackageManager packageManager = getApplicationContext().getPackageManager();
+                ApplicationInfo applicationInfo = packageManager.getApplicationInfo(getPackageName(), 0);
+                String applicationName = (String) packageManager.getApplicationLabel(applicationInfo);
+                PuzzleActivity.startWithPhotos(this, selectedPhotos, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + File.separator + applicationName, "IMG", Code.REQUEST_PUZZLE, false, Setting.imageEngine);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
