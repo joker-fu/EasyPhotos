@@ -61,7 +61,7 @@ public class EasyCameraActivity extends AppCompatActivity {
     private void toSystemCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            createCameraTempImageFile();
+            createCameraTempImageFile("IMG", ".jpg");
             if (mTempImageFile != null && mTempImageFile.exists()) {
                 Uri imageUri;
                 if (Build.VERSION.SDK_INT >= 24) {
@@ -81,10 +81,30 @@ public class EasyCameraActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, R.string.msg_no_camera_easy_photos, Toast.LENGTH_SHORT).show();
         }
+//        系统相机录制功能
+//        Intent cameraIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+//        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+//            createCameraTempImageFile("VIDEO", ".mp4");
+//            if (mTempImageFile != null && mTempImageFile.exists()) {
+//                Uri videoUri;
+//                if (Build.VERSION.SDK_INT >= 24) {
+//                    //通过FileProvider创建一个content类型的Uri
+//                    videoUri = FileProvider.getUriForFile(this, Setting.fileProviderAuthority, mTempImageFile);
+//                } else {
+//                    videoUri = Uri.fromFile(mTempImageFile);
+//                }
+//                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+//                cameraIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, Setting.recordDuration / 1000);
+//                cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+//                startActivityForResult(cameraIntent, Code.REQUEST_CAMERA);
+//            }
+//        } else {
+//            Toast.makeText(this, R.string.msg_no_camera_easy_photos, Toast.LENGTH_SHORT).show();
+//        }
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void createCameraTempImageFile() {
+    private void createCameraTempImageFile(String prefix, String suffix) {
         File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + File.separator + applicationName);
         if (!dir.exists() || !dir.isDirectory()) {
             if (!dir.mkdirs()) {
@@ -102,7 +122,7 @@ public class EasyCameraActivity extends AppCompatActivity {
             }
         }
         try {
-            mTempImageFile = File.createTempFile("IMG", ".jpg", dir);
+            mTempImageFile = File.createTempFile(prefix, suffix, dir);
         } catch (IOException e) {
             e.printStackTrace();
             mTempImageFile = null;
