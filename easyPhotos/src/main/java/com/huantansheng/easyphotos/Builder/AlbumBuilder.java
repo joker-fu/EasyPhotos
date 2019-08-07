@@ -358,7 +358,7 @@ public class AlbumBuilder {
      * @param bool 是否使用 默认：不使用（false）
      * @return AlbumBuilder
      */
-    public AlbumBuilder setCapture(boolean bool) {
+    public AlbumBuilder enableSystemCamera(boolean bool) {
         Setting.useSystemCamera = bool;
         return AlbumBuilder.this;
     }
