@@ -21,6 +21,7 @@ public class FileUtil {
     private static String storagePath = "";
     private static String DST_FOLDER_NAME = "JCamera";
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private static String initPath() {
         if (storagePath.equals("")) {
             storagePath = parentPath.getAbsolutePath() + File.separator + DST_FOLDER_NAME;
