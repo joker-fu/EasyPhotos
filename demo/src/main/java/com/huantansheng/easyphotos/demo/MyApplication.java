@@ -3,6 +3,7 @@ package com.huantansheng.easyphotos.demo;
 import android.app.Application;
 
 import com.squareup.leakcanary.LeakCanary;
+import com.tencent.bugly.crashreport.CrashReport;
 
 /**
  * 主要用于检测内存泄漏
@@ -18,6 +19,7 @@ public class MyApplication extends Application {
             // You should not init your app in this process.
             return;
         }
+        CrashReport.initCrashReport(getApplicationContext(), "4c251b8f40", false);
         LeakCanary.install(this);
     }
 }
