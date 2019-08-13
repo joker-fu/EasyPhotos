@@ -34,6 +34,8 @@ dependencies {
     implementation project(':easyPhotos')
 //    implementation 'com.joker.HuanTanSheng:EasyPhotos:2.4.6_beta5'
 
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+
     implementation("com.github.bumptech.glide:glide:4.5.0") {
         exclude group: "com.android.support"
     }
