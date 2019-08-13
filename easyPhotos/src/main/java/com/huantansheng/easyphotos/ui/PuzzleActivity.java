@@ -1,6 +1,7 @@
 package com.huantansheng.easyphotos.ui;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -526,9 +527,11 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         degreeSeekBar.setCurrentDegrees((int) degrees);
     }
 
+    @SuppressLint("RestrictedApi")
     private void savePhoto() {
         mBottomLayout.setVisibility(View.GONE);
         fab.hide();
+        fab.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         findViewById(R.id.tv_done).setVisibility(View.INVISIBLE);
         findViewById(R.id.progress_frame).setVisibility(View.VISIBLE);
