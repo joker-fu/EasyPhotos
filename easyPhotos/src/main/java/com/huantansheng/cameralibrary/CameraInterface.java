@@ -27,7 +27,6 @@ import com.huantansheng.cameralibrary.listener.ErrorListener;
 import com.huantansheng.cameralibrary.util.AngleUtil;
 import com.huantansheng.cameralibrary.util.CameraParamUtil;
 import com.huantansheng.cameralibrary.util.CheckPermission;
-import com.huantansheng.cameralibrary.util.DeviceUtil;
 import com.huantansheng.cameralibrary.util.FileUtil;
 import com.huantansheng.cameralibrary.util.LogUtil;
 import com.huantansheng.cameralibrary.util.ScreenUtils;
@@ -37,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static android.graphics.Bitmap.createBitmap;
 
@@ -694,7 +694,7 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
     }
 
-    int handlerTime = 0;
+    private int handlerTime = 0;
 
     public void handleFocus(final Context context, final float x, final float y, final FocusCallback callback) {
         if (mCamera == null) {
@@ -712,7 +712,7 @@ public class CameraInterface implements Camera.PreviewCallback {
             callback.focusSuccess();
             return;
         }
-        final String currentFocusMode = params.getFocusMode();
+//        final String currentFocusMode = params.getFocusMode();
         try {
             params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
             mCamera.setParameters(params);
@@ -720,9 +720,9 @@ public class CameraInterface implements Camera.PreviewCallback {
                 @Override
                 public void onAutoFocus(boolean success, Camera camera) {
                     if (success || handlerTime > 10) {
-                        Camera.Parameters params = camera.getParameters();
-                        params.setFocusMode(currentFocusMode);
-                        camera.setParameters(params);
+//                        Camera.Parameters params = camera.getParameters();
+//                        params.setFocusMode(currentFocusMode);
+//                        camera.setParameters(params);
                         handlerTime = 0;
                         callback.focusSuccess();
                     } else {
@@ -759,8 +759,8 @@ public class CameraInterface implements Camera.PreviewCallback {
         return x;
     }
 
-    void setErrorLinsenter(ErrorListener errorLisenter) {
-        this.errorLisenter = errorLisenter;
+    void setErrorListener(ErrorListener listener) {
+        this.errorLisenter = listener;
     }
 
 

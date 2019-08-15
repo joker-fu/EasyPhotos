@@ -442,7 +442,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     //启动Camera错误回调
     public void setErrorLisenter(ErrorListener errorLisenter) {
         this.errorLisenter = errorLisenter;
-        CameraInterface.getInstance().setErrorLinsenter(errorLisenter);
+        CameraInterface.getInstance().setErrorListener(errorLisenter);
     }
 
     //设置CaptureButton功能（拍照和录像）
