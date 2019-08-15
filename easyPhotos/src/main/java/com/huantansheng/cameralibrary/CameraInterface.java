@@ -36,7 +36,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static android.graphics.Bitmap.createBitmap;
 
@@ -341,7 +340,7 @@ public class CameraInterface implements Camera.PreviewCallback {
             }
         }
 
-        if (Build.VERSION.SDK_INT > 17 && this.mCamera != null) {
+        if (this.mCamera != null) {
             try {
                 this.mCamera.enableShutterSound(false);
             } catch (Exception e) {
@@ -398,6 +397,8 @@ public class CameraInterface implements Camera.PreviewCallback {
                 preview_height = previewSize.height;
 
                 mParams.setPictureSize(pictureSize.width, pictureSize.height);
+                mParams.setAutoExposureLock(true);
+                mParams.setVideoStabilization(true);
 
                 if (CameraParamUtil.getInstance().isSupportedFocusMode(mParams.getSupportedFocusModes(), Camera.Parameters.FOCUS_MODE_AUTO)) {
                     mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
