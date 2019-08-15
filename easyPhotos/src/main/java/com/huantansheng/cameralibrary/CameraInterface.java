@@ -47,7 +47,6 @@ import static android.graphics.Bitmap.createBitmap;
  * 描    述：camera操作单例
  * =====================================
  */
-@SuppressWarnings("deprecation")
 public class CameraInterface implements Camera.PreviewCallback {
 
     private static final String TAG = "CJT";
@@ -79,7 +78,7 @@ public class CameraInterface implements Camera.PreviewCallback {
     private String videoFileAbsPath;
     private Bitmap videoFirstFrame = null;
 
-    private ErrorListener errorLisenter;
+    private ErrorListener errorListener;
 
     private ImageView mSwitchView;
     private ImageView mFlashLamp;
@@ -313,8 +312,8 @@ public class CameraInterface implements Camera.PreviewCallback {
      */
     void doOpenCamera(CameraOpenOverCallback callback) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            if (!CheckPermission.isCameraUse(SELECTED_CAMERA) && this.errorLisenter != null) {
-                this.errorLisenter.onError();
+            if (!CheckPermission.isCameraUse(SELECTED_CAMERA) && this.errorListener != null) {
+                this.errorListener.onError();
                 return;
             }
         }
@@ -335,8 +334,8 @@ public class CameraInterface implements Camera.PreviewCallback {
             this.mCamera = Camera.open(id);
         } catch (Exception var3) {
             var3.printStackTrace();
-            if (this.errorLisenter != null) {
-                this.errorLisenter.onError();
+            if (this.errorListener != null) {
+                this.errorListener.onError();
             }
         }
 
@@ -444,7 +443,7 @@ public class CameraInterface implements Camera.PreviewCallback {
      * 销毁Camera
      */
     void doDestroyCamera() {
-        errorLisenter = null;
+        errorListener = null;
         if (null != mCamera) {
             try {
                 mCamera.setPreviewCallback(null);
@@ -629,14 +628,14 @@ public class CameraInterface implements Camera.PreviewCallback {
         } catch (IllegalStateException e) {
             e.printStackTrace();
             Log.i("CJT", "startRecord IllegalStateException");
-            if (this.errorLisenter != null) {
-                this.errorLisenter.onError();
+            if (this.errorListener != null) {
+                this.errorListener.onError();
             }
         } catch (IOException e) {
             e.printStackTrace();
             Log.i("CJT", "startRecord IOException");
-            if (this.errorLisenter != null) {
-                this.errorLisenter.onError();
+            if (this.errorListener != null) {
+                this.errorListener.onError();
             }
         } catch (RuntimeException e) {
             Log.i("CJT", "startRecord RuntimeException");
@@ -761,7 +760,7 @@ public class CameraInterface implements Camera.PreviewCallback {
     }
 
     void setErrorListener(ErrorListener listener) {
-        this.errorLisenter = listener;
+        this.errorListener = listener;
     }
 
 
