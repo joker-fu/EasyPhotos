@@ -396,8 +396,10 @@ public class CameraInterface implements Camera.PreviewCallback {
                 preview_height = previewSize.height;
 
                 mParams.setPictureSize(pictureSize.width, pictureSize.height);
-                mParams.setAutoExposureLock(true);
-                mParams.setVideoStabilization(true);
+//                mParams.setAutoExposureLock(true);
+                if (mParams.isVideoStabilizationSupported()) {
+                    mParams.setVideoStabilization(true);
+                }
 
                 if (CameraParamUtil.getInstance().isSupportedFocusMode(mParams.getSupportedFocusModes(), Camera.Parameters.FOCUS_MODE_AUTO)) {
                     mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
