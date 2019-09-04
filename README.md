@@ -129,6 +129,8 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志  
+**2.4.8_beta4：**
+-  修复拼图bug
 
 **2.4.8_beta3：**
 -  支持系统相机和仿微信相机切换 enableSystemCamera(bool)
