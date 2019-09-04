@@ -89,19 +89,28 @@ public class PhotosAdapter extends RecyclerView.Adapter {
                 ((PhotoViewHolder) holder).tvType.setVisibility(View.GONE);
             }
 
-            ((PhotoViewHolder) holder).vSelector.setVisibility(View.VISIBLE);
-            ((PhotoViewHolder) holder).tvSelector.setVisibility(View.VISIBLE);
+            if (Setting.singleCheckedBack) {
+                ((PhotoViewHolder) holder).vSelector.setVisibility(View.GONE);
+                ((PhotoViewHolder) holder).tvSelector.setVisibility(View.GONE);
+            } else {
+                ((PhotoViewHolder) holder).vSelector.setVisibility(View.VISIBLE);
+                ((PhotoViewHolder) holder).tvSelector.setVisibility(View.VISIBLE);
+            }
             ((PhotoViewHolder) holder).ivPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int realPosition = p;
-                    if (Setting.hasPhotosAd()) {
-                        realPosition--;
+                    if (Setting.singleCheckedBack) {
+                        ((PhotoViewHolder) holder).vSelector.performClick();
+                    } else {
+                        int realPosition = p;
+                        if (Setting.hasPhotosAd()) {
+                            realPosition--;
+                        }
+                        if (Setting.isShowCamera && !Setting.isBottomRightCamera()) {
+                            realPosition--;
+                        }
+                        listener.onPhotoClick(p, realPosition);
                     }
-                    if (Setting.isShowCamera && !Setting.isBottomRightCamera()) {
-                        realPosition--;
-                    }
-                    listener.onPhotoClick(p, realPosition);
                 }
             });
 
@@ -187,7 +196,7 @@ public class PhotosAdapter extends RecyclerView.Adapter {
 
     private void singleSelector(Photo photo, int position) {
         if (!Result.isEmpty()) {
-            if (Result.getPhotoPath(0).equals(photo.path)) {
+            if (Result.getPhotoPath(0).equals(photo.path) && !Setting.singleCheckedBack) {
                 Result.removePhoto(photo);
                 notifyItemChanged(position);
             } else {
