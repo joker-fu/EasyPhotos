@@ -320,6 +320,17 @@ public class AlbumBuilder {
     }
 
     /**
+     * 设置单选选中返回（无选中ui效果，仅单选有效）
+     *
+     * @param enable 选中返回 默认false
+     * @return
+     */
+    public AlbumBuilder enableSingleCheckedBack(boolean enable) {
+        Setting.singleCheckedBack = enable;
+        return AlbumBuilder.this;
+    }
+
+    /**
      * 是否显示拼图按钮
      *
      * @param shouldShow 是否显示
@@ -566,6 +577,8 @@ public class AlbumBuilder {
                     Setting.captureType = Capture.IMAGE;
                 }
                 break;
+            default:
+                break;
         }
         if (Setting.pictureCount != -1 || Setting.videoCount != -1) {
             Setting.count = Setting.pictureCount + Setting.videoCount;
@@ -575,7 +588,10 @@ public class AlbumBuilder {
             setPuzzleMenu(false);
             Setting.isCrop = false;
         }
-        if (Setting.count > 1) Setting.isCrop = false;
+        if (Setting.count > 1) {
+            Setting.isCrop = false;
+            Setting.singleCheckedBack = false;
+        }
     }
 
     /**

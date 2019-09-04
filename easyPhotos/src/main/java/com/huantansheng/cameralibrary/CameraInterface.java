@@ -27,7 +27,6 @@ import com.huantansheng.cameralibrary.listener.ErrorListener;
 import com.huantansheng.cameralibrary.util.AngleUtil;
 import com.huantansheng.cameralibrary.util.CameraParamUtil;
 import com.huantansheng.cameralibrary.util.CheckPermission;
-import com.huantansheng.cameralibrary.util.DeviceUtil;
 import com.huantansheng.cameralibrary.util.FileUtil;
 import com.huantansheng.cameralibrary.util.LogUtil;
 import com.huantansheng.cameralibrary.util.ScreenUtils;
@@ -48,7 +47,6 @@ import static android.graphics.Bitmap.createBitmap;
  * 描    述：camera操作单例
  * =====================================
  */
-@SuppressWarnings("deprecation")
 public class CameraInterface implements Camera.PreviewCallback {
 
     private static final String TAG = "CJT";
@@ -80,7 +78,7 @@ public class CameraInterface implements Camera.PreviewCallback {
     private String videoFileAbsPath;
     private Bitmap videoFirstFrame = null;
 
-    private ErrorListener errorLisenter;
+    private ErrorListener errorListener;
 
     private ImageView mSwitchView;
     private ImageView mFlashLamp;
@@ -314,8 +312,8 @@ public class CameraInterface implements Camera.PreviewCallback {
      */
     void doOpenCamera(CameraOpenOverCallback callback) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            if (!CheckPermission.isCameraUse(SELECTED_CAMERA) && this.errorLisenter != null) {
-                this.errorLisenter.onError();
+            if (!CheckPermission.isCameraUse(SELECTED_CAMERA) && this.errorListener != null) {
+                this.errorListener.onError();
                 return;
             }
         }
@@ -336,12 +334,12 @@ public class CameraInterface implements Camera.PreviewCallback {
             this.mCamera = Camera.open(id);
         } catch (Exception var3) {
             var3.printStackTrace();
-            if (this.errorLisenter != null) {
-                this.errorLisenter.onError();
+            if (this.errorListener != null) {
+                this.errorListener.onError();
             }
         }
 
-        if (Build.VERSION.SDK_INT > 17 && this.mCamera != null) {
+        if (this.mCamera != null) {
             try {
                 this.mCamera.enableShutterSound(false);
             } catch (Exception e) {
@@ -398,6 +396,10 @@ public class CameraInterface implements Camera.PreviewCallback {
                 preview_height = previewSize.height;
 
                 mParams.setPictureSize(pictureSize.width, pictureSize.height);
+//                mParams.setAutoExposureLock(true);
+                if (mParams.isVideoStabilizationSupported()) {
+                    mParams.setVideoStabilization(true);
+                }
 
                 if (CameraParamUtil.getInstance().isSupportedFocusMode(mParams.getSupportedFocusModes(), Camera.Parameters.FOCUS_MODE_AUTO)) {
                     mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
@@ -443,7 +445,7 @@ public class CameraInterface implements Camera.PreviewCallback {
      * 销毁Camera
      */
     void doDestroyCamera() {
-        errorLisenter = null;
+        errorListener = null;
         if (null != mCamera) {
             try {
                 mCamera.setPreviewCallback(null);
@@ -628,14 +630,14 @@ public class CameraInterface implements Camera.PreviewCallback {
         } catch (IllegalStateException e) {
             e.printStackTrace();
             Log.i("CJT", "startRecord IllegalStateException");
-            if (this.errorLisenter != null) {
-                this.errorLisenter.onError();
+            if (this.errorListener != null) {
+                this.errorListener.onError();
             }
         } catch (IOException e) {
             e.printStackTrace();
             Log.i("CJT", "startRecord IOException");
-            if (this.errorLisenter != null) {
-                this.errorLisenter.onError();
+            if (this.errorListener != null) {
+                this.errorListener.onError();
             }
         } catch (RuntimeException e) {
             Log.i("CJT", "startRecord RuntimeException");
@@ -694,7 +696,7 @@ public class CameraInterface implements Camera.PreviewCallback {
         }
     }
 
-    int handlerTime = 0;
+    private int handlerTime = 0;
 
     public void handleFocus(final Context context, final float x, final float y, final FocusCallback callback) {
         if (mCamera == null) {
@@ -712,7 +714,7 @@ public class CameraInterface implements Camera.PreviewCallback {
             callback.focusSuccess();
             return;
         }
-        final String currentFocusMode = params.getFocusMode();
+//        final String currentFocusMode = params.getFocusMode();
         try {
             params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
             mCamera.setParameters(params);
@@ -720,9 +722,9 @@ public class CameraInterface implements Camera.PreviewCallback {
                 @Override
                 public void onAutoFocus(boolean success, Camera camera) {
                     if (success || handlerTime > 10) {
-                        Camera.Parameters params = camera.getParameters();
-                        params.setFocusMode(currentFocusMode);
-                        camera.setParameters(params);
+//                        Camera.Parameters params = camera.getParameters();
+//                        params.setFocusMode(currentFocusMode);
+//                        camera.setParameters(params);
                         handlerTime = 0;
                         callback.focusSuccess();
                     } else {
@@ -759,8 +761,8 @@ public class CameraInterface implements Camera.PreviewCallback {
         return x;
     }
 
-    void setErrorLinsenter(ErrorListener errorLisenter) {
-        this.errorLisenter = errorLisenter;
+    void setErrorListener(ErrorListener listener) {
+        this.errorListener = listener;
     }
 
 

@@ -182,6 +182,7 @@ public class AlbumModel {
 
                 // 添加当前图片的专辑到专辑模型实体中
                 final File parentFile = new File(path).getParentFile();
+                if(parentFile==null) continue;
                 final String folderPath = parentFile.getAbsolutePath();
                 final String albumName = parentFile.getName();
                 album.addAlbumItem(albumName, folderPath, path);

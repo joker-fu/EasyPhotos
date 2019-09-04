@@ -166,6 +166,7 @@ public class SampleActivity extends AppCompatActivity
             case R.id.album_camera_single://相册单选，有相机功能，带裁剪
                 EasyPhotos.createAlbum(this, true, GlideEngine.getInstance())
                         .isCrop(true)
+                        //.enableSingleCheckedBack(true)
                         .setFreeStyleCropEnabled(true)
                         .start(callback);
                 break;
