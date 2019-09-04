@@ -1,6 +1,6 @@
 # EasyPhotos    
 
-#### 向原[EasyPhotos](https://github.com/HuanTanSheng/EasyPhotos)作者致敬！！！
+#### 原[EasyPhotos](https://github.com/HuanTanSheng/EasyPhotos) 原[EasyPhotos](https://github.com/HuanTanSheng/EasyPhotos) 原[EasyPhotos](https://github.com/HuanTanSheng/EasyPhotos)
 
 [ ![Download](https://api.bintray.com/packages/wrap0673/maven/EasyPhotos/images/download.svg) ](https://bintray.com/wrap0673/maven/EasyPhotos/_latestVersion)
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
@@ -55,8 +55,9 @@
 - 自带媒体库相关方法（如媒体文件更新到媒体库）    
 - 支持仿微信拍照和视频录制，并支持添加覆盖蒙层（指示层），适用于拍证件等
 - 支持单图裁剪
-- 外部可调用EasyPhotos进行预览
-- 支持压缩操作（具体由外部实现压缩逻辑）
+- 外部可调用EasyPhotos进行图片预览
+- 支持外部扩展视频播放（由外部实现视频播放逻辑）
+- 支持外部扩展图片/视频压缩操作（由外部实现压缩逻辑）
 - 支持Support和AndroidX
 
 
@@ -129,6 +130,10 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志  
+**2.4.8_beta5：**
+- 优化
+- 增加enableSingleCheckedBack(bool)，支持单选场景选中直接返回
+
 **2.4.8_beta4：**
 -  修复拼图bug
 

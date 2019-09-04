@@ -55,6 +55,7 @@ public class Setting {
     public static CompressEngine compressEngine = null;
     public static boolean isCompress = false;
     public static VideoPreviewCallback videoPreviewCallback;
+    public static boolean singleCheckedBack = false;
     // 相机按钮位置
     public static final int LIST_FIRST = 0;
     public static final int BOTTOM_RIGHT = 1;
@@ -106,6 +107,7 @@ public class Setting {
         compressEngine = null;
         isCompress = false;
         videoPreviewCallback = null;
+        singleCheckedBack = false;
         cameraLocation = BOTTOM_RIGHT;
         isShowCamera = false;
         onlyStartCamera = false;

@@ -454,7 +454,11 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         }
         rvAlbumItems.scrollToPosition(0);
         albumItemsAdapter.setSelectedPosition(0);
-        shouldShowMenuDone();
+        if (Setting.singleCheckedBack) {
+            tvDone.performClick();
+        } else {
+            shouldShowMenuDone();
+        }
     }
 
     private void onResult(File file) {
@@ -607,7 +611,6 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         shouldShowMenuDone();
         setClick(R.id.iv_album_items, R.id.tv_clear, R.id.iv_second_menu, R.id.tv_puzzle);
         setClick(tvAlbumItems, rootViewAlbumItems, tvDone, tvOriginal, tvPreview, ivCamera);
-
     }
 
     private void hideActionBar() {
@@ -896,7 +899,11 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
 
     @Override
     public void onSelectorChanged() {
-        shouldShowMenuDone();
+        if (Setting.singleCheckedBack) {
+            tvDone.performClick();
+        } else {
+            shouldShowMenuDone();
+        }
     }
 
 
