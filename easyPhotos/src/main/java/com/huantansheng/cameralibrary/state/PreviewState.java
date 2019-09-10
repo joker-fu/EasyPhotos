@@ -87,8 +87,8 @@ class PreviewState implements State {
     }
 
     @Override
-    public void cancle(SurfaceHolder holder, float screenProp) {
-        LogUtil.i("浏览状态下,没有 cancle 事件");
+    public void cancel(SurfaceHolder holder, float screenProp) {
+        LogUtil.i("浏览状态下,没有 cancel 事件");
     }
 
     @Override

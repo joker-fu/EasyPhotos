@@ -66,7 +66,7 @@ public class BorrowVideoState implements State {
     }
 
     @Override
-    public void cancle(SurfaceHolder holder, float screenProp) {
+    public void cancel(SurfaceHolder holder, float screenProp) {
         machine.getView().resetState(JCameraView.TYPE_VIDEO);
         machine.setState(machine.getPreviewState());
     }

@@ -18,6 +18,7 @@
     <string name="album_multi">Photo album (no camera,multi)</string>
     <string name="album_ad">Photo album (with advertisement)</string>
     <string name="camera">Camera</string>
+    <string name="camera_Cover">Camera (with cover layer)</string>
     <string name="addWatermark">Add watermark to picture</string>
     <string name="preview_pictures">preview pictures</string>
     <string name="puzzle">Jigsaw puzzle (used as a single function)</string>

@@ -11,6 +11,10 @@
 
                     android:title="@string/camera" />
                 <item
+                    android:id="@+id/camera_cover"
+
+                    android:title="@string/camera_Cover" />
+                <item
                     android:id="@+id/album_single"
 
                     android:title="@string/album_single" />
