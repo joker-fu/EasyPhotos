@@ -18,6 +18,7 @@
     <string name="album_multi">相册(无相机多选）</string>
     <string name="album_ad">相册（带广告）</string>
     <string name="camera">相机</string>
+    <string name="camera_Cover">相机 (覆盖层)</string>
     <string name="addWatermark">图片添加水印</string>
     <string name="preview_pictures">预览图片</string>
     <string name="puzzle">拼图(作为单独功能使用）</string>

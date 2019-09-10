@@ -151,7 +151,11 @@ public class SampleActivity extends AppCompatActivity
                 EasyPhotos.createCamera(this)
                         .start(callback);
                 break;
-
+            case R.id.camera_cover://单独使用相机带覆盖层
+                EasyPhotos.createCamera(this)
+                        .setCameraCoverView(View.inflate(this, R.layout.layout_shoot_bg, null))
+                        .start(callback);
+                break;
             case R.id.album_single://相册单选，无相机功能
                 EasyPhotos.createAlbum(this, false, GlideEngine.getInstance())
                         .start(callback);

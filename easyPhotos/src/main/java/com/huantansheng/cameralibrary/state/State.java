@@ -31,7 +31,7 @@ public interface State {
 
     void stopRecord(boolean isShort, long time);
 
-    void cancle(SurfaceHolder holder, float screenProp);
+    void cancel(SurfaceHolder holder, float screenProp);
 
     void confirm();
 

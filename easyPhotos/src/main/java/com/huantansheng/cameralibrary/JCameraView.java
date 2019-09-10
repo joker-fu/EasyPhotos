@@ -28,6 +28,7 @@ import com.huantansheng.cameralibrary.listener.CaptureListener;
 import com.huantansheng.cameralibrary.listener.ClickListener;
 import com.huantansheng.cameralibrary.listener.ErrorListener;
 import com.huantansheng.cameralibrary.listener.JCameraListener;
+import com.huantansheng.cameralibrary.listener.JCameraPreViewListener;
 import com.huantansheng.cameralibrary.listener.TypeListener;
 import com.huantansheng.cameralibrary.state.CameraMachine;
 import com.huantansheng.cameralibrary.util.FileUtil;
@@ -112,6 +113,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     private boolean firstTouch = true;
     private float firstTouchLength = 0;
+    private JCameraPreViewListener jCameraPreViewListener;
 
     public JCameraView(Context context) {
         this(context, null);
@@ -164,8 +166,9 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
             @Override
             public void onClick(View v) {
                 type_flash++;
-                if (type_flash > 0x023)
+                if (type_flash > 0x023) {
                     type_flash = TYPE_FLASH_AUTO;
+                }
                 setFlashRes();
             }
         });
@@ -225,8 +228,8 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
             @Override
             public void recordError() {
-                if (errorLisenter != null) {
-                    errorLisenter.AudioPermissionError();
+                if (errorListener != null) {
+                    errorListener.AudioPermissionError();
                 }
             }
         });
@@ -234,7 +237,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         mCaptureLayout.setTypeListener(new TypeListener() {
             @Override
             public void cancel() {
-                machine.cancle(mVideoView.getHolder(), screenProp);
+                machine.cancel(mVideoView.getHolder(), screenProp);
             }
 
             @Override
@@ -437,12 +440,17 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     }
 
 
-    private ErrorListener errorLisenter;
+    public void setPreViewListener(JCameraPreViewListener jCameraPreViewListener) {
+        this.jCameraPreViewListener = jCameraPreViewListener;
+    }
+
+
+    private ErrorListener errorListener;
 
     //启动Camera错误回调
-    public void setErrorLisenter(ErrorListener errorLisenter) {
-        this.errorLisenter = errorLisenter;
-        CameraInterface.getInstance().setErrorListener(errorLisenter);
+    public void setErrorListener(ErrorListener errorListener) {
+        this.errorListener = errorListener;
+        CameraInterface.getInstance().setErrorListener(errorListener);
     }
 
     //设置CaptureButton功能（拍照和录像）
@@ -464,9 +472,15 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 FileUtil.deleteFile(videoUrl);
                 mVideoView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 machine.start(mVideoView.getHolder(), screenProp);
+                if (jCameraPreViewListener != null) {
+                    jCameraPreViewListener.stop(TYPE_VIDEO);
+                }
                 break;
             case TYPE_PICTURE:
                 mPhoto.setVisibility(INVISIBLE);
+                if (jCameraPreViewListener != null) {
+                    jCameraPreViewListener.stop(TYPE_PICTURE);
+                }
                 break;
             case TYPE_SHORT:
                 break;
@@ -516,6 +530,9 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         mPhoto.setVisibility(VISIBLE);
         mCaptureLayout.startAlphaAnimation();
         mCaptureLayout.startTypeBtnAnimator();
+        if (jCameraPreViewListener != null) {
+            jCameraPreViewListener.start(TYPE_PICTURE);
+        }
     }
 
     @Override
@@ -558,6 +575,9 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 }
             }
         }).start();
+        if (jCameraPreViewListener != null) {
+            jCameraPreViewListener.start(TYPE_VIDEO);
+        }
     }
 
     @Override
