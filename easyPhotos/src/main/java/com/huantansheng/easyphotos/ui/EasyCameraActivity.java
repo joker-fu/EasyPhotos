@@ -24,6 +24,7 @@ import com.huantansheng.cameralibrary.JCameraView;
 import com.huantansheng.cameralibrary.listener.ClickListener;
 import com.huantansheng.cameralibrary.listener.ErrorListener;
 import com.huantansheng.cameralibrary.listener.JCameraListener;
+import com.huantansheng.cameralibrary.listener.JCameraPreViewListener;
 import com.huantansheng.cameralibrary.util.FileUtil;
 import com.huantansheng.easyphotos.R;
 import com.huantansheng.easyphotos.constant.Capture;
@@ -39,6 +40,7 @@ public class EasyCameraActivity extends AppCompatActivity {
     private JCameraView jCameraView;
     private File mTempImageFile;
     private String applicationName = "";
+    private RelativeLayout rlCoverView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +147,7 @@ public class EasyCameraActivity extends AppCompatActivity {
         jCameraView.enableCameraTip(Setting.enableCameraTip);
         if (Setting.cameraCoverView != null && Setting.cameraCoverView.get() != null) {
             View coverView = Setting.cameraCoverView.get();
-            RelativeLayout rlCoverView = findViewById(R.id.rl_cover_view);
+            rlCoverView = findViewById(R.id.rl_cover_view);
             coverView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             rlCoverView.addView(coverView);
         }
@@ -170,7 +172,7 @@ public class EasyCameraActivity extends AppCompatActivity {
         jCameraView.setMediaQuality(Setting.RECORDING_BIT_RATE);
         //fixme 录像时间+800ms 修复录像时间少1s问题
         jCameraView.setDuration(Setting.recordDuration + 800);
-        jCameraView.setErrorLisenter(new ErrorListener() {
+        jCameraView.setErrorListener(new ErrorListener() {
             @Override
             public void onError() {
                 //错误监听
@@ -187,6 +189,20 @@ public class EasyCameraActivity extends AppCompatActivity {
                 finish();
             }
         });
+        if (Setting.cameraCoverView != null && Setting.cameraCoverView.get() != null) {
+            jCameraView.setPreViewListener(new JCameraPreViewListener() {
+
+                @Override
+                public void start(int type) {
+                    rlCoverView.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void stop(int type) {
+                    rlCoverView.setVisibility(View.VISIBLE);
+                }
+            });
+        }
         //JCameraView监听
         jCameraView.setJCameraListener(new JCameraListener() {
             @Override
