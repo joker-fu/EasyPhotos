@@ -130,6 +130,9 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志  
+**2.4.8_beta6：**
+- 修复视频预览回调bug
+
 **2.4.8_beta5：**
 - 优化
 - 增加enableSingleCheckedBack(bool)，支持单选场景选中直接返回
