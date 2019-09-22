@@ -120,7 +120,9 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     @Override
     protected void onDestroy() {
         Setting.clear();
-        albumModel.stopQuery();
+        if (albumModel != null) {
+            albumModel.stopQuery();
+        }
         super.onDestroy();
     }
 
