@@ -131,6 +131,9 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志  
+**2.4.8_beta8：**
+- 修复初次获取权限时FileProvider问题
+
 **2.4.8_beta7：**
 - 修复视频预览回调bug
 
