@@ -28,6 +28,7 @@ public class AlbumModel {
     private static final String TAG = "AlbumModel";
     public static AlbumModel instance;
     public Album album;
+    private boolean isQuery = false;
 
     private static final String IS_GIF = "=='image/gif'";
 
@@ -77,6 +78,7 @@ public class AlbumModel {
      * @param callBack 查询完成后的回调
      */
     public void query(final Context context, final CallBack callBack) {
+        isQuery = true;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -85,6 +87,11 @@ public class AlbumModel {
                 if (null != callBack) callBack.onAlbumWorkedCallBack();
             }
         }).start();
+    }
+
+    public void stopQuery() {
+        isQuery = false;
+        instance = null;
     }
 
     /**
@@ -182,12 +189,12 @@ public class AlbumModel {
 
                 // 添加当前图片的专辑到专辑模型实体中
                 final File parentFile = new File(path).getParentFile();
-                if(parentFile==null) continue;
+                if (parentFile == null) continue;
                 final String folderPath = parentFile.getAbsolutePath();
                 final String albumName = parentFile.getName();
                 album.addAlbumItem(albumName, folderPath, path);
                 album.getAlbumItem(albumName).addImageItem(imageItem);
-            } while (cursor.moveToNext());
+            } while (isQuery && cursor.moveToNext());
             cursor.close();
         }
         //System.out.println("-----》 " + System.currentTimeMillis());
@@ -264,3 +271,4 @@ public class AlbumModel {
         }
     }
 }
+

@@ -111,7 +111,6 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         }
         initSomeViews();
         if (PermissionUtil.checkAndRequestPermissionsInActivity(this, getNeedPermissions())) {
-            Setting.fileProviderAuthority = getPackageName() + ".provider";
             hasPermissions();
         } else {
             permissionView.setVisibility(View.VISIBLE);
@@ -121,6 +120,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     @Override
     protected void onDestroy() {
         Setting.clear();
+        albumModel.stopQuery();
         super.onDestroy();
     }
 
@@ -164,6 +164,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     }
 
     private void hasPermissions() {
+        Setting.fileProviderAuthority = getPackageName() + ".provider";
         permissionView.setVisibility(View.GONE);
         if (Setting.onlyStartCamera) {
             launchCamera(Code.REQUEST_CAMERA);
