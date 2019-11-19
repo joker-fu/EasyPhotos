@@ -1,37 +1,37 @@
 <resources>
 
     <declare-styleable name="ButtonBarContainerTheme">
-        <attr name="metaButtonBarStyle" format="reference" />
-        <attr name="metaButtonBarButtonStyle" format="reference" />
+        <attr name="easyMetaButtonBarStyle" format="reference" />
+        <attr name="easyMetaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="PuzzleView">
-        <attr name="line_size" format="integer" />
-        <attr name="line_color" format="color" />
-        <attr name="selected_line_color" format="color" />
-        <attr name="handle_bar_color" format="color" />
-        <attr name="need_draw_line" format="boolean" />
-        <attr name="need_draw_outer_line" format="boolean" />
-        <attr name="piece_padding" format="dimension" />
-        <attr name="animation_duration" format="integer" />
-        <attr name="radian" format="float" />
+        <attr name="easy_line_size" format="integer" />
+        <attr name="easy_line_color" format="color" />
+        <attr name="easy_selected_line_color" format="color" />
+        <attr name="easy_handle_bar_color" format="color" />
+        <attr name="easy_need_draw_line" format="boolean" />
+        <attr name="easy_need_draw_outer_line" format="boolean" />
+        <attr name="easy_piece_padding" format="dimension" />
+        <attr name="easy_animation_duration" format="integer" />
+        <attr name="easy_radian" format="float" />
     </declare-styleable>
 
     <declare-styleable name="JCameraView">
-        <attr name="iconSize"/>
-        <attr name="iconMargin"/>
-        <attr name="iconSrc"/>
-        <attr name="iconLeft"/>
-        <attr name="iconRight"/>
-        <attr name="duration_max"/>
+        <attr name="easy_iconSize"/>
+        <attr name="easy_iconMargin"/>
+        <attr name="easy_iconSrc"/>
+        <attr name="easy_iconLeft"/>
+        <attr name="easy_iconRight"/>
+        <attr name="easy_duration_max"/>
     </declare-styleable>
 
     <declare-styleable name="SubsamplingScaleImageView">
-        <attr name="src" format="reference"/>
-        <attr name="assetName" format="string"/>
-        <attr name="panEnabled" format="boolean"/>
-        <attr name="zoomEnabled" format="boolean"/>
-        <attr name="quickScaleEnabled" format="boolean"/>
-        <attr name="tileBackgroundColor" format="color"/>
+        <attr name="easy_src" format="reference"/>
+        <attr name="easy_assetName" format="string"/>
+        <attr name="easy_panEnabled" format="boolean"/>
+        <attr name="easy_zoomEnabled" format="boolean"/>
+        <attr name="easy_quickScaleEnabled" format="boolean"/>
+        <attr name="easy_tileBackgroundColor" format="color"/>
     </declare-styleable>
 </resources>

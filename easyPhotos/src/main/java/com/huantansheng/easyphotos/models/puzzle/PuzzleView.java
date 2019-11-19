@@ -95,17 +95,17 @@ public class PuzzleView extends View {
 
     private void init(Context context, AttributeSet attrs) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PuzzleView);
-        lineSize = ta.getInt(R.styleable.PuzzleView_line_size, 4);
-        lineColor = ta.getColor(R.styleable.PuzzleView_line_color, ContextCompat.getColor(getContext(), R.color.easy_photos_fg_primary));
+        lineSize = ta.getInt(R.styleable.PuzzleView_easy_line_size, 4);
+        lineColor = ta.getColor(R.styleable.PuzzleView_easy_line_color, ContextCompat.getColor(getContext(), R.color.easy_photos_fg_primary));
         selectedLineColor =
-                ta.getColor(R.styleable.PuzzleView_selected_line_color, ContextCompat.getColor(getContext(), R.color.easy_photos_fg_accent));
+                ta.getColor(R.styleable.PuzzleView_easy_selected_line_color, ContextCompat.getColor(getContext(), R.color.easy_photos_fg_accent));
         handleBarColor =
-                ta.getColor(R.styleable.PuzzleView_handle_bar_color, ContextCompat.getColor(getContext(), R.color.easy_photos_fg_accent));
-        piecePadding = ta.getDimensionPixelSize(R.styleable.PuzzleView_piece_padding, 0);
-        needDrawLine = ta.getBoolean(R.styleable.PuzzleView_need_draw_line, false);
-        needDrawOuterLine = ta.getBoolean(R.styleable.PuzzleView_need_draw_outer_line, false);
-        duration = ta.getInt(R.styleable.PuzzleView_animation_duration, 300);
-        pieceRadian = ta.getFloat(R.styleable.PuzzleView_radian, 0f);
+                ta.getColor(R.styleable.PuzzleView_easy_handle_bar_color, ContextCompat.getColor(getContext(), R.color.easy_photos_fg_accent));
+        piecePadding = ta.getDimensionPixelSize(R.styleable.PuzzleView_easy_piece_padding, 0);
+        needDrawLine = ta.getBoolean(R.styleable.PuzzleView_easy_need_draw_line, false);
+        needDrawOuterLine = ta.getBoolean(R.styleable.PuzzleView_easy_need_draw_outer_line, false);
+        duration = ta.getInt(R.styleable.PuzzleView_easy_animation_duration, 300);
+        pieceRadian = ta.getFloat(R.styleable.PuzzleView_easy_radian, 0f);
         ta.recycle();
 
         bounds = new RectF();

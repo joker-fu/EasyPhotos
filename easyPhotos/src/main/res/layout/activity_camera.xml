@@ -4,7 +4,7 @@
     android:id="@+id/jCameraView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:duration_max="16000"
-    app:iconLeft="@drawable/ic_camera_view_arrow_down_easy_photos"
-    app:iconMargin="20dp"
-    app:iconSize="44dp" />
+    app:easy_duration_max="16000"
+    app:easy_iconLeft="@drawable/ic_camera_view_arrow_down_easy_photos"
+    app:easy_iconMargin="20dp"
+    app:easy_iconSize="44dp" />
