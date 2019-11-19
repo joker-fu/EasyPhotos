@@ -18,7 +18,7 @@
 
         <FrameLayout
             android:id="@+id/m_top_bar_layout"
-            style="?metaButtonBarStyle"
+            style="?attr/easyMetaButtonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/easy_photos_status_bar">
@@ -86,7 +86,7 @@
 
         <RelativeLayout
             android:id="@+id/m_bottom_bar"
-            style="?metaButtonBarStyle"
+            style="?attr/easyMetaButtonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
