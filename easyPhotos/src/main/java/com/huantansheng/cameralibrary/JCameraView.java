@@ -127,14 +127,14 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         super(context, attrs, defStyleAttr);
         //get AttributeSet
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.JCameraView, defStyleAttr, 0);
-        iconSize = a.getDimensionPixelSize(R.styleable.JCameraView_iconSize, (int) TypedValue.applyDimension(
+        iconSize = a.getDimensionPixelSize(R.styleable.JCameraView_easy_iconSize, (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_SP, 35, getResources().getDisplayMetrics()));
-        iconMargin = a.getDimensionPixelSize(R.styleable.JCameraView_iconMargin, (int) TypedValue.applyDimension(
+        iconMargin = a.getDimensionPixelSize(R.styleable.JCameraView_easy_iconMargin, (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_SP, 15, getResources().getDisplayMetrics()));
-        iconSrc = a.getResourceId(R.styleable.JCameraView_iconSrc, R.drawable.ic_camera_view_camera_easy_photos);
-        iconLeft = a.getResourceId(R.styleable.JCameraView_iconLeft, 0);
-        iconRight = a.getResourceId(R.styleable.JCameraView_iconRight, 0);
-        duration = a.getInteger(R.styleable.JCameraView_duration_max, 15 * 1000);       //没设置默认为15s
+        iconSrc = a.getResourceId(R.styleable.JCameraView_easy_iconSrc, R.drawable.ic_camera_view_camera_easy_photos);
+        iconLeft = a.getResourceId(R.styleable.JCameraView_easy_iconLeft, 0);
+        iconRight = a.getResourceId(R.styleable.JCameraView_easy_iconRight, 0);
+        duration = a.getInteger(R.styleable.JCameraView_easy_duration_max, 15 * 1000);       //没设置默认为15s
         a.recycle();
         initData();
         initView();
