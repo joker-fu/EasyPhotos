@@ -1,6 +1,8 @@
 # EasyPhotos    
 
-#### 原[EasyPhotos](https://github.com/HuanTanSheng/EasyPhotos) 原[EasyPhotos](https://github.com/HuanTanSheng/EasyPhotos) 原[EasyPhotos](https://github.com/HuanTanSheng/EasyPhotos)
+### 原[EasyPhotos](https://github.com/HuanTanSheng/EasyPhotos)地址
+
+### 适配完成Android10之后，将主要维护master分支（AndroidX），support分支仅修复bug。
 
 [ ![Download](https://api.bintray.com/packages/wrap0673/maven/EasyPhotos/images/download.svg) ](https://bintray.com/wrap0673/maven/EasyPhotos/_latestVersion)
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
@@ -79,8 +81,8 @@ dependencies {
    implementation 'com.joker.HuanTanSheng:EasyPhotos:_latestVersion'  
    
    //例如：
-   //support：implementation 'com.joker.HuanTanSheng:EasyPhotos:2.4.7'
-   //androidX：implementation 'com.joker.HuanTanSheng:EasyPhotos:andX-2.4.7'
+   //support：implementation 'com.joker.HuanTanSheng:EasyPhotos:2.5.0'
+   //androidX：implementation 'com.joker.HuanTanSheng:EasyPhotos:andX-2.5.0'
 }
 ```    
     
