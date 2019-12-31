@@ -5,7 +5,7 @@
 [ ![Download](https://api.bintray.com/packages/wrap0673/maven/EasyPhotos/images/download.svg) ](https://bintray.com/wrap0673/maven/EasyPhotos/_latestVersion)
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 ![](https://img.shields.io/badge/platform-android-blue.svg) 
-![](https://img.shields.io/badge/compileSdkVersion-28-blue.svg) 
+![](https://img.shields.io/badge/compileSdkVersion-29-blue.svg) 
 ![](https://img.shields.io/badge/minSdkVersion-19-blue.svg)
 
 [![demo下载](https://img.shields.io/badge/demo%E4%B8%8B%E8%BD%BD-demo-brightgreen.svg)](https://github.com/joker-fu/EasyPhotos/blob/master/demo/release/demo-release.apk)
@@ -60,7 +60,7 @@
 - 支持外部扩展视频播放（由外部实现视频播放逻辑）
 - 支持外部扩展图片/视频压缩操作（由外部实现压缩逻辑）
 - 支持Support和AndroidX
-
+- 兼容API19 ～ API29
 
 ## 获取EasyPhotos（通过Gradle方式）
 1. 在项目的 build.gradle（project） 文件里面添加:
@@ -130,7 +130,12 @@ EasyPhotos将在高颜值、高兼容、高性能、强功能的道路上持续�
 QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)      
 
 
-## 更新日志  
+## 更新日志
+**2.5.0：**
+- 兼容Android10，且Photo.path低于10返回绝对路径，高于10返回uri.toString（拼图/水印/裁剪/自定义相机拍照，由于UCrop还未兼容10，所以暂时改为源码依赖，已给UCrop提PR） 
+- 调整默认Setting相机参数（默认使用系统相机）
+- 因兼容Android10，调整部分方法参数（saveBitmapToDir去掉dirPath, namePrefix参数，默认存储在DCIM；startPuzzleWithPhotos/startPuzzleWithPaths去掉puzzleSaveDirPath, puzzleSaveNamePrefix参数 ）
+
 **2.4.8_beta9：**
 - 调整自定义属性名称
 
