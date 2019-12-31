@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator"
@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/easy_photos_bg_primary"
@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_photos"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -50,7 +50,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/m_tool_bar">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_album_items"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -269,7 +269,7 @@
                 app:srcCompat="@drawable/ic_notifications_easy_photos" />
         </RelativeLayout>
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -318,5 +318,5 @@
             </LinearLayout>
         </FrameLayout>
 
-    </android.support.constraint.ConstraintLayout>
-</android.support.design.widget.CoordinatorLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

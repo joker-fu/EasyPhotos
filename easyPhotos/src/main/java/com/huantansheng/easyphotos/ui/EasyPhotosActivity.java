@@ -7,24 +7,19 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.ImageDecoder;
 import android.hardware.Camera;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +32,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.huantansheng.easyphotos.EasyPhotos;
 import com.huantansheng.easyphotos.R;
@@ -54,14 +61,19 @@ import com.huantansheng.easyphotos.ui.adapter.AlbumItemsAdapter;
 import com.huantansheng.easyphotos.ui.adapter.PhotosAdapter;
 import com.huantansheng.easyphotos.ui.widget.PressedTextView;
 import com.huantansheng.easyphotos.utils.color.ColorUtils;
-import com.huantansheng.easyphotos.utils.media.DurationUtils;
 import com.huantansheng.easyphotos.utils.media.MediaScannerConnectionUtils;
+import com.huantansheng.easyphotos.utils.media.MediaUtils;
 import com.huantansheng.easyphotos.utils.permission.PermissionUtil;
 import com.huantansheng.easyphotos.utils.settings.SettingsUtils;
 import com.huantansheng.easyphotos.utils.system.SystemUtils;
+import com.huantansheng.easyphotos.utils.uri.UriUtils;
 import com.yalantis.ucrop.UCrop;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -136,7 +148,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         fragment.startActivityForResult(intent, requestCode);
     }
 
-    public static void start(android.support.v4.app.Fragment fragment, int requestCode) {
+    public static void start(androidx.fragment.app.Fragment fragment, int requestCode) {
         Intent intent = new Intent(fragment.getContext(), EasyPhotosActivity.class);
         fragment.startActivityForResult(intent, requestCode);
     }
@@ -279,6 +291,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Code.REQUEST_SETTING_APP_DETAILS) {
             if (PermissionUtil.checkAndRequestPermissionsInActivity(this, getNeedPermissions())) {
                 hasPermissions();
@@ -287,27 +300,27 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
             }
             return;
         }
-        String path = null;
-        if (data != null) {
-            String videoPath = data.getStringExtra(Key.EXTRA_RESULT_CAPTURE_VIDEO_PATH);
-            String imagePath = data.getStringExtra(Key.EXTRA_RESULT_CAPTURE_IMAGE_PATH);
-            if (videoPath != null && !videoPath.isEmpty()) {
-                path = videoPath;
-            } else {
-                path = imagePath;
-            }
-        }
-        File tempFile = null;
-        if (path != null) tempFile = new File(path);
-
         switch (resultCode) {
             case RESULT_OK:
                 if (data == null) return;
                 if (Code.REQUEST_CAMERA == requestCode) {
+                    String path;
+                    String videoPath = data.getStringExtra(Key.EXTRA_RESULT_CAPTURE_VIDEO_PATH);
+                    String imagePath = data.getStringExtra(Key.EXTRA_RESULT_CAPTURE_IMAGE_PATH);
+                    if (videoPath != null && !videoPath.isEmpty()) {
+                        path = videoPath;
+                    } else {
+                        path = imagePath;
+                    }
+                    if (!SystemUtils.beforeAndroidTen()) {
+                        path = UriUtils.getPathByUri(this, Uri.parse(path));
+                    }
+                    File tempFile = null;
+                    if (path != null) tempFile = new File(path);
                     if (tempFile == null || !tempFile.exists()) {
                         throw new RuntimeException("EasyPhotos拍照保存的图片不存在");
                     }
-                    onResult(tempFile);
+                    onCameraResult(tempFile);
                     return;
                 }
                 if (Code.REQUEST_PREVIEW_ACTIVITY == requestCode) {
@@ -320,8 +333,15 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
                     return;
                 }
                 if (Code.REQUEST_PUZZLE_SELECTOR == requestCode) {
-                    Photo puzzlePhoto = data.getParcelableExtra(EasyPhotos.RESULT_PHOTOS);
-                    addNewPhoto(puzzlePhoto);
+                    try {
+                        PackageManager packageManager = getApplicationContext().getPackageManager();
+                        ApplicationInfo applicationInfo = packageManager.getApplicationInfo(getPackageName(), 0);
+                        final String applicationName = (String) packageManager.getApplicationLabel(applicationInfo);
+                        Photo puzzlePhoto = data.getParcelableExtra(EasyPhotos.RESULT_PHOTOS);
+                        addNewPhoto(applicationName, puzzlePhoto);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     return;
                 }
                 if (UCrop.REQUEST_CROP == requestCode) {
@@ -335,13 +355,6 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
                 break;
             case RESULT_CANCELED:
                 if (Code.REQUEST_CAMERA == requestCode) {
-                    // 删除临时文件
-                    while (tempFile != null && tempFile.exists()) {
-                        boolean success = tempFile.delete();
-                        if (success) {
-                            tempFile = null;
-                        }
-                    }
                     if (Setting.onlyStartCamera) {
                         finish();
                     }
@@ -369,7 +382,9 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         }
     }
 
-    private void startCrop(Activity context, String source, Intent data) {
+    private void startCrop(AppCompatActivity context, Photo photo, Intent data) {
+
+        String source = photo.path;
 
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
         bitmapOptions.inJustDecodeBounds = true;
@@ -382,8 +397,8 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HH:mm:ss", Locale.getDefault());
-        String suffix = source.substring(source.lastIndexOf("."));
-        String imageName = "IMG_CROP_%s" + suffix;
+//        String suffix = source.substring(source.lastIndexOf("."));
+        String imageName = "IMG_CROP_%s" + getImageSuffix(photo.type);
         String destinationFileName = String.format(imageName, dateFormat.format(new Date()));
 
         UCrop.Options options = new UCrop.Options();
@@ -409,27 +424,90 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         //是否自由裁剪
         options.setFreeStyleCropEnabled(Setting.isFreeStyleCrop);
         //设置title
-        options.setToolbarTitle("");
+        options.setToolbarTitle("裁剪");
         //隐藏底部控制栏
         options.setHideBottomControls(Setting.isHideUCropControls);
-
-        File cacheFile = new File(context.getFilesDir(), destinationFileName);
-        UCrop.of(Uri.fromFile(new File(source)), Uri.fromFile(cacheFile))
+        Uri uri;
+        if (SystemUtils.beforeAndroidTen()) {
+            uri = Uri.fromFile(new File(source));
+        } else {
+//            Bitmap bitmap = getBitmap(context, Uri.parse(source));
+//            File tempFile = new File(context.getCacheDir(), "source_" + destinationFileName);
+//            convertBitmap2File(bitmap, tempFile);
+//            uri = Uri.fromFile(tempFile);
+            uri = Uri.parse(source);
+        }
+        File cacheFile = new File(context.getCacheDir(), destinationFileName);
+        UCrop.of(uri, Uri.fromFile(cacheFile))
                 .withAspectRatio(Setting.aspectRatio[0], Setting.aspectRatio[1])
                 .withOptions(options)
                 .start(context);
     }
 
-    private void addNewPhoto(Photo photo) {
+    private String getImageSuffix(String type) {
+        String defaultSuffix = ".png";
+        try {
+            int index = type.lastIndexOf("/") + 1;
+            if (index > 0) {
+                return "." + type.substring(index);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return defaultSuffix;
+        }
+        return defaultSuffix;
+    }
+
+    /************* UCrop没有兼容**Android10之前临时处理办法 **************/
+
+    private Bitmap getBitmap(Context context, Uri imageUri) {
+        Bitmap bitmap = null;
+        ContentResolver resolver = context.getContentResolver();
+        try {
+            if (SystemUtils.beforeAndroidTen()) {
+                InputStream inputStream = resolver.openInputStream(imageUri);
+                bitmap = BitmapFactory.decodeStream(inputStream);
+            } else {
+                ImageDecoder.Source source = ImageDecoder.createSource(resolver, imageUri);
+                bitmap = ImageDecoder.decodeBitmap(source);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
+    private void convertBitmap2File(Bitmap bitmap, File destFile) {
+        try {
+            boolean success = destFile.createNewFile();
+            if (success) {
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                byte[] bytes = bos.toByteArray();
+
+                FileOutputStream fos = new FileOutputStream(destFile);
+                fos.write(bytes);
+                fos.flush();
+                fos.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /************* UCrop没有兼容**Android10之前临时处理办法 **************/
+
+    private void addNewPhoto(String albumName, Photo photo) {
         MediaScannerConnectionUtils.refresh(this, photo.path);
         photo.selectedOriginal = Setting.selectedOriginal;
 
         String albumItem_all_name = albumModel.getAllAlbumName(this);
         albumModel.album.getAlbumItem(albumItem_all_name).addImageItem(0, photo);
-        final File parentFile = new File(photo.path).getParentFile();
-        String folderPath = parentFile.getAbsolutePath();
-        String albumName = parentFile.getName();
-        albumModel.album.addAlbumItem(albumName, folderPath, photo.path);
+        if (albumName == null) {
+            final File parentFile = new File(photo.path).getParentFile();
+            albumName = parentFile.getName();
+        }
+        albumModel.album.addAlbumItem(albumName, photo.path);
         albumModel.album.getAlbumItem(albumName).addImageItem(0, photo);
 
         albumItemList.clear();
@@ -464,80 +542,24 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         }
     }
 
-    private void onResult(File file) {
-        boolean isVideo;
-        int outWidth;
-        int outHeight;
-        String outMimeType;
-        try {
-            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-            mmr.setDataSource(file.getAbsolutePath());
-            outMimeType = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
-            outWidth = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
-            outHeight = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
-            isVideo = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-            outMimeType = options.outMimeType;
-            outWidth = options.outWidth;
-            outHeight = options.outHeight;
-            isVideo = false;
-        }
-        //if (code == Code.REQUEST_CAMERA) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HH:mm:ss", Locale.getDefault());
-        String fileName = file.getName();
-        String suffix = fileName.substring(fileName.lastIndexOf("."));
+    private void onCameraResult(File file) {
 
-        String imageName;
-        if (isVideo) {
-            imageName = "VIDEO_%s" + suffix;
-        } else {
-            imageName = "IMG_%s" + suffix;
+        final Pair<String, Photo> pair = MediaUtils.getPhoto(this, file);
+        if (pair == null || pair.second == null) {
+            throw new RuntimeException("EasyPhotos拍照保存的图片不存在");
         }
 
-        String filename = String.format(imageName, dateFormat.format(new Date()));
-        File reNameFile = new File(file.getParentFile(), filename);
-        if (!reNameFile.exists()) {
-            if (file.renameTo(reNameFile)) {
-                file = reNameFile;
-            }
-        }
-        //}
-
-        Photo photo = new Photo(file.getName(), file.getAbsolutePath(), file.lastModified() / 1000, outWidth, outHeight, file.length(), DurationUtils.getDuration(file.getAbsolutePath()), outMimeType);
-
+        String bucketName = pair.first;
+        Photo photo = pair.second;
         if (Setting.onlyStartCamera || albumModel.getAlbumItems().isEmpty()) {
             MediaScannerConnectionUtils.refresh(this, file);// 更新媒体库
 
             photo.selectedOriginal = Setting.selectedOriginal;
             Result.addPhoto(photo);
             done();
-
-//            Intent data = new Intent();
-
-//            resultList.add(photo);
-//
-//            data.putParcelableArrayListExtra(EasyPhotos.RESULT_PHOTOS, resultList);
-//
-//            data.putExtra(EasyPhotos.RESULT_SELECTED_ORIGINAL, Setting.selectedOriginal);
-//
-//            ArrayList<String> pathList = new ArrayList<>();
-//            pathList.add(photo.path);
-//
-//            data.putStringArrayListExtra(EasyPhotos.RESULT_PATHS, pathList);
-//
-//            if (Setting.isCrop) {
-//                startCrop(this, file.getAbsolutePath(), data);
-//            } else {
-//                setResult(RESULT_OK, data);
-//                finish();
-//            }
             return;
         }
-        addNewPhoto(photo);
+        addNewPhoto(bucketName, photo);
     }
 
     private void onAlbumWorkedDo() {
@@ -717,7 +739,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         intent.putStringArrayListExtra(EasyPhotos.RESULT_PATHS, resultPaths);
         intent.putExtra(EasyPhotos.RESULT_SELECTED_ORIGINAL, Setting.selectedOriginal);
         if (Setting.isCrop && TextUtils.isEmpty(resultList.get(0).cropPath)) {
-            startCrop(this, resultList.get(0).path, intent);
+            startCrop(this, resultList.get(0), intent);
         } else if (!isCompressed && Setting.compressEngine != null && Setting.isCompress) {
             isCompressed = true;
             compress();

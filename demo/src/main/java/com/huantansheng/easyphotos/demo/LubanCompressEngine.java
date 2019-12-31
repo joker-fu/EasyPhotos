@@ -1,6 +1,7 @@
 package com.huantansheng.easyphotos.demo;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 
@@ -15,7 +16,6 @@ import java.util.List;
 
 import top.zibin.luban.CompressionPredicate;
 import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
 
 public class LubanCompressEngine implements CompressEngine {
     //单例
@@ -37,8 +37,14 @@ public class LubanCompressEngine implements CompressEngine {
         return instance;
     }
 
-    private String getPath() {
-        String path = Environment.getExternalStorageDirectory() + "/Luban/image/";
+    private String getPath(Context context) {
+        String path;
+        //Android 10 存在在应用内
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            path = Environment.getExternalStorageDirectory() + "/Luban/image/";
+        } else {
+            path = context.getFilesDir() + "/Luban/image/";
+        }
         File file = new File(path);
         if (file.mkdirs()) {
             return path;
@@ -70,7 +76,7 @@ public class LubanCompressEngine implements CompressEngine {
 
                     List<File> files = Luban.with(context).load(paths)
                             .ignoreBy(100)
-                            .setTargetDir(getPath())
+                            .setTargetDir(getPath(context))
                             .filter(new CompressionPredicate() {
                                 @Override
                                 public boolean apply(String path) {

@@ -46,4 +46,6 @@
     <!--状态栏-->
     <color name="easy_photos_status_bar">#393a3f</color>
 
+    <color name="ucrop_color_blaze_orange">@color/easy_photos_fg_accent</color>
+
 </resources>

@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.huantansheng.cameralibrary.JCameraView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/jCameraView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:easy_duration_max="16000"
-    app:easy_iconLeft="@drawable/ic_camera_view_arrow_down_easy_photos"
-    app:easy_iconMargin="20dp"
-    app:easy_iconSize="44dp" />
+    android:layout_height="match_parent">
+
+    <com.huantansheng.cameralibrary.JCameraView
+        android:id="@+id/jCameraView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:easy_duration_max="16000"
+        app:easy_iconLeft="@drawable/ic_camera_view_arrow_down_easy_photos"
+        app:easy_iconMargin="20dp"
+        app:easy_iconSize="44dp" />
+
+    <ProgressBar
+        android:id="@+id/pb_progress"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+</FrameLayout>

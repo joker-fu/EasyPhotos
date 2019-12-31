@@ -4,17 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.FragmentManager;
 
 import com.huantansheng.easyphotos.EasyPhotos;
 import com.huantansheng.easyphotos.models.sticker.cache.StickerCache;
 import com.huantansheng.easyphotos.models.sticker.entity.TextStickerData;
-import com.huantansheng.easyphotos.models.sticker.view.BitmapSticker;
-import com.huantansheng.easyphotos.models.sticker.view.TextSticker;
 import com.huantansheng.easyphotos.models.sticker.listener.OnStickerClickListener;
+import com.huantansheng.easyphotos.models.sticker.view.BitmapSticker;
 import com.huantansheng.easyphotos.models.sticker.view.EditFragment;
+import com.huantansheng.easyphotos.models.sticker.view.TextSticker;
 import com.huantansheng.easyphotos.utils.bitmap.BitmapUtils;
 import com.huantansheng.easyphotos.utils.bitmap.SaveBitmapCallBack;
 
@@ -120,7 +121,7 @@ public class StickerModel {
         textStickers.add(sticker);
     }
 
-    public void save(Activity act, ViewGroup stickerGroup, View imageGroup, int imageWidth, int imageHeight, final String dirPath, final String namePrefix, final boolean notifyMedia, final SaveBitmapCallBack callBack) {
+    public void save(Activity act, ViewGroup stickerGroup, View imageGroup, int imageWidth, int imageHeight, final SaveBitmapCallBack callBack) {
 
         if (null != this.currBitmapSticker && this.currBitmapSticker.isUsing()) {
             this.currBitmapSticker.setUsing(false);
@@ -155,7 +156,7 @@ public class StickerModel {
             saveBitmap = cropBitmap;
         }
 
-        EasyPhotos.saveBitmapToDir(act, dirPath, namePrefix, saveBitmap, notifyMedia, callBack);
+        EasyPhotos.saveBitmapToDir(act, saveBitmap, callBack);
 
     }
 

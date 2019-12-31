@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.huantansheng.easyphotos.constant.Type;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.setting.Setting;
+import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,9 +26,14 @@ public class Result {
         if (TextUtils.isEmpty(path)) {
             return -3;
         }
-        final File file = new File(path);
-        if (!file.exists() || !file.isFile()) {
-            return -3;
+        if (SystemUtils.beforeAndroidTen()) {
+            final File file = new File(path);
+            if (!file.exists() || !file.isFile()) {
+                return -3;
+            }
+        } else {
+            //TODO 判断文件是否存在
+            //if(AndroidQUtils.isAndroidQFileExists())
         }
         if (Setting.selectMutualExclusion && photos.size() > 0) {
             if (photo.type.contains(Type.VIDEO) != photos.get(0).type.contains(Type.VIDEO)) {

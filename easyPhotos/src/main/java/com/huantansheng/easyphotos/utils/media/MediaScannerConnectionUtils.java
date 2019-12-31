@@ -15,8 +15,7 @@ public class MediaScannerConnectionUtils {
 
     public static void refresh(Context cxt, String... filePaths) {
         MediaScannerConnection.scanFile(cxt.getApplicationContext(),
-                filePaths, null,
-                null);
+                filePaths, null, null);
     }
 
 

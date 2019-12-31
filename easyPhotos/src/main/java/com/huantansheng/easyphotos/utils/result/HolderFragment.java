@@ -3,10 +3,11 @@ package com.huantansheng.easyphotos.utils.result;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.huantansheng.easyphotos.EasyPhotos;
 import com.huantansheng.easyphotos.callback.PuzzleCallback;
@@ -42,14 +43,14 @@ public class HolderFragment extends Fragment {
         EasyPhotosActivity.start(this, HOLDER_SELECT_REQUEST_CODE);
     }
 
-    public void startPuzzleWithPhotos(ArrayList<Photo> photos, String puzzleSaveDirPath, String puzzleSaveNamePrefix, boolean replaceCustom, @NonNull ImageEngine imageEngine, PuzzleCallback callback) {
+    public void startPuzzleWithPhotos(ArrayList<Photo> photos, boolean replaceCustom, @NonNull ImageEngine imageEngine, PuzzleCallback callback) {
         mPuzzleCallback = callback;
-        PuzzleActivity.startWithPhotos(this, photos, puzzleSaveDirPath, puzzleSaveNamePrefix, HOLDER_PUZZLE_REQUEST_CODE, replaceCustom, imageEngine);
+        PuzzleActivity.startWithPhotos(this, photos, HOLDER_PUZZLE_REQUEST_CODE, replaceCustom, imageEngine);
     }
 
-    public void startPuzzleWithPaths(ArrayList<String> paths, String puzzleSaveDirPath, String puzzleSaveNamePrefix, boolean replaceCustom, @NonNull ImageEngine imageEngine, PuzzleCallback callback) {
+    public void startPuzzleWithPaths(ArrayList<String> paths, boolean replaceCustom, @NonNull ImageEngine imageEngine, PuzzleCallback callback) {
         mPuzzleCallback = callback;
-        PuzzleActivity.startWithPaths(this, paths, puzzleSaveDirPath, puzzleSaveNamePrefix, HOLDER_PUZZLE_REQUEST_CODE, replaceCustom, imageEngine);
+        PuzzleActivity.startWithPaths(this, paths, HOLDER_PUZZLE_REQUEST_CODE, replaceCustom, imageEngine);
     }
 
     @Override

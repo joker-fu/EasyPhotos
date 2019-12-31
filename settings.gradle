@@ -1,1 +1,1 @@
-include ':demo', ':easyPhotos'
+include ':demo', ':easyPhotos', ':ucrop'

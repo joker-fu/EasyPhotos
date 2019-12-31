@@ -1,7 +1,8 @@
 package com.huantansheng.easyphotos.setting;
 
-import android.support.annotation.IntDef;
 import android.view.View;
+
+import androidx.annotation.IntDef;
 
 import com.huantansheng.cameralibrary.JCameraView;
 import com.huantansheng.easyphotos.callback.VideoPreviewCallback;
@@ -61,7 +62,7 @@ public class Setting {
     public static final int BOTTOM_RIGHT = 1;
     public static int cameraLocation = BOTTOM_RIGHT;
     // 相机功能
-    public static boolean useSystemCamera = false;
+    public static boolean useSystemCamera = true;
     public static String captureType = Capture.ALL;
     public static int recordDuration = 15000;
     public static WeakReference<View> cameraCoverView = null;
@@ -117,7 +118,7 @@ public class Setting {
         showCleanMenu = true;
         videoMinSecond = 0L;
         videoMaxSecond = Long.MAX_VALUE;
-        useSystemCamera = false;
+        useSystemCamera = true;
         captureType = Capture.ALL;
         recordDuration = 15000;
         if (cameraCoverView != null) cameraCoverView.clear();
