@@ -1,22 +1,31 @@
 package com.huantansheng.easyphotos.utils.bitmap;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-
-import androidx.annotation.NonNull;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.huantansheng.easyphotos.EasyPhotos;
+import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -140,63 +149,135 @@ public class BitmapUtils {
 
 
     /**
-     * 保存Bitmap到指定文件夹
+     * 保存Bitmap到DCIM文件夹
      *
-     * @param act         上下文
-     * @param dirPath     文件夹全路径
-     * @param bitmap      bitmap
-     * @param namePrefix  保存文件的前缀名，文件最终名称格式为：前缀名+自动生成的唯一数字字符+.png
-     * @param notifyMedia 是否更新到媒体库
-     * @param callBack    保存图片后的回调，回调已经处于UI线程
+     * @param act      上下文
+     * @param bitmap   bitmap
+     * @param callBack 保存图片后的回调，回调已经处于UI线程
      */
-    public static void saveBitmapToDir(final Activity act, final String dirPath, final String namePrefix, final Bitmap bitmap, final boolean notifyMedia, final SaveBitmapCallBack callBack) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                File dirF = new File(dirPath);
+    public static void saveBitmapToDir(final Activity act, final Bitmap bitmap, final SaveBitmapCallBack callBack) {
 
-                if (!dirF.exists() || !dirF.isDirectory()) {
-                    if (!dirF.mkdirs()) {
-                        act.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                callBack.onCreateDirFailed();
-                            }
-                        });
-                        return;
+        try {
+            PackageManager packageManager = act.getApplicationContext().getPackageManager();
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(act.getPackageName(), 0);
+            final String applicationName = (String) packageManager.getApplicationLabel(applicationInfo);
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (SystemUtils.beforeAndroidTen()) {
+                        saveBitmapBeforeAndroidQ(act, applicationName, bitmap, callBack);
+                    } else {
+                        saveBitmapAndroidQ(act, applicationName, bitmap, callBack);
                     }
                 }
+            }).start();
 
-                try {
-                    final File writeFile = File.createTempFile(namePrefix, ".png", dirF);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
-                    FileOutputStream fos = null;
-                    fos = new FileOutputStream(writeFile);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                    fos.flush();
-                    fos.close();
-                    if (notifyMedia) {
-                        EasyPhotos.notifyMedia(act, writeFile);
+    private static void saveBitmapBeforeAndroidQ(Activity act, String dir, Bitmap b, final SaveBitmapCallBack callBack) {
+        final String dirPath;
+        if (SystemUtils.beforeAndroidTen()) {
+            dirPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + File.separator + dir;
+        } else {
+            dirPath = act.getExternalFilesDir(Environment.DIRECTORY_DCIM) + File.separator + dir;
+        }
+        File dirF = new File(dirPath);
+
+        if (!dirF.exists() || !dirF.isDirectory()) {
+            if (!dirF.mkdirs()) {
+                act.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        callBack.onCreateDirFailed();
                     }
-                    act.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            callBack.onSuccess(writeFile);
-                        }
-                    });
-
-                } catch (final IOException e) {
-                    act.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            callBack.onIOFailed(e);
-                        }
-                    });
-
-                }
+                });
+                return;
             }
-        }).start();
+        }
 
+        try {
+            final File writeFile = File.createTempFile("IMG_", ".png", dirF);
+
+            FileOutputStream fos;
+            fos = new FileOutputStream(writeFile);
+            b.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
+            fos.close();
+            EasyPhotos.notifyMedia(act, writeFile);
+            act.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    callBack.onSuccess(writeFile.getAbsolutePath());
+                }
+            });
+
+        } catch (final IOException e) {
+            act.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    callBack.onFailed(e);
+                }
+            });
+
+        }
+    }
+
+    private static void saveBitmapAndroidQ(Activity act, String dir, Bitmap b, final SaveBitmapCallBack callBack) {
+        long dataTake = System.currentTimeMillis();
+        String jpegName = "IMG_" + dataTake + ".jpg";
+
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, jpegName);
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        values.put(MediaStore.Images.Media.RELATIVE_PATH, "DCIM/" + dir);
+
+        Uri external;
+        ContentResolver resolver = act.getContentResolver();
+        String status = Environment.getExternalStorageState();
+        // 判断是否有SD卡,优先使用SD卡存储,当没有SD卡时使用手机存储
+        if (status.equals(Environment.MEDIA_MOUNTED)) {
+            external = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        } else {
+            external = MediaStore.Images.Media.INTERNAL_CONTENT_URI;
+        }
+
+        final Uri insertUri = resolver.insert(external, values);
+        if (insertUri == null) {
+            act.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    callBack.onCreateDirFailed();
+                }
+            });
+            return;
+        }
+        OutputStream os;
+        try {
+            os = resolver.openOutputStream(insertUri);
+            b.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            if (os != null) {
+                os.flush();
+                os.close();
+            }
+            act.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    callBack.onSuccess(insertUri.toString());
+                }
+            });
+        } catch (final IOException e) {
+            e.printStackTrace();
+            act.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    callBack.onFailed(e);
+                }
+            });
+        }
     }
 
 

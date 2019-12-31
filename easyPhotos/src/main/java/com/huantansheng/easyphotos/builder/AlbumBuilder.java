@@ -1,4 +1,4 @@
-package com.huantansheng.easyphotos.Builder;
+package com.huantansheng.easyphotos.builder;
 
 import android.app.Activity;
 import androidx.annotation.IntRange;

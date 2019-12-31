@@ -1,18 +1,19 @@
 package com.huantansheng.easyphotos.ui.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.huantansheng.easyphotos.R;
 import com.huantansheng.easyphotos.constant.Type;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.setting.Setting;
-import com.huantansheng.easyphotos.utils.media.DurationUtils;
+import com.huantansheng.easyphotos.utils.media.MediaUtils;
 
 import java.util.ArrayList;
 
@@ -57,7 +58,7 @@ public class PuzzleSelectorPreviewAdapter extends RecyclerView.Adapter {
             ((PhotoViewHolder) holder).tvType.setVisibility(View.VISIBLE);
         } else if (Setting.showVideo() && type.contains(Type.VIDEO)) {
             Setting.imageEngine.loadPhoto(((PhotoViewHolder) holder).ivPhoto.getContext(), path, ((PhotoViewHolder) holder).ivPhoto);
-            ((PhotoViewHolder) holder).tvType.setText(DurationUtils.format(duration));
+            ((PhotoViewHolder) holder).tvType.setText(MediaUtils.format(duration));
             ((PhotoViewHolder) holder).tvType.setVisibility(View.VISIBLE);
         } else {
             Setting.imageEngine.loadPhoto(((PhotoViewHolder) holder).ivPhoto.getContext(), path, ((PhotoViewHolder) holder).ivPhoto);

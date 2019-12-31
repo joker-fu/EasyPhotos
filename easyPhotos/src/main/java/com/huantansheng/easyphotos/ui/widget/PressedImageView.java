@@ -14,18 +14,18 @@ public class PressedImageView extends androidx.appcompat.widget.AppCompatImageVi
 
     public PressedImageView(Context context) {
         super(context);
-        this.scaleSize = 0.97f;
+        this.scaleSize = 0.98f;
     }
 
     public PressedImageView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        this.scaleSize = 0.97f;
+        this.scaleSize = 0.98f;
 
     }
 
     public PressedImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.scaleSize = 0.97f;
+        this.scaleSize = 0.98f;
 
     }
 

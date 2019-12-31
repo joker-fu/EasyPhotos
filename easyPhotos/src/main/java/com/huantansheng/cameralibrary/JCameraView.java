@@ -427,7 +427,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     }
 
     /**************************************************
-     * 对外提供的API                     *
+     * 对外提供的API*
      **************************************************/
 
     public void setSaveVideoPath(String path) {

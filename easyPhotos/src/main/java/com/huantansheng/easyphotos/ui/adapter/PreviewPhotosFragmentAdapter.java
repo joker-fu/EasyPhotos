@@ -1,18 +1,19 @@
 package com.huantansheng.easyphotos.ui.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.huantansheng.easyphotos.R;
 import com.huantansheng.easyphotos.constant.Type;
 import com.huantansheng.easyphotos.result.Result;
 import com.huantansheng.easyphotos.setting.Setting;
 import com.huantansheng.easyphotos.ui.widget.PressedImageView;
-import com.huantansheng.easyphotos.utils.media.DurationUtils;
+import com.huantansheng.easyphotos.utils.media.MediaUtils;
 
 /**
  * 预览所有选中图片集合的适配器
@@ -49,7 +50,7 @@ public class PreviewPhotosFragmentAdapter extends RecyclerView.Adapter<PreviewPh
             holder.tvType.setVisibility(View.VISIBLE);
         } else if (Setting.showVideo() && type.contains(Type.VIDEO)) {
             Setting.imageEngine.loadPhoto(holder.ivPhoto.getContext(), path, holder.ivPhoto);
-            holder.tvType.setText(DurationUtils.format(duration));
+            holder.tvType.setText(MediaUtils.format(duration));
             holder.tvType.setVisibility(View.VISIBLE);
         } else {
             Setting.imageEngine.loadPhoto(holder.ivPhoto.getContext(), path, holder.ivPhoto);

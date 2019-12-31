@@ -617,7 +617,7 @@ public class CameraInterface implements Camera.PreviewCallback {
 //        }
         mediaRecorder.setPreviewDisplay(surface);
 
-        videoFileName = "video_" + System.currentTimeMillis() + ".mp4";
+        videoFileName = "VID_" + System.currentTimeMillis() + ".mp4";
         if (saveVideoPath.equals("")) {
             saveVideoPath = Environment.getExternalStorageDirectory().getPath();
         }

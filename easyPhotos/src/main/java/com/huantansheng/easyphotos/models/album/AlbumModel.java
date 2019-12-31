@@ -12,6 +12,7 @@ import com.huantansheng.easyphotos.models.album.entity.Album;
 import com.huantansheng.easyphotos.models.album.entity.AlbumItem;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.setting.Setting;
+import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,11 +40,11 @@ public class AlbumModel {
     private static final String[] PROJECTIONS = new String[]{
             MediaStore.Files.FileColumns._ID,
             MediaStore.MediaColumns.DISPLAY_NAME,
+            MediaStore.MediaColumns.BUCKET_DISPLAY_NAME,
             MediaStore.MediaColumns.MIME_TYPE,
             MediaStore.MediaColumns.DATE_MODIFIED,
             MediaStore.MediaColumns.SIZE,
             MediaStore.Video.Media.DURATION,
-
             MediaStore.MediaColumns.DATA,
             MediaStore.MediaColumns.WIDTH,
             MediaStore.MediaColumns.HEIGHT
@@ -106,7 +107,7 @@ public class AlbumModel {
         String selection;
         String[] selectionArgs;
         if (Setting.isOnlyGif() && Setting.showGif) {
-            //进gif
+            //仅gif
             selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "=?"
                     + " AND " + MediaStore.MediaColumns.SIZE + "> " + Setting.minSize
                     + " AND " + MediaStore.MediaColumns.SIZE + "< " + Setting.maxSize
@@ -154,8 +155,10 @@ public class AlbumModel {
         } else if (cursor.moveToFirst()) {
             final String albumItem_all_name = getAllAlbumName(context);
             final String albumItem_video_name = context.getString(R.string.selector_folder_video_easy_photos);
+            final int idCol = cursor.getColumnIndex(MediaStore.MediaColumns._ID);
             final int pathCol = cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
             final int nameCol = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
+            final int bucketNameCol = cursor.getColumnIndex(MediaStore.MediaColumns.BUCKET_DISPLAY_NAME);
             final int dateCol = cursor.getColumnIndex(MediaStore.MediaColumns.DATE_MODIFIED);
             final int mimeTypeCol = cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE);
             final int sizeCol = cursor.getColumnIndex(MediaStore.MediaColumns.SIZE);
@@ -165,35 +168,52 @@ public class AlbumModel {
 
             boolean equalsAlbumName = albumItem_video_name.equals(albumItem_all_name);
             do {
-                final String path = cursor.getString(pathCol);
+                final long id = cursor.getLong(idCol);
+                final String path;
                 final String type = cursor.getString(mimeTypeCol);
                 final long size = cursor.getLong(sizeCol);
                 final int width = cursor.getInt(widthCol);
                 final int height = cursor.getInt(heightCol);
                 final String name = cursor.getString(nameCol);
+                final String bucketName = cursor.getString(bucketNameCol);
                 final long dateTime = cursor.getLong(dateCol);
                 final long duration = cursor.getLong(durationCol);
+
+                if (SystemUtils.beforeAndroidTen()) {
+                    path = cursor.getString(pathCol);
+                } else {
+                    final boolean isVideo = type.contains(Type.VIDEO);
+                    final boolean isImage = type.contains(Type.IMAGE);
+                    final boolean isGif = type.contains(Type.GIF);
+                    final Uri contentUri;
+                    if (isImage || isGif) {
+                        contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                    } else if (isVideo) {
+                        contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                    } else {
+                        contentUri = MediaStore.Files.getContentUri("external");
+                    }
+                    // final Uri uri = ContentUris.withAppendedId(contentUri, id);
+                    path = contentUri.buildUpon().appendPath(String.valueOf(id)).build().toString();
+                }
+
                 final Photo imageItem = new Photo(name, path, dateTime, width, height, size, duration, type);
+                if (width < Setting.minWidth || height < Setting.minHeight) {
+                    continue;
+                }
                 // 把图片全部放进“全部”专辑
-                album.addAlbumItem(albumItem_all_name, "", path);
+                album.addAlbumItem(albumItem_all_name, path);
                 album.getAlbumItem(albumItem_all_name).addImageItem(imageItem);
                 if (type.contains(Type.VIDEO)) {
                     // 把视频全部放进“所有视频”专辑
                     if (Setting.showVideo() && !equalsAlbumName) {
-                        album.addAlbumItem(albumItem_video_name, "", path, 1);
+                        album.addAlbumItem(albumItem_video_name, path, 1);
                         album.getAlbumItem(albumItem_video_name).addImageItem(imageItem);
                     }
-                } else if (width < Setting.minWidth || height < Setting.minHeight) {
-                    continue;
                 }
-
                 // 添加当前图片的专辑到专辑模型实体中
-                final File parentFile = new File(path).getParentFile();
-                if (parentFile == null) continue;
-                final String folderPath = parentFile.getAbsolutePath();
-                final String albumName = parentFile.getName();
-                album.addAlbumItem(albumName, folderPath, path);
-                album.getAlbumItem(albumName).addImageItem(imageItem);
+                album.addAlbumItem(bucketName, path);
+                album.getAlbumItem(bucketName).addImageItem(imageItem);
             } while (isQuery && cursor.moveToNext());
             cursor.close();
         }
@@ -238,6 +258,7 @@ public class AlbumModel {
         void onAlbumWorkedCallBack();
     }
 
+    @Deprecated
     public void fillPhoto(Context context, Photo photo) {
         String filePath = photo.path;
         final File file = new File(photo.path);

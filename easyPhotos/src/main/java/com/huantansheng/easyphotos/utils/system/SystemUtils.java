@@ -241,12 +241,19 @@ public class SystemUtils {
         return false;
     }
 
-    //Android Api 23以上
-    private boolean isAndroidMOrAbove() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return true;
-        }
-        return false;
+    //Android M 之前的版本
+    public static boolean beforeAndroidM() {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
+    }
+
+    //Android N 之前的版本
+    public static boolean beforeAndroidN() {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.N;
+    }
+
+    //Android 10 之前的版本
+    public static boolean beforeAndroidTen() {
+        return android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.Q;
     }
 
     private String getSystemProperty(String propName) {

@@ -6,24 +6,22 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.IdRes;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import androidx.annotation.IdRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.huantansheng.easyphotos.R;
 import com.huantansheng.easyphotos.constant.Code;
@@ -37,7 +35,6 @@ import com.huantansheng.easyphotos.ui.widget.PressedTextView;
 import com.huantansheng.easyphotos.utils.color.ColorUtils;
 import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class PuzzleSelectorActivity extends AppCompatActivity implements View.OnClickListener, AlbumItemsAdapter.OnClickListener, PuzzleSelectorAdapter.OnClickListener, PuzzleSelectorPreviewAdapter.OnClickListener {
@@ -152,14 +149,7 @@ public class PuzzleSelectorActivity extends AppCompatActivity implements View.On
         } else if (R.id.root_view_album_items == id) {
             showAlbumItems(false);
         } else if (R.id.tv_done == id) {
-            try {
-                PackageManager packageManager = getApplicationContext().getPackageManager();
-                ApplicationInfo applicationInfo = packageManager.getApplicationInfo(getPackageName(), 0);
-                String applicationName = (String) packageManager.getApplicationLabel(applicationInfo);
-                PuzzleActivity.startWithPhotos(this, selectedPhotos, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + File.separator + applicationName, "IMG", Code.REQUEST_PUZZLE, false, Setting.imageEngine);
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
+            PuzzleActivity.startWithPhotos(this, selectedPhotos, Code.REQUEST_PUZZLE, false, Setting.imageEngine);
         }
     }
 

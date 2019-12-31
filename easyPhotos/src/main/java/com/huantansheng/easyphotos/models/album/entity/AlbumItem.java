@@ -9,13 +9,11 @@ import java.util.ArrayList;
 
 public class AlbumItem {
     public String name;
-    public String folderPath;
     public String coverImagePath;
     public ArrayList<Photo> photos;
 
-    AlbumItem(String name, String folderPath, String coverImagePath) {
+    AlbumItem(String name, String coverImagePath) {
         this.name = name;
-        this.folderPath = folderPath;
         this.coverImagePath = coverImagePath;
         this.photos = new ArrayList<>();
     }
@@ -25,6 +23,7 @@ public class AlbumItem {
     }
 
     public void addImageItem(int index, Photo imageItem) {
+        this.coverImagePath = imageItem.path;
         this.photos.add(index, imageItem);
     }
 }

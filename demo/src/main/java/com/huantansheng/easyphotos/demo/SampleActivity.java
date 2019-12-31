@@ -3,8 +3,9 @@ package com.huantansheng.easyphotos.demo;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +32,9 @@ import com.huantansheng.easyphotos.callback.SelectCallback;
 import com.huantansheng.easyphotos.constant.Type;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.setting.Setting;
+import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class SampleActivity extends AppCompatActivity
@@ -154,6 +157,7 @@ public class SampleActivity extends AppCompatActivity
                 break;
             case R.id.camera_cover://单独使用相机带覆盖层
                 EasyPhotos.createCamera(this)
+                        .enableSystemCamera(false)
                         .setCameraCoverView(View.inflate(this, R.layout.layout_shoot_bg, null))
                         .start(callback);
                 break;
@@ -223,6 +227,7 @@ public class SampleActivity extends AppCompatActivity
 
             case R.id.album_has_video_gif://相册中显示视频和gif图
                 EasyPhotos.createAlbum(this, true, GlideEngine.getInstance())
+                        .enableSystemCamera(false)
                         .setCount(9)
                         .filter(Type.all())
                         .setGif(true)
@@ -243,6 +248,7 @@ public class SampleActivity extends AppCompatActivity
 
             case R.id.album_only_video://相册中只选择视频(相册只有视频 会禁用拼图 裁剪 拍照)
                 EasyPhotos.createAlbum(this, true, GlideEngine.getInstance())
+                        .enableSystemCamera(false)
                         .setCount(9)
                         .filter(Type.video())
                         .start(callback);
@@ -282,7 +288,17 @@ public class SampleActivity extends AppCompatActivity
 
                 //这一步如果图大的话会耗时，但耗时不长，你可以在异步操作。另外copy出来的bitmap在确定不用的时候记得回收，如果你用Glide操作过copy出来的bitmap那就不要回收了，否则Glide会报错。
                 Bitmap watermark = BitmapFactory.decodeResource(getResources(), R.drawable.watermark).copy(Bitmap.Config.RGB_565, true);
-                bitmap = BitmapFactory.decodeFile(selectedPhotoList.get(0).path).copy(Bitmap.Config.ARGB_8888, true);
+                if (SystemUtils.beforeAndroidTen()) {
+                    bitmap = BitmapFactory.decodeFile(selectedPhotoList.get(0).path);
+                } else {
+                    try {
+                        ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), Uri.parse(selectedPhotoList.get(0).path));
+                        bitmap = ImageDecoder.decodeBitmap(source);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
 
                 //给图片添加水印的api
                 EasyPhotos.addWatermark(watermark, bitmap, 1080, 20, 20, true);
@@ -292,6 +308,7 @@ public class SampleActivity extends AppCompatActivity
                 bitmapView.setVisibility(View.VISIBLE);
                 bitmapView.setImageBitmap(bitmap);
                 Toast.makeText(SampleActivity.this, "水印在左下角", Toast.LENGTH_SHORT).show();
+                drawer.closeDrawer(GravityCompat.START);
                 break;
 
             case R.id.puzzle:
@@ -301,7 +318,7 @@ public class SampleActivity extends AppCompatActivity
                         .start(new SelectCallback() {
                             @Override
                             public void onResult(ArrayList<Photo> photos, ArrayList<String> paths, boolean isOriginal) {
-                                EasyPhotos.startPuzzleWithPhotos(SampleActivity.this, photos, Environment.getExternalStorageDirectory().getAbsolutePath(), "AlbumBuilder", false, GlideEngine.getInstance(), new PuzzleCallback() {
+                                EasyPhotos.startPuzzleWithPhotos(SampleActivity.this, photos, false, GlideEngine.getInstance(), new PuzzleCallback() {
                                     @Override
                                     public void onResult(Photo photo, String path) {
                                         selectedPhotoList.clear();

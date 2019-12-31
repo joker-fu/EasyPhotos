@@ -3,21 +3,12 @@ package com.huantansheng.easyphotos.ui;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.IdRes;
-import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -26,6 +17,17 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.huantansheng.easyphotos.EasyPhotos;
 import com.huantansheng.easyphotos.R;
 import com.huantansheng.easyphotos.callback.SelectCallback;
@@ -44,12 +46,13 @@ import com.huantansheng.easyphotos.setting.Setting;
 import com.huantansheng.easyphotos.ui.adapter.PuzzleAdapter;
 import com.huantansheng.easyphotos.ui.adapter.TextStickerAdapter;
 import com.huantansheng.easyphotos.utils.bitmap.SaveBitmapCallBack;
-import com.huantansheng.easyphotos.utils.media.DurationUtils;
+import com.huantansheng.easyphotos.utils.media.MediaUtils;
 import com.huantansheng.easyphotos.utils.permission.PermissionUtil;
 import com.huantansheng.easyphotos.utils.settings.SettingsUtils;
+import com.huantansheng.easyphotos.utils.system.SystemUtils;
+import com.huantansheng.easyphotos.utils.uri.UriUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,7 +69,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
     private static WeakReference<Class<? extends Activity>> toClass;
 
 
-    public static void startWithPhotos(Activity act, ArrayList<Photo> photos, String puzzleSaveDirPath, String puzzleSaveNamePrefix, int requestCode, boolean replaceCustom, @NonNull ImageEngine imageEngine) {
+    public static void startWithPhotos(Activity act, ArrayList<Photo> photos, int requestCode, boolean replaceCustom, @NonNull ImageEngine imageEngine) {
         if (null != toClass) {
             toClass.clear();
             toClass = null;
@@ -77,15 +80,13 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent(act, PuzzleActivity.class);
         intent.putExtra(Key.PUZZLE_FILE_IS_PHOTO, true);
         intent.putParcelableArrayListExtra(Key.PUZZLE_FILES, photos);
-        intent.putExtra(Key.PUZZLE_SAVE_DIR, puzzleSaveDirPath);
-        intent.putExtra(Key.PUZZLE_SAVE_NAME_PREFIX, puzzleSaveNamePrefix);
         if (replaceCustom) {
             toClass = new WeakReference<Class<? extends Activity>>(act.getClass());
         }
         act.startActivityForResult(intent, requestCode);
     }
 
-    public static void startWithPhotos(Fragment fragment, ArrayList<Photo> photos, String puzzleSaveDirPath, String puzzleSaveNamePrefix, int requestCode, boolean replaceCustom, @NonNull ImageEngine imageEngine) {
+    public static void startWithPhotos(Fragment fragment, ArrayList<Photo> photos, int requestCode, boolean replaceCustom, @NonNull ImageEngine imageEngine) {
         if (null != toClass) {
             toClass.clear();
             toClass = null;
@@ -96,37 +97,16 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent(fragment.getActivity(), PuzzleActivity.class);
         intent.putExtra(Key.PUZZLE_FILE_IS_PHOTO, true);
         intent.putParcelableArrayListExtra(Key.PUZZLE_FILES, photos);
-        intent.putExtra(Key.PUZZLE_SAVE_DIR, puzzleSaveDirPath);
-        intent.putExtra(Key.PUZZLE_SAVE_NAME_PREFIX, puzzleSaveNamePrefix);
         if (replaceCustom) {
-            toClass = new WeakReference<Class<? extends Activity>>(fragment.getActivity().getClass());
-        }
-        fragment.startActivityForResult(intent, requestCode);
-    }
-
-    public static void startWithPhotos(androidx.fragment.app.Fragment fragmentV, ArrayList<Photo> photos, String puzzleSaveDirPath, String puzzleSaveNamePrefix, int requestCode, boolean replaceCustom, @NonNull ImageEngine imageEngine) {
-        if (null != toClass) {
-            toClass.clear();
-            toClass = null;
-        }
-        if (Setting.imageEngine != imageEngine) {
-            Setting.imageEngine = imageEngine;
-        }
-        Intent intent = new Intent(fragmentV.getActivity(), PuzzleActivity.class);
-        intent.putExtra(Key.PUZZLE_FILE_IS_PHOTO, true);
-        intent.putParcelableArrayListExtra(Key.PUZZLE_FILES, photos);
-        intent.putExtra(Key.PUZZLE_SAVE_DIR, puzzleSaveDirPath);
-        intent.putExtra(Key.PUZZLE_SAVE_NAME_PREFIX, puzzleSaveNamePrefix);
-        if (replaceCustom) {
-            if (fragmentV.getActivity() != null) {
-                toClass = new WeakReference<Class<? extends Activity>>(fragmentV.getActivity().getClass());
+            if (fragment.getActivity() != null) {
+                toClass = new WeakReference<Class<? extends Activity>>(fragment.getActivity().getClass());
             }
         }
-        fragmentV.startActivityForResult(intent, requestCode);
+        fragment.startActivityForResult(intent, requestCode);
     }
 
 
-    public static void startWithPaths(Activity act, ArrayList<String> paths, String puzzleSaveDirPath, String puzzleSaveNamePrefix, int requestCode, boolean replaceCustom, @NonNull ImageEngine imageEngine) {
+    public static void startWithPaths(Activity act, ArrayList<String> paths, int requestCode, boolean replaceCustom, @NonNull ImageEngine imageEngine) {
         if (null != toClass) {
             toClass.clear();
             toClass = null;
@@ -137,16 +117,13 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent(act, PuzzleActivity.class);
         intent.putExtra(Key.PUZZLE_FILE_IS_PHOTO, false);
         intent.putStringArrayListExtra(Key.PUZZLE_FILES, paths);
-        intent.putExtra(Key.PUZZLE_SAVE_DIR, puzzleSaveDirPath);
-        intent.putExtra(Key.PUZZLE_SAVE_NAME_PREFIX, puzzleSaveNamePrefix);
         if (replaceCustom) {
             toClass = new WeakReference<Class<? extends Activity>>(act.getClass());
         }
         act.startActivityForResult(intent, requestCode);
     }
 
-
-    public static void startWithPaths(Fragment fragment, ArrayList<String> paths, String puzzleSaveDirPath, String puzzleSaveNamePrefix, int requestCode, boolean replaceCustom, @NonNull ImageEngine imageEngine) {
+    public static void startWithPaths(Fragment fragment, ArrayList<String> paths, int requestCode, boolean replaceCustom, @NonNull ImageEngine imageEngine) {
         if (null != toClass) {
             toClass.clear();
             toClass = null;
@@ -157,39 +134,17 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent(fragment.getActivity(), PuzzleActivity.class);
         intent.putExtra(Key.PUZZLE_FILE_IS_PHOTO, false);
         intent.putStringArrayListExtra(Key.PUZZLE_FILES, paths);
-        intent.putExtra(Key.PUZZLE_SAVE_DIR, puzzleSaveDirPath);
-        intent.putExtra(Key.PUZZLE_SAVE_NAME_PREFIX, puzzleSaveNamePrefix);
         if (replaceCustom) {
-            toClass = new WeakReference<Class<? extends Activity>>(fragment.getActivity().getClass());
+            if (null != fragment.getActivity())
+                toClass = new WeakReference<Class<? extends Activity>>(fragment.getActivity().getClass());
         }
         fragment.startActivityForResult(intent, requestCode);
-    }
-
-    public static void startWithPaths(androidx.fragment.app.Fragment fragmentV, ArrayList<String> paths, String puzzleSaveDirPath, String puzzleSaveNamePrefix, int requestCode, boolean replaceCustom, @NonNull ImageEngine imageEngine) {
-        if (null != toClass) {
-            toClass.clear();
-            toClass = null;
-        }
-        if (Setting.imageEngine != imageEngine) {
-            Setting.imageEngine = imageEngine;
-        }
-        Intent intent = new Intent(fragmentV.getActivity(), PuzzleActivity.class);
-        intent.putExtra(Key.PUZZLE_FILE_IS_PHOTO, false);
-        intent.putStringArrayListExtra(Key.PUZZLE_FILES, paths);
-        intent.putExtra(Key.PUZZLE_SAVE_DIR, puzzleSaveDirPath);
-        intent.putExtra(Key.PUZZLE_SAVE_NAME_PREFIX, puzzleSaveNamePrefix);
-        if (replaceCustom) {
-            if (null != fragmentV.getActivity())
-                toClass = new WeakReference<Class<? extends Activity>>(fragmentV.getActivity().getClass());
-        }
-        fragmentV.startActivityForResult(intent, requestCode);
     }
 
     ArrayList<Photo> photos = null;
     ArrayList<String> paths = null;
     ArrayList<Bitmap> bitmaps = new ArrayList<>();
     boolean fileTypeIsPhoto;
-    String saveDirPath, saveNamePrefix;
 
     private PuzzleView puzzleView;
     private RecyclerView rvPuzzleTemplet;
@@ -349,8 +304,6 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         deviceHeight = getResources().getDisplayMetrics().heightPixels;
         Intent intent = getIntent();
         fileTypeIsPhoto = intent.getBooleanExtra(Key.PUZZLE_FILE_IS_PHOTO, false);
-        saveDirPath = intent.getStringExtra(Key.PUZZLE_SAVE_DIR);
-        saveNamePrefix = intent.getStringExtra(Key.PUZZLE_SAVE_NAME_PREFIX);
         if (fileTypeIsPhoto) {
             photos = intent.getParcelableArrayListExtra(Key.PUZZLE_FILES);
             fileCount = photos.size() > 9 ? 9 : photos.size();
@@ -539,20 +492,28 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         puzzleView.clearHandling();
         puzzleView.invalidate();
 
-        stickerModel.save(this, mRootView, puzzleView, puzzleView.getWidth(), puzzleView.getHeight(), saveDirPath, saveNamePrefix, true, new SaveBitmapCallBack() {
+        stickerModel.save(this, mRootView, puzzleView, puzzleView.getWidth(), puzzleView.getHeight(), new SaveBitmapCallBack() {
+            @SuppressWarnings("ConstantConditions")
             @Override
-            public void onSuccess(File file) {
+            public void onSuccess(String path) {
+                Photo photo;
+                if (SystemUtils.beforeAndroidTen()) {
+                    File file = new File((path));
+                    photo = new Photo(file.getName(), file.getAbsolutePath(), file.lastModified() / 1000, puzzleView.getWidth(), puzzleView.getHeight(), file.length(), MediaUtils.getDuration(file.getAbsolutePath()), "image/png");
+                } else {
+                    path = UriUtils.getPathByUri(PuzzleActivity.this, Uri.parse(path));
+                    photo = MediaUtils.getPhoto(PuzzleActivity.this, new File(path)).second;
+                }
                 Intent intent = new Intent();
-                intent.putExtra(EasyPhotos.RESULT_PATHS, file.getAbsolutePath());
-
-                Photo photo = new Photo(file.getName(), file.getAbsolutePath(), file.lastModified() / 1000, puzzleView.getWidth(), puzzleView.getHeight(), file.length(), DurationUtils.getDuration(file.getAbsolutePath()), "image/png");
+                intent.putExtra(EasyPhotos.RESULT_PATHS, path);
                 intent.putExtra(EasyPhotos.RESULT_PHOTOS, photo);
                 setResult(RESULT_OK, intent);
                 PuzzleActivity.this.finish();
             }
 
             @Override
-            public void onIOFailed(IOException exception) {
+            public void onFailed(Exception exception) {
+                exception.printStackTrace();
                 setResult(RESULT_OK);
                 PuzzleActivity.this.finish();
             }
