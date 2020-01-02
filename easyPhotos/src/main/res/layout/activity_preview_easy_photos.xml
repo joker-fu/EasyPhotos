@@ -35,7 +35,7 @@
 
                 <ImageView
                     android:id="@+id/iv_back"
-                    android:layout_width="42dp"
+                    android:layout_width="54dp"
                     android:layout_height="match_parent"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"

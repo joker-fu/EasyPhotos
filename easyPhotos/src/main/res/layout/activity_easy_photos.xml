@@ -202,7 +202,7 @@
 
         <ImageView
             android:id="@+id/iv_back"
-            android:layout_width="42dp"
+            android:layout_width="54dp"
             android:layout_height="42dp"
             android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="@+id/m_tool_bar"

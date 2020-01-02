@@ -7,15 +7,11 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.ImageDecoder;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
@@ -69,11 +65,7 @@ import com.huantansheng.easyphotos.utils.system.SystemUtils;
 import com.huantansheng.easyphotos.utils.uri.UriUtils;
 import com.yalantis.ucrop.UCrop;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -427,14 +419,12 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         options.setToolbarTitle("裁剪");
         //隐藏底部控制栏
         options.setHideBottomControls(Setting.isHideUCropControls);
+        //toolbar
+        options.setToolbarCancelDrawable(R.drawable.ic_arrow_back_easy_photos);
         Uri uri;
         if (SystemUtils.beforeAndroidTen()) {
             uri = Uri.fromFile(new File(source));
         } else {
-//            Bitmap bitmap = getBitmap(context, Uri.parse(source));
-//            File tempFile = new File(context.getCacheDir(), "source_" + destinationFileName);
-//            convertBitmap2File(bitmap, tempFile);
-//            uri = Uri.fromFile(tempFile);
             uri = Uri.parse(source);
         }
         File cacheFile = new File(context.getCacheDir(), destinationFileName);
@@ -457,45 +447,6 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         }
         return defaultSuffix;
     }
-
-    /************* UCrop没有兼容**Android10之前临时处理办法 **************/
-
-    private Bitmap getBitmap(Context context, Uri imageUri) {
-        Bitmap bitmap = null;
-        ContentResolver resolver = context.getContentResolver();
-        try {
-            if (SystemUtils.beforeAndroidTen()) {
-                InputStream inputStream = resolver.openInputStream(imageUri);
-                bitmap = BitmapFactory.decodeStream(inputStream);
-            } else {
-                ImageDecoder.Source source = ImageDecoder.createSource(resolver, imageUri);
-                bitmap = ImageDecoder.decodeBitmap(source);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return bitmap;
-    }
-
-    private void convertBitmap2File(Bitmap bitmap, File destFile) {
-        try {
-            boolean success = destFile.createNewFile();
-            if (success) {
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-                byte[] bytes = bos.toByteArray();
-
-                FileOutputStream fos = new FileOutputStream(destFile);
-                fos.write(bytes);
-                fos.flush();
-                fos.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /************* UCrop没有兼容**Android10之前临时处理办法 **************/
 
     private void addNewPhoto(String albumName, Photo photo) {
         MediaScannerConnectionUtils.refresh(this, photo.path);

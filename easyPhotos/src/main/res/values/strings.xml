@@ -86,5 +86,9 @@
 
     <string name="compressing_picture">压缩中…</string>
 
+    <string name="ucrop_rotate">旋转</string>
 
+    <string name="ucrop_scale">缩放</string>
+
+    <string name="ucrop_crop">裁剪</string>
 </resources>

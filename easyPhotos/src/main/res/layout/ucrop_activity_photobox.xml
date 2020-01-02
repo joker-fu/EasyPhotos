@@ -8,17 +8,32 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/toolbar_size_easy_photos"
         android:background="@color/ucrop_color_toolbar"
-        android:minHeight="?attr/actionBarSize">
+        app:contentInsetStartWithNavigation="-100dp">
 
-        <TextView
-            android:id="@+id/toolbar_title"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:text="@string/ucrop_label_edit_photo"
-            android:textColor="@color/ucrop_color_toolbar_widget" />
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/m_back_line"
+                android:layout_width="1dp"
+                android:layout_height="18dp"
+                android:background="@color/easy_photos_bar_primary_dark" />
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:text="@string/ucrop_label_edit_photo"
+                android:textColor="@color/ucrop_color_toolbar_widget" />
+        </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
 
