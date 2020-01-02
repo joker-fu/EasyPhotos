@@ -133,8 +133,13 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志
+**2.5.1：**
+- 调整UCrop为无JNI版本（之前用了JNI版本）
+- 调整UCrop裁剪兼容Android10方案
+- 调整UI
+
 **2.5.0：**
-- 兼容Android10，且Photo.path低于10返回绝对路径，高于10返回uri.toString（拼图/水印/裁剪/自定义相机拍照，由于UCrop还未兼容10，所以暂时改为源码依赖，已给UCrop提PR） 
+- 兼容Android10，且Photo.path低于10返回绝对路径，高于10返回uri.toString（拼图/水印/裁剪/自定义相机拍照，由于UCrop还未兼容10，所以暂时改为源码依赖） 
 - 调整默认Setting相机参数（默认使用系统相机）
 - 因兼容Android10，调整部分方法参数（saveBitmapToDir去掉dirPath, namePrefix参数，默认存储在DCIM；startPuzzleWithPhotos/startPuzzleWithPaths去掉puzzleSaveDirPath, puzzleSaveNamePrefix参数 ）
 
