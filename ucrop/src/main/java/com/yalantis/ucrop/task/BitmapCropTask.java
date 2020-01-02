@@ -7,7 +7,6 @@ import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -23,10 +22,10 @@ import com.yalantis.ucrop.util.FileUtils;
 import com.yalantis.ucrop.util.ImageHeaderParser;
 
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 
@@ -154,9 +153,8 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
         if (shouldCrop) {
             ExifInterface originalExif;
             if (isAndroidQ) {
-                ParcelFileDescriptor parcelFileDescriptor = mContext.get().getContentResolver().openFileDescriptor(mImageInputUri, "r");
-                FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-                originalExif = new ExifInterface(fileDescriptor);
+                InputStream stream = mContext.get().getContentResolver().openInputStream(mImageInputUri);
+                originalExif = new ExifInterface(stream);
             } else {
                 originalExif = new ExifInterface(mImageInputUri.getPath());
             }
@@ -167,9 +165,8 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
             return true;
         } else {
             if (isAndroidQ && mImageInputUri.toString().startsWith("content://")) {
-                ParcelFileDescriptor parcelFileDescriptor = mContext.get().getContentResolver().openFileDescriptor(mImageInputUri, "r");
-                FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-                FileUtils.copyFile(fileDescriptor, mImageOutputPath);
+                InputStream stream = mContext.get().getContentResolver().openInputStream(mImageInputUri);
+                FileUtils.copyFile((FileInputStream) stream, mImageOutputPath);
             } else {
                 FileUtils.copyFile(mImageInputUri.getPath(), mImageOutputPath);
             }
