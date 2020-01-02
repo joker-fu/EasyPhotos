@@ -9,16 +9,16 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+
 import com.yalantis.ucrop.callback.BitmapLoadCallback;
 import com.yalantis.ucrop.model.ExifInfo;
 import com.yalantis.ucrop.util.BitmapLoadUtils;
 import com.yalantis.ucrop.util.FastBitmapDrawable;
 import com.yalantis.ucrop.util.RectUtils;
-
-import androidx.annotation.IntRange;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
 
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
@@ -52,7 +52,8 @@ public class TransformImageView extends AppCompatImageView {
 
     private int mMaxBitmapSize = 0;
 
-    private String mImageInputPath, mImageOutputPath;
+    private Uri mImageInputUri;
+    private String mImageOutputPath;
     private ExifInfo mExifInfo;
 
     /**
@@ -118,8 +119,8 @@ public class TransformImageView extends AppCompatImageView {
         setImageDrawable(new FastBitmapDrawable(bitmap));
     }
 
-    public String getImageInputPath() {
-        return mImageInputPath;
+    public Uri getImageInputUri() {
+        return mImageInputUri;
     }
 
     public String getImageOutputPath() {
@@ -143,8 +144,8 @@ public class TransformImageView extends AppCompatImageView {
                 new BitmapLoadCallback() {
 
                     @Override
-                    public void onBitmapLoaded(@NonNull Bitmap bitmap, @NonNull ExifInfo exifInfo, @NonNull String imageInputPath, @Nullable String imageOutputPath) {
-                        mImageInputPath = imageInputPath;
+                    public void onBitmapLoaded(@NonNull Bitmap bitmap, @NonNull ExifInfo exifInfo, @NonNull Uri imageInputUri, @Nullable String imageOutputPath) {
+                        mImageInputUri = imageInputUri;
                         mImageOutputPath = imageOutputPath;
                         mExifInfo = exifInfo;
 
