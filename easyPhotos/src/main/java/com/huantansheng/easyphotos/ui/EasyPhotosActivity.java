@@ -5,6 +5,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -18,7 +19,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.ScaleAnimation;
@@ -596,6 +599,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initAlbumItems() {
         rvAlbumItems = findViewById(R.id.rv_album_items);
         albumItemList.clear();
@@ -611,6 +615,41 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         albumItemsAdapter = new AlbumItemsAdapter(this, albumItemList, 0, this);
         rvAlbumItems.setLayoutManager(new LinearLayoutManager(this));
         rvAlbumItems.setAdapter(albumItemsAdapter);
+        rvAlbumItems.setOnTouchListener(new View.OnTouchListener() {
+            float lastY;
+            boolean canClose;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_MOVE:
+                        float curY = event.getY();
+                        if (!rvAlbumItems.canScrollVertically(-1)) {
+                            float dy = lastY == 0 ? 0 : curY - lastY;
+                            if (dy > ViewConfiguration.get(EasyPhotosActivity.this).getScaledTouchSlop()) {
+                                lastY = 0;
+                                canClose = true;
+                            }
+                        } else {
+                            canClose = false;
+                        }
+                        lastY = curY;
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (canClose) {
+                            canClose = false;
+                            showAlbumItems(false);
+                            return true;
+                        }
+                        break;
+                    default:
+                        lastY = 0;
+                        canClose = false;
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -773,7 +812,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         ObjectAnimator translationHide = ObjectAnimator.ofFloat(rvAlbumItems, "translationY", 0,
                 mBottomBar.getTop());
         ObjectAnimator alphaHide = ObjectAnimator.ofFloat(rootViewAlbumItems, "alpha", 1.0f, 0.0f);
-        translationHide.setDuration(200);
+        translationHide.setDuration(300);
         setHide = new AnimatorSet();
         setHide.addListener(new AnimatorListenerAdapter() {
             @Override
