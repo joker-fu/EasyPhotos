@@ -37,7 +37,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     implementation project(':easyPhotos')
-//    implementation 'com.joker.HuanTanSheng:EasyPhotos:2.4.6_beta5'
+
+    //implementation 'com.joker.HuanTanSheng:EasyPhotos:andX-2.5.2'
 
     implementation 'com.tencent.bugly:crashreport:latest.release'
 

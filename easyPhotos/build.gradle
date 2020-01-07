@@ -27,7 +27,7 @@ dependencies {
     implementation 'androidx.exifinterface:exifinterface:1.1.0'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     //implementation 'com.github.yalantis:ucrop:2.2.4'
-    implementation project(':ucrop')
+    api 'com.joker.HuanTanSheng:UCrop:andX-2.5.1'
 }
 
 publish {
@@ -35,7 +35,7 @@ publish {
     repoName = "maven"  //仓库名
     groupId = 'com.joker.HuanTanSheng'  //compile引用时的第1部分groupId
     artifactId = 'EasyPhotos'  //compile引用时的第2部分项目名
-    publishVersion = "andX-2.5.1"  //compile引用时的第3部分版本号
+    publishVersion = "andX-2.5.2"  //compile引用时的第3部分版本号
     desc = 'Select Photo For Android'
     website = 'https://github.com/joker-fu/EasyPhotos'
 }

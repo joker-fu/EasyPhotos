@@ -133,15 +133,21 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志
+**2.5.2：**
+- 补发UCrop兼容包，它兼容Android10，其他与原库无异，等原库兼容将替换为原库
+- 调整交互
+
 **2.5.1：**
 - 调整UCrop为无JNI版本（之前用了JNI版本）
 - 调整UCrop裁剪兼容Android10方案
 - 调整UI
+- 因漏发UCrop兼容包，已删除
 
 **2.5.0：**
 - 兼容Android10，且Photo.path低于10返回绝对路径，高于10返回uri.toString（拼图/水印/裁剪/自定义相机拍照，由于UCrop还未兼容10，所以暂时改为源码依赖） 
 - 调整默认Setting相机参数（默认使用系统相机）
 - 因兼容Android10，调整部分方法参数（saveBitmapToDir去掉dirPath, namePrefix参数，默认存储在DCIM；startPuzzleWithPhotos/startPuzzleWithPaths去掉puzzleSaveDirPath, puzzleSaveNamePrefix参数 ）
+- 因漏发UCrop兼容包，已删除
 
 **2.4.8_beta9：**
 - 调整自定义属性名称
