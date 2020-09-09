@@ -18,12 +18,12 @@
     </declare-styleable>
 
     <declare-styleable name="JCameraView">
-        <attr name="easy_iconSize"/>
-        <attr name="easy_iconMargin"/>
-        <attr name="easy_iconSrc"/>
-        <attr name="easy_iconLeft"/>
-        <attr name="easy_iconRight"/>
-        <attr name="easy_duration_max"/>
+        <attr name="easy_iconSize" format="dimension" />
+        <attr name="easy_iconMargin" format="dimension" />
+        <attr name="easy_iconSrc" format="reference" />
+        <attr name="easy_iconLeft" format="reference" />
+        <attr name="easy_iconRight" format="reference" />
+        <attr name="easy_duration_max" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="SubsamplingScaleImageView">

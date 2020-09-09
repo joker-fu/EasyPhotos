@@ -5,7 +5,7 @@
 
 ### 适配完成Android10之后，将主要维护master分支（AndroidX），support分支仅修复bug。
 
-[ ![Download](https://api.bintray.com/packages/wrap0673/maven/EasyPhotos/images/download.svg?version=2.5.0) ](https://bintray.com/wrap0673/maven/EasyPhotos/2.5.0/link)
+[ ![Download](https://api.bintray.com/packages/wrap0673/maven/EasyPhotos/images/download.svg?version=2.5.1) ](https://bintray.com/wrap0673/maven/EasyPhotos/2.5.1/link)
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 ![](https://img.shields.io/badge/platform-android-blue.svg) 
 ![](https://img.shields.io/badge/compileSdkVersion-28-blue.svg) 
@@ -134,6 +134,9 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志  
+**2.5.1：**
+- 2.5.1 attr.xml问题修复
+
 **2.5.0：**
 - 2.5.0正式版
 
