@@ -419,7 +419,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         //是否自由裁剪
         options.setFreeStyleCropEnabled(Setting.isFreeStyleCrop);
         //设置title
-        options.setToolbarTitle("裁剪");
+        options.setToolbarTitle(getString(R.string.ucrop_activity_title));
         //隐藏底部控制栏
         options.setHideBottomControls(Setting.isHideUCropControls);
         //toolbar

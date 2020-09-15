@@ -38,7 +38,7 @@
 
     <string name="empty_easy_photos">清空</string>
 
-    <string name="no_photos_easy_photos">没有符合要求的图片，拍一张吧</string>
+    <string name="no_photos_easy_photos">没有符合要求的媒体文件</string>
 
     <string name="permissions_again_easy_photos">请点击并允许相关权限</string>
 
@@ -85,6 +85,8 @@
     <string name="missing_audio_permission">没有录音权限</string>
 
     <string name="compressing_picture">压缩中…</string>
+
+    <string name="ucrop_activity_title">裁剪</string>
 
     <string name="ucrop_rotate">旋转</string>
 

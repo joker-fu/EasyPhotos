@@ -81,8 +81,8 @@ dependencies {
    implementation 'com.joker.HuanTanSheng:EasyPhotos:_latestVersion'  
    
    //例如：
-   //support：implementation 'com.joker.HuanTanSheng:EasyPhotos:2.5.0'
-   //androidX：implementation 'com.joker.HuanTanSheng:EasyPhotos:andX-2.5.0'
+   //support：implementation 'com.joker.HuanTanSheng:EasyPhotos:2.5.1'
+   //androidX：implementation 'com.joker.HuanTanSheng:EasyPhotos:andX-2.5.4'
 }
 ```    
     
@@ -133,6 +133,10 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志
+**2.5.4：**
+- strings.xml 修改 no_photos_easy_photos
+- strings.xml 增加 ucrop_activity_title 用于裁剪页标题
+
 **2.5.3：**
 - 修复attr问题
 
