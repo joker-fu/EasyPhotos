@@ -2,7 +2,8 @@
 
 ### 原[EasyPhotos](https://github.com/HuanTanSheng/EasyPhotos)地址
 
-### 适配完成Android10之后，将主要维护master分支（AndroidX），support分支仅修复bug。
+### **适配完成Android10之后，将主要维护master分支（AndroidX），support分支仅修复bug。**
+### **签名信息遗忘，APK暂未未更新，请直接跑 demo**
 
 [ ![Download](https://api.bintray.com/packages/wrap0673/maven/EasyPhotos/images/download.svg) ](https://bintray.com/wrap0673/maven/EasyPhotos/_latestVersion)
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
@@ -82,7 +83,7 @@ dependencies {
    
    //例如：
    //support：implementation 'com.joker.HuanTanSheng:EasyPhotos:2.5.1'
-   //androidX：implementation 'com.joker.HuanTanSheng:EasyPhotos:andX-2.5.4'
+   //androidX：implementation 'com.joker.HuanTanSheng:EasyPhotos:andX-2.5.5'
 }
 ```    
     
@@ -133,6 +134,9 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志
+**2.5.5：**
+- 预览图片 支持设置从第几张开始
+
 **2.5.4：**
 - strings.xml 修改 no_photos_easy_photos
 - strings.xml 增加 ucrop_activity_title 用于裁剪页标题

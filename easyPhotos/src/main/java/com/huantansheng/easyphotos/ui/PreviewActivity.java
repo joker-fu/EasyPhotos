@@ -54,14 +54,15 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
         act.startActivityForResult(intent, Code.REQUEST_PREVIEW_ACTIVITY);
     }
 
-    public static void start(Activity act, ArrayList<Photo> photos, boolean bottomPreview) {
-        PreviewActivity.start(act,photos,bottomPreview,0);
+    public static void start(Activity act, @NonNull ArrayList<Photo> photos, boolean bottomPreview) {
+        PreviewActivity.start(act, photos, bottomPreview, 0);
     }
 
-    public static void start(Activity act, ArrayList<Photo> photos, boolean bottomPreview, int currIndex) {
-        if (photos != null && photos.size() < 1) return;
+    public static void start(Activity act, @NonNull ArrayList<Photo> photos, boolean bottomPreview, int currIndex) {
+        int size = photos.size();
+        if (size < 1) return;
         if (currIndex < 0) currIndex = 0;
-        if (currIndex > photos.size()-1) currIndex = photos.size()-1;
+        if (currIndex > size - 1) currIndex = size - 1;
         Intent intent = new Intent(act, PreviewActivity.class);
         intent.putExtra(Key.PREVIEW_EXTERNAL_PHOTOS, photos);
         intent.putExtra(Key.PREVIEW_EXTERNAL_PHOTOS_BOTTOM_PREVIEW, bottomPreview);
@@ -176,7 +177,8 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
         this.photos.addAll(photos);
 
         boolean isShow = getIntent().getBooleanExtra(Key.PREVIEW_EXTERNAL_PHOTOS_BOTTOM_PREVIEW, false);
-        if (isShow) Result.photos = photos; else Result.photos.clear();
+        if (isShow) Result.photos = photos;
+        else Result.photos.clear();
 
         index = intent.getIntExtra(Key.PREVIEW_PHOTO_INDEX, 0);
         lastPosition = index;

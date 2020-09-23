@@ -160,9 +160,9 @@ public class EasyPhotos {
     /**
      * 保存Bitmap到DCIM文件夹
      *
-     * @param act         上下文
-     * @param bitmap      bitmap
-     * @param callBack    保存图片后的回调，回调已经处于UI线程
+     * @param act      上下文
+     * @param bitmap   bitmap
+     * @param callBack 保存图片后的回调，回调已经处于UI线程
      */
     public static void saveBitmapToDir(Activity act, Bitmap bitmap, SaveBitmapCallBack callBack) {
         BitmapUtils.saveBitmapToDir(act, bitmap, callBack);
@@ -199,16 +199,16 @@ public class EasyPhotos {
     /**
      * 启动拼图（最多对9张图片进行拼图）
      *
-     * @param act                  上下文
-     * @param paths                图片地址集合（最多对9张图片进行拼图）
-     * @param replaceCustom        单击替换拼图中的某张图片时，是否以startForResult的方式启动你的自定义界面，该界面与传进来的act为同一界面。false则在EasyPhotos内部完成，正常需求直接写false即可。 true的情况适用于：用于拼图的图片集合中包含网络图片，是在你的act界面中获取并下载的（也可以直接用网络地址，不用下载后的本地地址，也就是可以不下载下来），而非单纯本地相册。举例：你的act中有两个按钮，一个指向本地相册，一个指向网络相册，用户在该界面任意选择，选择好图片后跳转到拼图界面，用户在拼图界面点击替换按钮，将会启动一个新的act界面，这时，act只让用户在网络相册和本地相册选择一张图片，选择好执行
-     *                             Intent intent = new Intent();
-     *                             intent.putStringArrayListExtra(AlbumBuilder.RESULT_PATHS , paths);
-     *                             act.setResult(RESULT_OK,intent); 并关闭act，回到拼图界面，完成替换。
-     * @param imageEngine          图片加载引擎的具体实现
-     * @param callback             拼图回调
+     * @param act           上下文
+     * @param paths         图片地址集合（最多对9张图片进行拼图）
+     * @param replaceCustom 单击替换拼图中的某张图片时，是否以startForResult的方式启动你的自定义界面，该界面与传进来的act为同一界面。false则在EasyPhotos内部完成，正常需求直接写false即可。 true的情况适用于：用于拼图的图片集合中包含网络图片，是在你的act界面中获取并下载的（也可以直接用网络地址，不用下载后的本地地址，也就是可以不下载下来），而非单纯本地相册。举例：你的act中有两个按钮，一个指向本地相册，一个指向网络相册，用户在该界面任意选择，选择好图片后跳转到拼图界面，用户在拼图界面点击替换按钮，将会启动一个新的act界面，这时，act只让用户在网络相册和本地相册选择一张图片，选择好执行
+     *                      Intent intent = new Intent();
+     *                      intent.putStringArrayListExtra(AlbumBuilder.RESULT_PATHS , paths);
+     *                      act.setResult(RESULT_OK,intent); 并关闭act，回到拼图界面，完成替换。
+     * @param imageEngine   图片加载引擎的具体实现
+     * @param callback      拼图回调
      */
-    public static void startPuzzleWithPaths(FragmentActivity act, ArrayList<String> paths,  boolean replaceCustom, @NonNull ImageEngine imageEngine, PuzzleCallback callback) {
+    public static void startPuzzleWithPaths(FragmentActivity act, ArrayList<String> paths, boolean replaceCustom, @NonNull ImageEngine imageEngine, PuzzleCallback callback) {
         act.setResult(Activity.RESULT_OK);
         EasyResult.get(act).startPuzzleWithPaths(paths, replaceCustom, imageEngine, callback);
     }
@@ -241,7 +241,6 @@ public class EasyPhotos {
         }
         EasyPhotos.startPreviewPhotos(act, imageEngine, photos, bottomPreview, 0);
     }
-
 
 
     /**
