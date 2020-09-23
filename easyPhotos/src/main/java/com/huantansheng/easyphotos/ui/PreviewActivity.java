@@ -55,12 +55,19 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
     }
 
     public static void start(Activity act, ArrayList<Photo> photos, boolean bottomPreview) {
+        PreviewActivity.start(act,photos,bottomPreview,0);
+    }
+
+    public static void start(Activity act, ArrayList<Photo> photos, boolean bottomPreview, int currIndex) {
+        if (photos != null && photos.size() < 1) return;
+        if (currIndex < 0) currIndex = 0;
+        if (currIndex > photos.size()-1) currIndex = photos.size()-1;
         Intent intent = new Intent(act, PreviewActivity.class);
         intent.putExtra(Key.PREVIEW_EXTERNAL_PHOTOS, photos);
         intent.putExtra(Key.PREVIEW_EXTERNAL_PHOTOS_BOTTOM_PREVIEW, bottomPreview);
+        intent.putExtra(Key.PREVIEW_PHOTO_INDEX, currIndex);
         act.startActivity(intent);
     }
-
 
     /**
      * 一些旧设备在UI小部件更新之间需要一个小延迟
