@@ -3,7 +3,7 @@
 ### 原[EasyPhotos](https://github.com/HuanTanSheng/EasyPhotos)地址
 
 ### **适配完成Android10之后，将主要维护master分支（AndroidX），support分支仅修复bug。**
-### **签名信息遗忘，APK暂未未更新，请直接跑 demo**
+### **签名信息遗忘，APK暂未更新，请直接跑 demo**
 
 [ ![Download](https://api.bintray.com/packages/wrap0673/maven/EasyPhotos/images/download.svg) ](https://bintray.com/wrap0673/maven/EasyPhotos/_latestVersion)
 [![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
