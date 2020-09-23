@@ -222,8 +222,7 @@ public class EasyPhotos {
      * @param bottomPreview 是否显示底部预览效果
      */
     public static void startPreviewPhotos(FragmentActivity act, @NonNull ImageEngine imageEngine, @NonNull ArrayList<Photo> photos, boolean bottomPreview) {
-        Setting.imageEngine = imageEngine;
-        PreviewActivity.start(act, photos, bottomPreview);
+        EasyPhotos.startPreviewPhotos(act, imageEngine, photos, bottomPreview, 0);
     }
 
     /**
@@ -235,15 +234,47 @@ public class EasyPhotos {
      * @param bottomPreview 是否显示底部预览效果
      */
     public static void startPreviewPaths(FragmentActivity act, @NonNull ImageEngine imageEngine, @NonNull ArrayList<String> paths, boolean bottomPreview) {
-        Setting.imageEngine = imageEngine;
         ArrayList<Photo> photos = new ArrayList<>();
         for (String path : paths) {
             Photo photo = new Photo(null, path, 0, 0, 0, 0, 0, "");
             photos.add(photo);
         }
-        PreviewActivity.start(act, photos, bottomPreview);
+        EasyPhotos.startPreviewPhotos(act, imageEngine, photos, bottomPreview, 0);
     }
 
+
+
+    /**
+     * 提供外部预览图片（网络图片请开启网络权限）
+     *
+     * @param act           上下文
+     * @param imageEngine   图片加载引擎
+     * @param paths         图片路径集合
+     * @param bottomPreview 是否显示底部预览效果
+     * @param currIndex     预览图片从第几张开始
+     */
+    public static void startPreviewPaths(FragmentActivity act, @NonNull ImageEngine imageEngine, @NonNull ArrayList<String> paths, boolean bottomPreview, int currIndex) {
+        ArrayList<Photo> photos = new ArrayList<>();
+        for (String path : paths) {
+            Photo photo = new Photo(null, path, 0, 0, 0, 0, 0, "");
+            photos.add(photo);
+        }
+        EasyPhotos.startPreviewPhotos(act, imageEngine, photos, bottomPreview, currIndex);
+    }
+
+    /**
+     * 提供外部预览图片（网络图片请开启网络权限）
+     *
+     * @param act           上下文
+     * @param imageEngine   图片加载引擎
+     * @param photos        图片Photo集合
+     * @param bottomPreview 是否显示底部预览效果
+     * @param currIndex     预览图片从第几张开始
+     */
+    public static void startPreviewPhotos(FragmentActivity act, @NonNull ImageEngine imageEngine, @NonNull ArrayList<Photo> photos, boolean bottomPreview, int currIndex) {
+        Setting.imageEngine = imageEngine;
+        PreviewActivity.start(act, photos, bottomPreview, currIndex);
+    }
     //**************更新媒体库***********************
 
     /**
