@@ -165,7 +165,7 @@ public class PreviewPhotosAdapter extends RecyclerView.Adapter<PreviewPhotosAdap
             ivPhoto.setMediumScale(3f);
             ivPhoto.setMinimumScale(1f);
 
-            ivBigPhoto.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
+            ivBigPhoto.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_START);
             ivBigPhoto.setMaxScale(5f);
             ivBigPhoto.setMinScale(0.8f);
         }

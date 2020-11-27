@@ -8,12 +8,11 @@ import android.content.res.Resources;
 import android.graphics.*;
 import android.net.Uri;
 import android.os.Build;
-
-import android.text.TextUtils;
-
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import android.text.TextUtils;
+
 
 import com.huantansheng.easyphotos.ui.widget.subscaleview.SubsamplingScaleImageView;
 
@@ -24,7 +23,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Default implementation of {@link com.huantansheng.easyphotos.ui.widget.subscaleview.decoder.ImageRegionDecoder}
+ * Default implementation of {@link ImageRegionDecoder}
  * using Android's {@link BitmapRegionDecoder}, based on the Skia library. This
  * works well in most circumstances and has reasonable performance due to the cached decoder instance,
  * however it has some problems with grayscale, indexed and CMYK images.
@@ -101,6 +100,9 @@ public class SkiaImageRegionDecoder implements ImageRegionDecoder {
             try {
                 ContentResolver contentResolver = context.getContentResolver();
                 inputStream = contentResolver.openInputStream(uri);
+                if (inputStream == null) {
+                    throw new Exception("Content resolver returned null stream. Unable to initialise with uri.");
+                }
                 decoder = BitmapRegionDecoder.newInstance(inputStream, false);
             } finally {
                 if (inputStream != null) {

@@ -14,16 +14,14 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
-
-import android.text.TextUtils;
-import android.util.Log;
-
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.Log;
+
 
 import com.huantansheng.easyphotos.ui.widget.subscaleview.SubsamplingScaleImageView;
-
 
 import java.io.File;
 import java.io.FileFilter;
@@ -42,7 +40,7 @@ import static android.content.Context.ACTIVITY_SERVICE;
 
 /**
  * <p>
- * An implementation of {@link com.huantansheng.easyphotos.ui.widget.subscaleview.decoder.ImageRegionDecoder} using a pool of {@link BitmapRegionDecoder}s,
+ * An implementation of {@link ImageRegionDecoder} using a pool of {@link BitmapRegionDecoder}s,
  * to provide true parallel loading of tiles. This is only effective if parallel loading has been
  * enabled in the view by calling {@link SubsamplingScaleImageView#setExecutor(Executor)}
  * with a multi-threaded {@link Executor} instance.

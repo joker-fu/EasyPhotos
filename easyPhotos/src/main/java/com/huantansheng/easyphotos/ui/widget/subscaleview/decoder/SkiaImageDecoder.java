@@ -7,11 +7,11 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.text.TextUtils;
-
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import android.text.TextUtils;
+
 
 import com.huantansheng.easyphotos.ui.widget.subscaleview.SubsamplingScaleImageView;
 
@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
- * Default implementation of {@link com.huantansheng.easyphotos.ui.widget.subscaleview.decoder.ImageDecoder}
+ * Default implementation of {@link ImageDecoder}
  * using Android's {@link BitmapFactory}, based on the Skia library. This
  * works well in most circumstances and has reasonable performance, however it has some problems
  * with grayscale, indexed and CMYK images.
@@ -94,9 +94,7 @@ public class SkiaImageDecoder implements ImageDecoder {
                 bitmap = BitmapFactory.decodeStream(inputStream, null, options);
             } finally {
                 if (inputStream != null) {
-                    try {
-                        inputStream.close();
-                    } catch (Exception e) { /* Ignore */ }
+                    try { inputStream.close(); } catch (Exception e) { /* Ignore */ }
                 }
             }
         }

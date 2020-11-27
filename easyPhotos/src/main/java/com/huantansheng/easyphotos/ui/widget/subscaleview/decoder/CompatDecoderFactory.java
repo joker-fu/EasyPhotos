@@ -1,8 +1,6 @@
 package com.huantansheng.easyphotos.ui.widget.subscaleview.decoder;
 
 import android.graphics.Bitmap;
-
-
 import androidx.annotation.NonNull;
 
 import java.lang.reflect.Constructor;
@@ -20,7 +18,7 @@ public class CompatDecoderFactory<T> implements DecoderFactory<T> {
 
     /**
      * Construct a factory for the given class. This must have a default constructor.
-     * @param clazz a class that implements {@link com.huantansheng.easyphotos.ui.widget.subscaleview.decoder.ImageDecoder} or {@link com.huantansheng.easyphotos.ui.widget.subscaleview.decoder.ImageRegionDecoder}.
+     * @param clazz a class that implements {@link ImageDecoder} or {@link ImageRegionDecoder}.
      */
     public CompatDecoderFactory(@NonNull Class<? extends T> clazz) {
     this(clazz, null);

@@ -37,6 +37,7 @@ import com.huantansheng.easyphotos.setting.Setting;
 import com.huantansheng.easyphotos.ui.adapter.PreviewPhotosAdapter;
 import com.huantansheng.easyphotos.ui.widget.PressedTextView;
 import com.huantansheng.easyphotos.ui.widget.PreviewRecyclerView;
+import com.huantansheng.easyphotos.ui.widget.subscaleview.SubsamplingScaleImageView;
 import com.huantansheng.easyphotos.utils.color.ColorUtils;
 import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
@@ -341,7 +342,7 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
                     holder.ivPhoto.setScale(1f, true);
                 }
                 if (holder.ivBigPhoto != null && holder.ivBigPhoto.getScale() != 1f) {
-                    holder.ivBigPhoto.resetScaleAndCenter();
+                    holder.ivBigPhoto.resetScaleAndTop();
                 }
             }
         });

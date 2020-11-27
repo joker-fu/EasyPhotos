@@ -199,7 +199,7 @@ public class SubsamplingScaleImageView extends View {
     private int orientation = ORIENTATION_0;
 
     // Max scale allowed (prevent infinite zoom)
-    private float maxScale = 3F;
+    private float maxScale = 2F;
 
     // Min scale allowed (prevent infinite zoom)
     private float minScale = minScale();
@@ -424,7 +424,7 @@ public class SubsamplingScaleImageView extends View {
      *
      * @param imageSource Image source.
      */
-    public final void setImage(@NonNull com.huantansheng.easyphotos.ui.widget.subscaleview.ImageSource imageSource) {
+    public final void setImage(@NonNull ImageSource imageSource) {
         setImage(imageSource, null, null);
     }
 
@@ -436,7 +436,7 @@ public class SubsamplingScaleImageView extends View {
      * @param imageSource Image source.
      * @param state       State to be restored. Nullable.
      */
-    public final void setImage(@NonNull com.huantansheng.easyphotos.ui.widget.subscaleview.ImageSource imageSource, com.huantansheng.easyphotos.ui.widget.subscaleview.ImageViewState state) {
+    public final void setImage(@NonNull ImageSource imageSource, ImageViewState state) {
         setImage(imageSource, null, state);
     }
 
@@ -444,14 +444,14 @@ public class SubsamplingScaleImageView extends View {
      * Set the image source from a bitmap, resource, asset, file or other URI, providing a preview image to be
      * displayed until the full size image is loaded.
      * <p>
-     * You must declare the dimensions of the full size image by calling {@link com.huantansheng.easyphotos.ui.widget.subscaleview.ImageSource#dimensions(int, int)}
+     * You must declare the dimensions of the full size image by calling {@link ImageSource#dimensions(int, int)}
      * on the imageSource object. The preview source will be ignored if you don't provide dimensions,
      * and if you provide a bitmap for the full size image.
      *
      * @param imageSource   Image source. Dimensions must be declared.
      * @param previewSource Optional source for a preview image to be displayed and allow interaction while the full size image loads.
      */
-    public final void setImage(@NonNull com.huantansheng.easyphotos.ui.widget.subscaleview.ImageSource imageSource, com.huantansheng.easyphotos.ui.widget.subscaleview.ImageSource previewSource) {
+    public final void setImage(@NonNull ImageSource imageSource, ImageSource previewSource) {
         setImage(imageSource, previewSource, null);
     }
 
@@ -461,7 +461,7 @@ public class SubsamplingScaleImageView extends View {
      * This is the best method to use when you want scale and center to be restored after screen orientation change;
      * it avoids any redundant loading of tiles in the wrong orientation.
      * <p>
-     * You must declare the dimensions of the full size image by calling {@link com.huantansheng.easyphotos.ui.widget.subscaleview.ImageSource#dimensions(int, int)}
+     * You must declare the dimensions of the full size image by calling {@link ImageSource#dimensions(int, int)}
      * on the imageSource object. The preview source will be ignored if you don't provide dimensions,
      * and if you provide a bitmap for the full size image.
      *
@@ -469,7 +469,7 @@ public class SubsamplingScaleImageView extends View {
      * @param previewSource Optional source for a preview image to be displayed and allow interaction while the full size image loads.
      * @param state         State to be restored. Nullable.
      */
-    public final void setImage(@NonNull com.huantansheng.easyphotos.ui.widget.subscaleview.ImageSource imageSource, com.huantansheng.easyphotos.ui.widget.subscaleview.ImageSource previewSource, com.huantansheng.easyphotos.ui.widget.subscaleview.ImageViewState state) {
+    public final void setImage(@NonNull ImageSource imageSource, ImageSource previewSource, ImageViewState state) {
         //noinspection ConstantConditions
         if (imageSource == null) {
             throw new NullPointerException("imageSource must not be null");
@@ -1008,16 +1008,8 @@ public class SubsamplingScaleImageView extends View {
             }
         }
         float doubleTapZoomScale = Math.min(maxScale, SubsamplingScaleImageView.this.doubleTapZoomScale);
-//        boolean zoomIn = (scale <= doubleTapZoomScale * 0.9) || scale == minScale;
-//        float targetScale = zoomIn ? doubleTapZoomScale : minScale();
-        //start fixme 保持和PhotoView效果一致
-        boolean zoomIn = (scale <= maxScale * 0.9) || scale == minScale;
-        float targetScale = zoomIn ? maxScale : minScale();
-        float middleScale = (maxScale + minScale()) / 2;
-        if (scale < middleScale) {
-            targetScale = middleScale;
-        }
-        //end
+        boolean zoomIn = (scale <= doubleTapZoomScale * 0.9) || scale == minScale;
+        float targetScale = zoomIn ? doubleTapZoomScale : minScale();
         if (doubleTapZoomStyle == ZOOM_FOCUS_CENTER_IMMEDIATE) {
             setScaleAndCenter(targetScale, sCenter);
         } else if (doubleTapZoomStyle == ZOOM_FOCUS_CENTER || !zoomIn || !panEnabled) {
@@ -1150,7 +1142,7 @@ public class SubsamplingScaleImageView extends View {
                 }
             }
 
-        } else if (bitmap != null) {
+        } else if (bitmap != null && !bitmap.isRecycled()) {
 
             float xScale = scale, yScale = scale;
             if (bitmapIsPreview) {
@@ -1934,7 +1926,7 @@ public class SubsamplingScaleImageView extends View {
                     cursor.close();
                 }
             }
-        } else if (sourceUri.startsWith(com.huantansheng.easyphotos.ui.widget.subscaleview.ImageSource.FILE_SCHEME) && !sourceUri.startsWith(com.huantansheng.easyphotos.ui.widget.subscaleview.ImageSource.ASSET_SCHEME)) {
+        } else if (sourceUri.startsWith(ImageSource.FILE_SCHEME) && !sourceUri.startsWith(ImageSource.ASSET_SCHEME)) {
             try {
                 ExifInterface exifInterface = new ExifInterface(sourceUri.substring(ImageSource.FILE_SCHEME.length() - 1));
                 int orientationAttr = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
@@ -2005,7 +1997,7 @@ public class SubsamplingScaleImageView extends View {
     /**
      * Set scale, center and orientation from saved state.
      */
-    private void restoreState(com.huantansheng.easyphotos.ui.widget.subscaleview.ImageViewState state) {
+    private void restoreState(ImageViewState state) {
         if (state != null && VALID_ORIENTATIONS.contains(state.getOrientation())) {
             this.orientation = state.getOrientation();
             this.pendingScale = state.getScale();
@@ -2713,6 +2705,17 @@ public class SubsamplingScaleImageView extends View {
         invalidate();
     }
 
+    public final void resetScaleAndTop() {
+        this.anim = null;
+        this.pendingScale = limitedScale(0);
+        if (isReady()) {
+            this.sPendingCenter = new PointF(sWidth() / 2, 0);
+        } else {
+            this.sPendingCenter = new PointF(0, 0);
+        }
+        invalidate();
+    }
+
     /**
      * Call to find whether the view is initialised, has dimensions, and will display an image on
      * the next draw. If a preview has been provided, it may be the preview that will be displayed
@@ -2797,10 +2800,10 @@ public class SubsamplingScaleImageView extends View {
      * Get the current state of the view (scale, center, orientation) for restoration after rotate. Will return null if
      * the view is not ready.
      *
-     * @return an {@link com.huantansheng.easyphotos.ui.widget.subscaleview.ImageViewState} instance representing the current position of the image. null if the view isn't ready.
+     * @return an {@link ImageViewState} instance representing the current position of the image. null if the view isn't ready.
      */
     @Nullable
-    public final com.huantansheng.easyphotos.ui.widget.subscaleview.ImageViewState getState() {
+    public final ImageViewState getState() {
         if (vTranslate != null && sWidth > 0 && sHeight > 0) {
             //noinspection ConstantConditions
             return new ImageViewState(getScale(), getCenter(), getOrientation());

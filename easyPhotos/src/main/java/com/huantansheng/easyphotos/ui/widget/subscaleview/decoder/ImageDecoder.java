@@ -3,7 +3,6 @@ package com.huantansheng.easyphotos.ui.widget.subscaleview.decoder;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
-
 import androidx.annotation.NonNull;
 
 /**
@@ -26,7 +25,6 @@ public interface ImageDecoder {
      * @return the decoded bitmap
      * @throws Exception if decoding fails.
      */
-    @NonNull
-    Bitmap decode(Context context, @NonNull Uri uri) throws Exception;
+    @NonNull Bitmap decode(Context context, @NonNull Uri uri) throws Exception;
 
 }
