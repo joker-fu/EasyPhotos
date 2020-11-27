@@ -83,7 +83,7 @@ dependencies {
    
    //例如：
    //support：implementation 'com.joker.HuanTanSheng:EasyPhotos:2.5.1'
-   //androidX：implementation 'com.joker.HuanTanSheng:EasyPhotos:andX-2.5.5'
+   //androidX：implementation 'com.joker.HuanTanSheng:EasyPhotos:andX-2.5.6'
 }
 ```    
     
@@ -134,6 +134,11 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
 
 
 ## 更新日志
+
+**2.5.5：**
+- 升级subsampling-scale-image-view源码，修改源码增加resetScaleAndTop方法
+- 优化长图预览
+
 **2.5.5：**
 - 预览图片 支持设置从第几张开始
 
