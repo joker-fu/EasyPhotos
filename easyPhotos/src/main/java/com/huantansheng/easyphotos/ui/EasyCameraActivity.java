@@ -68,7 +68,8 @@ public class EasyCameraActivity extends AppCompatActivity {
 
     private void toSystemCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+        if (cameraIntent.resolveActivity(getPackageManager()) != null ||
+                getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
             Uri imageUri;
             if (SystemUtils.beforeAndroidTen()) {
                 final File tempFile = createCameraTempFile("IMG", ".jpg");

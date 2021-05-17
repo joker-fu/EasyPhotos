@@ -149,9 +149,9 @@ public class AlbumModel {
         final ContentResolver contentResolver = context.getContentResolver();
         final Cursor cursor = contentResolver.query(CONTENT_URI, PROJECTIONS, selection, selectionArgs, SORT_ORDER);
 
-        //System.out.println("-----》 " + System.currentTimeMillis());
+        // System.out.println("-----》 " + System.currentTimeMillis());
         if (cursor == null) {
-//            Log.d(TAG, "call: " + "Empty photos");
+        // Log.d(TAG, "call: " + "Empty photos");
         } else if (cursor.moveToFirst()) {
             final String albumItem_all_name = getAllAlbumName(context);
             final String albumItem_video_name = context.getString(R.string.selector_folder_video_easy_photos);
