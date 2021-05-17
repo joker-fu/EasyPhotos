@@ -6,9 +6,7 @@ buildscript {
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
-        //bintray 插件
-        classpath 'com.novoda:bintray-release:0.9'
+        classpath 'com.android.tools.build:gradle:4.1.3'
     }
 }
 
