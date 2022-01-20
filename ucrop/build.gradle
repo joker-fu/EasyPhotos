@@ -2,13 +2,11 @@ apply plugin: 'com.android.library'
 //apply plugin: 'com.novoda.bintray-release'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 29
-        versionCode 25
-        versionName "2.2.4-native"
 
         vectorDrawables.useSupportLibrary = true
     }

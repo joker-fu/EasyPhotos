@@ -407,7 +407,6 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         options.setToolbarColor(barColor);
         int widgetColor = ContextCompat.getColor(this, R.color.easy_photos_fg_primary);
         options.setToolbarWidgetColor(widgetColor);
-        options.setActiveWidgetColor(Color.BLACK);
         //options.setLogoColor(Color.TRANSPARENT);
         //设置裁剪质量
         options.setCompressionQuality(Setting.compressQuality);

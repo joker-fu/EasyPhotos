@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.huantansheng.easyphotos.demo"
@@ -9,6 +9,7 @@ android {
         targetSdkVersion 30
         versionCode 2
         versionName "1.0.2"
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -30,10 +31,10 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'com.google.android.material:material:1.5.0'
     testImplementation 'junit:junit:4.13.2'
 
     implementation project(':easyPhotos')
@@ -48,6 +49,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 
     implementation 'top.zibin:Luban:1.1.8'
+    implementation "androidx.multidex:multidex:2.0.1"
 
     //检测内存泄漏
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
