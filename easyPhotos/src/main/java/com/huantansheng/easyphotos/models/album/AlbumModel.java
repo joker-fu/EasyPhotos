@@ -84,8 +84,7 @@ public class AlbumModel {
             @Override
             public void run() {
                 album.clear();
-                initAlbum(context);
-                if (null != callBack) callBack.onAlbumWorkedCallBack();
+                initAlbum(context, callBack);
             }
         }).start();
     }
@@ -103,7 +102,7 @@ public class AlbumModel {
                 Setting.videoMinSecond, Setting.videoMinSecond == 0 ? "" : "=", Setting.videoMaxSecond);
     }
 
-    private void initAlbum(Context context) {
+    private void initAlbum(Context context, CallBack callBack) {
         String selection;
         String[] selectionArgs;
         if (Setting.isOnlyGif() && Setting.showGif) {
@@ -146,12 +145,13 @@ public class AlbumModel {
             throw new RuntimeException("filter types error, please check your filter method! ");
         }
 
+
         final ContentResolver contentResolver = context.getContentResolver();
         final Cursor cursor = contentResolver.query(CONTENT_URI, PROJECTIONS, selection, selectionArgs, SORT_ORDER);
+        int index = 0;
 
-        // System.out.println("-----》 " + System.currentTimeMillis());
         if (cursor == null) {
-        // Log.d(TAG, "call: " + "Empty photos");
+            // Log.d(TAG, "call: " + "Empty photos");
         } else if (cursor.moveToFirst()) {
             final String albumItem_all_name = getAllAlbumName(context);
             final String albumItem_video_name = context.getString(R.string.selector_folder_video_easy_photos);
@@ -167,6 +167,7 @@ public class AlbumModel {
             final int heightCol = cursor.getColumnIndex(MediaStore.MediaColumns.HEIGHT);
 
             boolean equalsAlbumName = albumItem_video_name.equals(albumItem_all_name);
+
             do {
                 final long id = cursor.getLong(idCol);
                 final String path;
@@ -214,10 +215,14 @@ public class AlbumModel {
                 // 添加当前图片的专辑到专辑模型实体中
                 album.addAlbumItem(bucketName, path);
                 album.getAlbumItem(bucketName).addImageItem(imageItem);
+                index++;
+                if (index % 500 == 0) {
+                    callBack.onAlbumWorkedCallBack();
+                }
             } while (isQuery && cursor.moveToNext());
+            callBack.onAlbumWorkedCallBack();
             cursor.close();
         }
-        //System.out.println("-----》 " + System.currentTimeMillis());
     }
 
     /**

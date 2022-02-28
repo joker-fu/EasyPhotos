@@ -182,18 +182,20 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         if (Setting.selectedPhotos.size() > Setting.count) {
             throw new RuntimeException("AlbumBuilder: 默认勾选的图片张数不能大于设置的选择数！" + "|默认勾选张数：" + Setting.selectedPhotos.size() + "|设置的选择数：" + Setting.count);
         }
-        AlbumModel.CallBack albumModelCallBack = new AlbumModel.CallBack() {
-            @Override
-            public void onAlbumWorkedCallBack() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        onAlbumWorkedDo();
-                        showProgress(false);
-                    }
-                });
+        AlbumModel.CallBack albumModelCallBack = () -> runOnUiThread(() -> {
+            if (photosAdapter != null && albumItemsAdapter != null) {
+                int start = photoList.size();
+                photoList.clear();
+                photoList.addAll(albumModel.getCurrAlbumItemPhotos(currAlbumItemIndex));
+                photosAdapter.notifyItemChanged(start, photoList.size());
+                albumItemList.clear();
+                albumItemList.addAll(albumModel.getAlbumItems());
+                albumItemsAdapter.notifyDataSetChanged();
+                return;
             }
-        };
+            onAlbumWorkedDo();
+            showProgress(false);
+        });
         albumModel = AlbumModel.getInstance();
         showProgress(true);
         albumModel.query(this, albumModelCallBack);

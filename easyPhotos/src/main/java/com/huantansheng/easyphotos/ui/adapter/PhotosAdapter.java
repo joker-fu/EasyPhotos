@@ -196,19 +196,22 @@ public class PhotosAdapter extends RecyclerView.Adapter {
     }
 
     private void singleSelector(Photo photo, int position) {
+        int res = 0;
         if (!Result.isEmpty()) {
             if (Result.getPhotoPath(0).equals(photo.path) && !Setting.singleCheckedBack) {
                 Result.removePhoto(photo);
-                notifyItemChanged(position);
             } else {
                 Result.removePhoto(0);
-                Result.addPhoto(photo);
+                res = Result.addPhoto(photo);
                 notifyItemChanged(singlePosition);
-                notifyItemChanged(position);
             }
         } else {
-            Result.addPhoto(photo);
-            notifyItemChanged(position);
+            res = Result.addPhoto(photo);
+        }
+        notifyItemChanged(position);
+        if (res != 0) {
+            listener.onSelectError(res);
+            return;
         }
         listener.onSelectorChanged();
     }
