@@ -65,7 +65,7 @@ public class Setting {
     public static boolean useSystemCamera = true;
     public static String captureType = Capture.ALL;
     public static int recordDuration = 15000;
-    public static WeakReference<View> cameraCoverView = null;
+    public static View cameraCoverView = null;
     public static boolean enableCameraTip = true;
     public static int RECORDING_BIT_RATE = JCameraView.MEDIA_QUALITY_MIDDLE;
     // 裁剪相关参数
@@ -121,7 +121,6 @@ public class Setting {
         useSystemCamera = true;
         captureType = Capture.ALL;
         recordDuration = 15000;
-        if (cameraCoverView != null) cameraCoverView.clear();
         cameraCoverView = null;
         enableCameraTip = true;
         RECORDING_BIT_RATE = JCameraView.MEDIA_QUALITY_MIDDLE;

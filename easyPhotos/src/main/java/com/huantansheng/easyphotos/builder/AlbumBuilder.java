@@ -1,11 +1,12 @@
 package com.huantansheng.easyphotos.builder;
 
 import android.app.Activity;
+import android.view.View;
+
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import android.view.View;
 
 import com.huantansheng.easyphotos.callback.SelectCallback;
 import com.huantansheng.easyphotos.callback.VideoPreviewCallback;
@@ -403,7 +404,7 @@ public class AlbumBuilder {
      * @return AlbumBuilder
      */
     public AlbumBuilder setCameraCoverView(View coverView) {
-        Setting.cameraCoverView = new WeakReference<View>(coverView);
+        Setting.cameraCoverView = coverView;
         return AlbumBuilder.this;
     }
 

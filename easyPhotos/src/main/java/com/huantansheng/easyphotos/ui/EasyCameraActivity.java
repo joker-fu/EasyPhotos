@@ -164,8 +164,8 @@ public class EasyCameraActivity extends AppCompatActivity {
         pbProgress = findViewById(R.id.pb_progress);
         jCameraView = findViewById(R.id.jCameraView);
         jCameraView.enableCameraTip(Setting.enableCameraTip);
-        if (Setting.cameraCoverView != null && Setting.cameraCoverView.get() != null) {
-            View coverView = Setting.cameraCoverView.get();
+        if (Setting.cameraCoverView != null) {
+            View coverView = Setting.cameraCoverView;
             rlCoverView = findViewById(R.id.rl_cover_view);
             coverView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             rlCoverView.addView(coverView);
@@ -212,7 +212,7 @@ public class EasyCameraActivity extends AppCompatActivity {
                 finish();
             }
         });
-        if (Setting.cameraCoverView != null && Setting.cameraCoverView.get() != null) {
+        if (Setting.cameraCoverView != null) {
             jCameraView.setPreViewListener(new JCameraPreViewListener() {
 
                 @Override
@@ -327,7 +327,6 @@ public class EasyCameraActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (Setting.cameraCoverView != null) Setting.cameraCoverView.clear();
         Setting.cameraCoverView = null;
         super.onDestroy();
     }
