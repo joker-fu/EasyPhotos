@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 31
         vectorDrawables.useSupportLibrary = true
     }
     lintOptions {
