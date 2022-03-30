@@ -13,32 +13,32 @@ public interface ImageEngine {
      * 加载图片到ImageView
      *
      * @param context   上下文
-     * @param photoPath 图片路径
+     * @param path      路径
      * @param imageView 加载到的ImageView
      */
-    void loadPhoto(Context context, String photoPath, ImageView imageView);
+    void loadPhoto(Context context, String path, ImageView imageView);
 
     /**
      * 加载gif动图图片到ImageView，gif动图不动
      *
      * @param context   上下文
-     * @param gifPath   gif动图路径
+     * @param path      gif动图路径
      * @param imageView 加载到的ImageView
      *                  <p>
      *                  备注：不支持动图显示的情况下可以不写
      */
-    void loadGifAsBitmap(Context context, String gifPath, ImageView imageView);
+    void loadGifAsBitmap(Context context, String path, ImageView imageView);
 
     /**
      * 加载gif动图到ImageView，gif动图动
      *
      * @param context   上下文
-     * @param gifPath   gif动图路径
+     * @param path      gif动图路径
      * @param imageView 加载动图的ImageView
      *                  <p>
      *                  备注：不支持动图显示的情况下可以不写
      */
-    void loadGif(Context context, String gifPath, ImageView imageView);
+    void loadGif(Context context, String path, ImageView imageView);
 
     /**
      * 获取图片加载框架中的缓存Bitmap

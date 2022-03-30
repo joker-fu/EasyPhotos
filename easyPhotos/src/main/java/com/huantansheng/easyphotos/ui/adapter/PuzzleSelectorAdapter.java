@@ -1,6 +1,7 @@
 package com.huantansheng.easyphotos.ui.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,10 +48,10 @@ public class PuzzleSelectorAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
         final int p = position;
-        Photo photo = dataList.get(position);
-        String path = photo.path;
-        String type = photo.type;
-        long duration = photo.duration;
+        final Photo photo = dataList.get(position);
+        final String path = photo.filePath;
+        final String type = photo.type;
+        final long duration = photo.duration;
         final boolean isGif = path.endsWith(Type.GIF) || type.endsWith(Type.GIF);
         if (Setting.showGif && isGif) {
             Setting.imageEngine.loadGifAsBitmap(((PhotoViewHolder) holder).ivPhoto.getContext(), path, ((PhotoViewHolder) holder).ivPhoto);
@@ -65,12 +66,7 @@ public class PuzzleSelectorAdapter extends RecyclerView.Adapter {
             ((PhotoViewHolder) holder).tvType.setVisibility(View.GONE);
         }
 
-        ((PhotoViewHolder) holder).ivPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onPhotoClick(p);
-            }
-        });
+        ((PhotoViewHolder) holder).ivPhoto.setOnClickListener(v -> listener.onPhotoClick(p));
     }
 
 

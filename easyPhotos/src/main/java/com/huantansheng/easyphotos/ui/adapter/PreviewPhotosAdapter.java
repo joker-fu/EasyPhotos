@@ -5,18 +5,14 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Build;
-
-import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.github.chrisbanes.photoview.OnScaleChangedListener;
-import com.github.chrisbanes.photoview.OnViewTapListener;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.github.chrisbanes.photoview.PhotoView;
 import com.huantansheng.easyphotos.R;
 import com.huantansheng.easyphotos.constant.Type;
@@ -34,9 +30,9 @@ import java.util.ArrayList;
  * Created by huan on 2017/10/26.
  */
 public class PreviewPhotosAdapter extends RecyclerView.Adapter<PreviewPhotosAdapter.PreviewPhotosViewHolder> {
-    private ArrayList<Photo> photos;
-    private OnClickListener listener;
-    private LayoutInflater inflater;
+    private final ArrayList<Photo> photos;
+    private final OnClickListener listener;
+    private final LayoutInflater inflater;
 
     public interface OnClickListener {
         void onPhotoClick();
@@ -58,10 +54,9 @@ public class PreviewPhotosAdapter extends RecyclerView.Adapter<PreviewPhotosAdap
 
     @Override
     public void onBindViewHolder(@NonNull final PreviewPhotosViewHolder holder, int position) {
-        final String path = photos.get(position).path;
+        final String path = photos.get(position).filePath;
         final String type = photos.get(position).type;
-        final double ratio =
-                (double) photos.get(position).height / (double) photos.get(position).width;
+        final double ratio = (double) photos.get(position).height / (double) photos.get(position).width;
 
         holder.ivPlay.setVisibility(View.GONE);
         holder.ivPhoto.setVisibility(View.GONE);
@@ -69,15 +64,9 @@ public class PreviewPhotosAdapter extends RecyclerView.Adapter<PreviewPhotosAdap
 
         if (type.contains(Type.VIDEO)) {
             holder.ivPhoto.setVisibility(View.VISIBLE);
-            Setting.imageEngine.loadPhoto(holder.ivPhoto.getContext(), path,
-                    holder.ivPhoto);
+            Setting.imageEngine.loadPhoto(holder.ivPhoto.getContext(), path, holder.ivPhoto);
             holder.ivPlay.setVisibility(View.VISIBLE);
-            holder.ivPlay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toPlayVideo(v, path, type);
-                }
-            });
+            holder.ivPlay.setOnClickListener(v -> toPlayVideo(v, path, type));
         } else if (path.endsWith(Type.GIF) || type.endsWith(Type.GIF)) {
             holder.ivPhoto.setVisibility(View.VISIBLE);
             Setting.imageEngine.loadGif(holder.ivPhoto.getContext(), path, holder.ivPhoto);
@@ -91,12 +80,7 @@ public class PreviewPhotosAdapter extends RecyclerView.Adapter<PreviewPhotosAdap
             }
         }
 
-        holder.ivBigPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onPhotoClick();
-            }
-        });
+        holder.ivBigPhoto.setOnClickListener(v -> listener.onPhotoClick());
         holder.ivBigPhoto.setOnStateChangedListener(new SubsamplingScaleImageView.OnStateChangedListener() {
             @Override
             public void onScaleChanged(float newScale, int origin) {
@@ -109,18 +93,8 @@ public class PreviewPhotosAdapter extends RecyclerView.Adapter<PreviewPhotosAdap
             }
         });
         holder.ivPhoto.setScale(1f);
-        holder.ivPhoto.setOnViewTapListener(new OnViewTapListener() {
-            @Override
-            public void onViewTap(View view, float x, float y) {
-                listener.onPhotoClick();
-            }
-        });
-        holder.ivPhoto.setOnScaleChangeListener(new OnScaleChangedListener() {
-            @Override
-            public void onScaleChange(float scaleFactor, float focusX, float focusY) {
-                listener.onPhotoScaleChanged();
-            }
-        });
+        holder.ivPhoto.setOnViewTapListener((view, x, y) -> listener.onPhotoClick());
+        holder.ivPhoto.setOnScaleChangeListener((scaleFactor, focusX, focusY) -> listener.onPhotoScaleChanged());
     }
 
     private void toPlayVideo(View v, String path, String type) {
@@ -129,20 +103,18 @@ public class PreviewPhotosAdapter extends RecyclerView.Adapter<PreviewPhotosAdap
         } else {
             Context context = v.getContext();
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            Uri uri = getUri(context, path, intent);
+            final Uri uri;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                uri = Uri.parse(path);
+            } else {
+                uri = Uri.fromFile(new File(path));
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.putExtra(Intent.EXTRA_STREAM, uri);
+            }
             intent.setDataAndType(uri, type);
             context.startActivity(intent);
-        }
-    }
-
-    private Uri getUri(Context context, String path, Intent intent) {
-        File file = new File(path);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            return FileProvider.getUriForFile(context, Setting.fileProviderAuthority, file);
-        } else {
-            return Uri.fromFile(file);
         }
     }
 
@@ -151,7 +123,7 @@ public class PreviewPhotosAdapter extends RecyclerView.Adapter<PreviewPhotosAdap
         return photos.size();
     }
 
-    public class PreviewPhotosViewHolder extends RecyclerView.ViewHolder {
+    public static class PreviewPhotosViewHolder extends RecyclerView.ViewHolder {
         public PhotoView ivPhoto;
         public SubsamplingScaleImageView ivBigPhoto;
         ImageView ivPlay;

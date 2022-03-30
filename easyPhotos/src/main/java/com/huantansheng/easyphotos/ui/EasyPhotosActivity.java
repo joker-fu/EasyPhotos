@@ -78,10 +78,10 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         .OnClickListener, PhotosAdapter.OnClickListener, AdListener, View.OnClickListener {
 
     private AlbumModel albumModel;
-    private ArrayList<Object> photoList = new ArrayList<>();
-    private ArrayList<Object> albumItemList = new ArrayList<>();
+    private final ArrayList<Object> photoList = new ArrayList<>();
+    private final ArrayList<Object> albumItemList = new ArrayList<>();
 
-    private ArrayList<Photo> resultList = new ArrayList<>();
+    private final ArrayList<Photo> resultList = new ArrayList<>();
 
     private RecyclerView rvPhotos;
     private PhotosAdapter photosAdapter;
@@ -201,9 +201,6 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         albumModel.query(this, albumModelCallBack);
         if (!Setting.selectedPhotos.isEmpty()) {
             for (Photo selectedPhoto : Setting.selectedPhotos) {
-                if (TextUtils.isEmpty(selectedPhoto.name)) {
-                    albumModel.fillPhoto(this, selectedPhoto);
-                }
                 selectedPhoto.selectedOriginal = Setting.selectedOriginal;
                 Result.addPhoto(selectedPhoto);
             }
@@ -236,14 +233,11 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
             @Override
             public void onShouldShow() {
                 tvPermission.setText(R.string.permissions_again_easy_photos);
-                permissionView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (PermissionUtil.checkAndRequestPermissionsInActivity(EasyPhotosActivity.this, getNeedPermissions())) {
-                            hasPermissions();
-                        } else {
-                            permissionView.setVisibility(View.VISIBLE);
-                        }
+                permissionView.setOnClickListener(view -> {
+                    if (PermissionUtil.checkAndRequestPermissionsInActivity(EasyPhotosActivity.this, getNeedPermissions())) {
+                        hasPermissions();
+                    } else {
+                        permissionView.setVisibility(View.VISIBLE);
                     }
                 });
 
@@ -258,7 +252,6 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
                         SettingsUtils.startMyApplicationDetailsForResult(EasyPhotosActivity.this, getPackageName());
                     }
                 });
-
             }
         });
     }
@@ -273,12 +266,9 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         if (!cameraIsCanUse()) {
             permissionView.setVisibility(View.VISIBLE);
             tvPermission.setText(R.string.permissions_die_easy_photos);
-            permissionView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    SettingsUtils.startMyApplicationDetailsForResult(EasyPhotosActivity.this, getPackageName());
-                }
-            });
+            permissionView.setOnClickListener(view ->
+                    SettingsUtils.startMyApplicationDetailsForResult(this, getPackageName())
+            );
             return;
         }
         Intent intent = new Intent(this, EasyCameraActivity.class);
@@ -301,17 +291,15 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
             case RESULT_OK:
                 if (data == null) return;
                 if (Code.REQUEST_CAMERA == requestCode) {
-                    String path;
-                    String videoPath = data.getStringExtra(Key.EXTRA_RESULT_CAPTURE_VIDEO_PATH);
-                    String imagePath = data.getStringExtra(Key.EXTRA_RESULT_CAPTURE_IMAGE_PATH);
-                    if (videoPath != null && !videoPath.isEmpty()) {
-                        path = videoPath;
+                    Uri uri;
+                    Uri videoUri = data.getParcelableExtra(Key.EXTRA_RESULT_CAPTURE_VIDEO_PATH);
+                    Uri imageUri = data.getParcelableExtra(Key.EXTRA_RESULT_CAPTURE_IMAGE_PATH);
+                    if (videoUri != null) {
+                        uri = videoUri;
                     } else {
-                        path = imagePath;
+                        uri = imageUri;
                     }
-                    if (!SystemUtils.beforeAndroidTen()) {
-                        path = UriUtils.getPathByUri(this, Uri.parse(path));
-                    }
+                    String path = UriUtils.getPathByUri(uri);
                     File tempFile = null;
                     if (path != null) tempFile = new File(path);
                     if (tempFile == null || !tempFile.exists()) {
@@ -381,11 +369,9 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
 
     private void startCrop(AppCompatActivity context, Photo photo, Intent data) {
 
-        String source = photo.path;
-
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
         bitmapOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(source, bitmapOptions);
+        BitmapFactory.decodeFile(photo.filePath, bitmapOptions);
         if (bitmapOptions.outWidth == -1 || bitmapOptions.outHeight == -1) {
             setResult(RESULT_OK, data);
             finish();
@@ -394,7 +380,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HH:mm:ss", Locale.getDefault());
-//        String suffix = source.substring(source.lastIndexOf("."));
+
         String imageName = "IMG_CROP_%s" + getImageSuffix(photo.type);
         String destinationFileName = String.format(imageName, dateFormat.format(new Date()));
 
@@ -425,14 +411,16 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         options.setHideBottomControls(Setting.isHideUCropControls);
         //toolbar
         options.setToolbarCancelDrawable(R.drawable.ic_arrow_back_easy_photos);
-        Uri uri;
-        if (SystemUtils.beforeAndroidTen()) {
-            uri = Uri.fromFile(new File(source));
-        } else {
-            uri = Uri.parse(source);
-        }
+
+//        Uri uri;
+//        if (SystemUtils.beforeAndroidTen()) {
+//            uri = Uri.fromFile(new File(source));
+//        } else {
+//            uri = Uri.parse(source);
+//        }
+
         File cacheFile = new File(context.getCacheDir(), destinationFileName);
-        UCrop.of(uri, Uri.fromFile(cacheFile))
+        UCrop.of(photo.fileUri, Uri.fromFile(cacheFile))
                 .withAspectRatio(Setting.aspectRatio[0], Setting.aspectRatio[1])
                 .withOptions(options)
                 .start(context);
@@ -453,16 +441,16 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
     }
 
     private void addNewPhoto(String albumName, Photo photo) {
-        MediaScannerConnectionUtils.refresh(this, photo.path);
+        MediaScannerConnectionUtils.refresh(this, photo.filePath);
         photo.selectedOriginal = Setting.selectedOriginal;
 
         String albumItem_all_name = albumModel.getAllAlbumName(this);
         albumModel.album.getAlbumItem(albumItem_all_name).addImageItem(0, photo);
         if (albumName == null) {
-            final File parentFile = new File(photo.path).getParentFile();
+            final File parentFile = new File(photo.filePath).getParentFile();
             albumName = parentFile.getName();
         }
-        albumModel.album.addAlbumItem(albumName, photo.path);
+        albumModel.album.addAlbumItem(albumName, photo.fileUri, photo.filePath);
         albumModel.album.getAlbumItem(albumName).addImageItem(0, photo);
 
         albumItemList.clear();
@@ -499,7 +487,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
 
     private void onCameraResult(File file) {
 
-        final Pair<String, Photo> pair = MediaUtils.getPhoto(this, file);
+        final Pair<String, Photo> pair = MediaUtils.getPhoto(file);
         if (pair == null || pair.second == null) {
             throw new RuntimeException("EasyPhotos拍照保存的图片不存在");
         }
@@ -719,13 +707,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         intent.putParcelableArrayListExtra(EasyPhotos.RESULT_PHOTOS, resultList);
         ArrayList<String> resultPaths = new ArrayList<>();
         for (Photo photo : resultList) {
-            if (!TextUtils.isEmpty(photo.compressPath)) {
-                resultPaths.add(photo.compressPath);
-            } else if (!TextUtils.isEmpty(photo.cropPath)) {
-                resultPaths.add(photo.cropPath);
-            } else {
-                resultPaths.add(photo.path);
-            }
+            resultPaths.add(photo.getAvailablePath());
         }
         intent.putStringArrayListExtra(EasyPhotos.RESULT_PATHS, resultPaths);
         intent.putExtra(EasyPhotos.RESULT_SELECTED_ORIGINAL, Setting.selectedOriginal);

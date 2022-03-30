@@ -32,10 +32,11 @@ public class PhotosAdapter extends RecyclerView.Adapter {
     private static final int TYPE_CAMERA = 1;
     private static final int TYPE_ALBUM_ITEMS = 2;
 
-    private ArrayList<Object> dataList;
-    private LayoutInflater mInflater;
-    private OnClickListener listener;
-    private boolean unable, isSingle;
+    private final ArrayList<Object> dataList;
+    private final LayoutInflater mInflater;
+    private final OnClickListener listener;
+    private boolean unable;
+    private final boolean isSingle;
     private int singlePosition;
 
 
@@ -73,20 +74,18 @@ public class PhotosAdapter extends RecyclerView.Adapter {
             if (item == null) return;
             boolean isSelected = Result.isSelected(item);
             updateSelector(((PhotoViewHolder) holder).tvSelector, isSelected, item, p);
-            String path = item.path;
-            String type = item.type;
             long duration = item.duration;
-            final boolean isGif = path.endsWith(Type.GIF) || type.endsWith(Type.GIF);
+            final boolean isGif = item.filePath.endsWith(Type.GIF) || item.type.endsWith(Type.GIF);
             if (Setting.showGif && isGif) {
-                Setting.imageEngine.loadGifAsBitmap(((PhotoViewHolder) holder).ivPhoto.getContext(), path, ((PhotoViewHolder) holder).ivPhoto);
+                Setting.imageEngine.loadGifAsBitmap(((PhotoViewHolder) holder).ivPhoto.getContext(), item.filePath, ((PhotoViewHolder) holder).ivPhoto);
                 ((PhotoViewHolder) holder).tvType.setText(R.string.gif_easy_photos);
                 ((PhotoViewHolder) holder).tvType.setVisibility(View.VISIBLE);
-            } else if (Setting.showVideo() && type.contains(Type.VIDEO)) {
-                Setting.imageEngine.loadPhoto(((PhotoViewHolder) holder).ivPhoto.getContext(), path, ((PhotoViewHolder) holder).ivPhoto);
+            } else if (Setting.showVideo() && item.type.contains(Type.VIDEO)) {
+                Setting.imageEngine.loadPhoto(((PhotoViewHolder) holder).ivPhoto.getContext(), item.filePath, ((PhotoViewHolder) holder).ivPhoto);
                 ((PhotoViewHolder) holder).tvType.setText(MediaUtils.format(duration));
                 ((PhotoViewHolder) holder).tvType.setVisibility(View.VISIBLE);
             } else {
-                Setting.imageEngine.loadPhoto(((PhotoViewHolder) holder).ivPhoto.getContext(), path, ((PhotoViewHolder) holder).ivPhoto);
+                Setting.imageEngine.loadPhoto(((PhotoViewHolder) holder).ivPhoto.getContext(), item.filePath, ((PhotoViewHolder) holder).ivPhoto);
                 ((PhotoViewHolder) holder).tvType.setVisibility(View.GONE);
             }
 
@@ -198,7 +197,7 @@ public class PhotosAdapter extends RecyclerView.Adapter {
     private void singleSelector(Photo photo, int position) {
         int res = 0;
         if (!Result.isEmpty()) {
-            if (Result.getPhotoPath(0).equals(photo.path) && !Setting.singleCheckedBack) {
+            if (Result.getPhoto(0).equals(photo) && !Setting.singleCheckedBack) {
                 Result.removePhoto(photo);
             } else {
                 Result.removePhoto(0);
@@ -273,7 +272,7 @@ public class PhotosAdapter extends RecyclerView.Adapter {
         void onSelectorChanged();
     }
 
-    private class CameraViewHolder extends RecyclerView.ViewHolder {
+    private static class CameraViewHolder extends RecyclerView.ViewHolder {
         final FrameLayout flCamera;
 
         CameraViewHolder(View itemView) {
@@ -282,7 +281,7 @@ public class PhotosAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public class PhotoViewHolder extends RecyclerView.ViewHolder {
+    public static class PhotoViewHolder extends RecyclerView.ViewHolder {
         final PressedImageView ivPhoto;
         final TextView tvSelector;
         final View vSelector;

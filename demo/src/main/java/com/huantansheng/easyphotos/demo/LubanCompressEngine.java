@@ -16,6 +16,7 @@ import java.util.List;
 
 import top.zibin.luban.CompressionPredicate;
 import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 public class LubanCompressEngine implements CompressEngine {
     //单例
@@ -66,7 +67,7 @@ public class LubanCompressEngine implements CompressEngine {
                         if (!TextUtils.isEmpty(photo.cropPath)) {
                             paths.add(photo.cropPath);
                         } else {
-                            paths.add(photo.path);
+                            paths.add(photo.filePath);
                         }
                     }
                     if (paths.isEmpty()) {

@@ -1,5 +1,7 @@
 package com.huantansheng.easyphotos.models.album.entity;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -17,17 +19,17 @@ public class Album {
         hasAlbumItems = new LinkedHashMap<>();
     }
 
-    public void addAlbumItem(String name, String coverImagePath) {
+    public void addAlbumItem(String name, Uri coverImageUri, String coverImagePath) {
         if (null == hasAlbumItems.get(name)) {
-            AlbumItem albumItem = new AlbumItem(name, coverImagePath);
+            AlbumItem albumItem = new AlbumItem(name, coverImageUri, coverImagePath);
             this.hasAlbumItems.put(albumItem.name, albumItem);
             this.albumItems.add(albumItem);
         }
     }
 
-    public void addAlbumItem(String name, String coverImagePath, int index) {
+    public void addAlbumItem(String name, Uri coverImageUri, String coverImagePath, int index) {
         if (null == hasAlbumItems.get(name)) {
-            AlbumItem albumItem = new AlbumItem(name, coverImagePath);
+            AlbumItem albumItem = new AlbumItem(name, coverImageUri, coverImagePath);
             this.hasAlbumItems.put(albumItem.name, albumItem);
             this.albumItems.add(index, albumItem);
         }

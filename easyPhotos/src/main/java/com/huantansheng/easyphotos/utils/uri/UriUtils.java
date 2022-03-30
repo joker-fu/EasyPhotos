@@ -13,6 +13,11 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import androidx.core.content.FileProvider;
+
+import com.huantansheng.easyphotos.EasyPhotos;
+import com.huantansheng.easyphotos.setting.Setting;
+import com.huantansheng.easyphotos.utils.provider.EasyPhotosFileProvider;
 import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
 import java.io.File;
@@ -22,7 +27,8 @@ public class UriUtils {
     private static final String TAG = "UriUtils";
 
     @SuppressLint("NewApi")
-    public static String getPathByUri(Context context, Uri uri) {
+    public static String getPathByUri(Uri uri) {
+        Context context = EasyPhotos.getApp();
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
@@ -139,11 +145,8 @@ public class UriUtils {
         return "com.google.android.apps.photos.contentprovider".equals(uri.getAuthority());
     }
 
-    /**
-     * 图片路径转uri
-     */
-    public static Uri getUriByPath(Context context, String path) {
-        ContentResolver contentResolver = context.getContentResolver();
+    public static Uri getUriByPath(String path) {
+        ContentResolver contentResolver = EasyPhotos.getApp().getContentResolver();
         Uri contentUri = MediaStore.Files.getContentUri("external");
         Cursor cursor = contentResolver.query(contentUri, new String[]{MediaStore.Files.FileColumns._ID},
                 MediaStore.Files.FileColumns.DATA + "=? ", new String[]{path},

@@ -37,7 +37,6 @@ import com.huantansheng.easyphotos.setting.Setting;
 import com.huantansheng.easyphotos.ui.adapter.PreviewPhotosAdapter;
 import com.huantansheng.easyphotos.ui.widget.PressedTextView;
 import com.huantansheng.easyphotos.ui.widget.PreviewRecyclerView;
-import com.huantansheng.easyphotos.ui.widget.subscaleview.SubsamplingScaleImageView;
 import com.huantansheng.easyphotos.utils.color.ColorUtils;
 import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
@@ -395,7 +394,7 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
             ivSelector.setImageResource(R.drawable.ic_selector_true_easy_photos);
             if (!Result.isEmpty()) {
                 for (int i = 0; i < Result.count(); i++) {
-                    if (photos.get(lastPosition).path.equals(Result.getPhotoPath(i))) {
+                    if (photos.get(lastPosition).equals(Result.getPhoto(i))) {
                         previewFragment.setSelectedPosition(i);
                         break;
                     }
@@ -463,18 +462,16 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
 
     private void singleSelector(Photo photo) {
         if (!Result.isEmpty()) {
-            if (Result.getPhotoPath(0).equals(photo.path)) {
+            if (Result.getPhoto(0).equals(photo)) {
                 Result.removePhoto(photo);
-                toggleSelector();
             } else {
                 Result.removePhoto(0);
                 Result.addPhoto(photo);
-                toggleSelector();
             }
         } else {
             Result.addPhoto(photo);
-            toggleSelector();
         }
+        toggleSelector();
     }
 
     private void shouldShowMenuDone() {
@@ -511,9 +508,9 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
 
     @Override
     public void onPreviewPhotoClick(int position) {
-        String path = Result.getPhotoPath(position);
+        Photo photo = Result.getPhoto(position);
         for (int i = 0, length = photos.size(); i < length; i++) {
-            if (TextUtils.equals(path, photos.get(i).path)) {
+            if (photo.equals(photos.get(i))) {
                 rvPhotos.scrollToPosition(i);
                 lastPosition = i;
                 tvNumber.setText(getString(R.string.preview_current_number_easy_photos, lastPosition + 1, photos.size()));

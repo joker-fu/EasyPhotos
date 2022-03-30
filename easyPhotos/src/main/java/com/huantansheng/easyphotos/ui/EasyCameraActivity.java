@@ -33,6 +33,7 @@ import com.huantansheng.easyphotos.constant.Capture;
 import com.huantansheng.easyphotos.constant.Code;
 import com.huantansheng.easyphotos.constant.Key;
 import com.huantansheng.easyphotos.setting.Setting;
+import com.huantansheng.easyphotos.utils.Future;
 import com.huantansheng.easyphotos.utils.media.MediaUtils;
 import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
@@ -46,7 +47,7 @@ public class EasyCameraActivity extends AppCompatActivity {
     private RelativeLayout rlCoverView;
 
     private String applicationName = "";
-    private String cameraPath = null;
+    private Uri imageUri = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +71,6 @@ public class EasyCameraActivity extends AppCompatActivity {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null ||
                 getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
-            Uri imageUri;
             if (SystemUtils.beforeAndroidTen()) {
                 final File tempFile = createCameraTempFile("IMG", ".jpg");
                 if (tempFile != null && tempFile.exists()) {
@@ -80,7 +80,7 @@ public class EasyCameraActivity extends AppCompatActivity {
                         //通过FileProvider创建一个content类型的Uri
                         imageUri = FileProvider.getUriForFile(this, Setting.fileProviderAuthority, tempFile);
                     }
-                    cameraPath = tempFile.getAbsolutePath();
+//                    cameraPath = tempFile.getAbsolutePath();
                 } else {
                     Toast.makeText(this, R.string.camera_temp_file_error_easy_photos, Toast.LENGTH_SHORT).show();
                     return;
@@ -91,7 +91,7 @@ public class EasyCameraActivity extends AppCompatActivity {
                     Toast.makeText(this, R.string.camera_temp_file_error_easy_photos, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                cameraPath = imageUri.toString();
+//                cameraPath = imageUri.toString();
             }
             //对目标应用临时授权该Uri所代表的文件
             cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -187,8 +187,10 @@ public class EasyCameraActivity extends AppCompatActivity {
     private void initCustomCamera() {
         //视频存储路径
         if (SystemUtils.beforeAndroidTen()) {
+            // /storage/emulated/0/DCIM/EasyPhotosDemo
             jCameraView.setSaveVideoPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + File.separator + applicationName);
         } else {
+            // /storage/emulated/0/Android/data/com.huantansheng.easyphotos.demo2/files/DCIM/EasyPhotosDemo
             jCameraView.setSaveVideoPath(getExternalFilesDir(Environment.DIRECTORY_DCIM) + File.separator + applicationName);
         }
         jCameraView.setFeatures(getFeature());
@@ -231,14 +233,22 @@ public class EasyCameraActivity extends AppCompatActivity {
             @Override
             public void captureSuccess(Bitmap bitmap) {
                 //获取图片bitmap
-                String path;
                 if (SystemUtils.beforeAndroidTen()) {
-                    path = FileUtil.saveBitmap(applicationName, bitmap);
+                    String path = FileUtil.saveBitmap(applicationName, bitmap);
+                    File file = new File(path);
+                    if (SystemUtils.beforeAndroidN()) {
+                        imageUri = Uri.fromFile(file);
+                    } else {
+                        //通过FileProvider创建一个content类型的Uri
+                        imageUri = FileProvider.getUriForFile(EasyCameraActivity.this, Setting.fileProviderAuthority, file);
+                    }
                 } else {
-                    path = FileUtil.saveBitmapAndroidQ(EasyCameraActivity.this, applicationName, bitmap);
+                    String path = FileUtil.saveBitmapAndroidQ(EasyCameraActivity.this, applicationName, bitmap);
+                    imageUri = Uri.parse(path);
                 }
+
                 Intent intent = new Intent();
-                intent.putExtra(Key.EXTRA_RESULT_CAPTURE_IMAGE_PATH, path);
+                intent.putExtra(Key.EXTRA_RESULT_CAPTURE_IMAGE_PATH, imageUri);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -247,36 +257,32 @@ public class EasyCameraActivity extends AppCompatActivity {
             public void recordSuccess(final String url, Bitmap firstFrame) {
                 //获取视频路径
                 if (SystemUtils.beforeAndroidTen()) {
-                    //String path = FileUtil.saveBitmap(applicationName, firstFrame);
                     Intent intent = new Intent();
-                    //intent.putExtra(Key.EXTRA_RESULT_CAPTURE_IMAGE_PATH, path);
-                    intent.putExtra(Key.EXTRA_RESULT_CAPTURE_VIDEO_PATH, url);
+                    File file = new File(url);
+                    if (SystemUtils.beforeAndroidN()) {
+                        imageUri = Uri.fromFile(file);
+                    } else {
+                        //通过FileProvider创建一个content类型的Uri
+                        imageUri = FileProvider.getUriForFile(EasyCameraActivity.this, Setting.fileProviderAuthority, file);
+                    }
+                    intent.putExtra(Key.EXTRA_RESULT_CAPTURE_VIDEO_PATH, imageUri);
                     setResult(RESULT_OK, intent);
                     finish();
                 } else {
                     pbProgress.setVisibility(View.VISIBLE);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //String path = FileUtil.saveBitmap(applicationName, firstFrame);
-                            final String resUrl = FileUtil.copy2DCIMAndroidQ(EasyCameraActivity.this, url, applicationName);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    pbProgress.setVisibility(View.GONE);
-                                    if (!isFinishing()) {
-                                        Intent intent = new Intent();
-                                        //intent.putExtra(Key.EXTRA_RESULT_CAPTURE_IMAGE_PATH, path);
-                                        intent.putExtra(Key.EXTRA_RESULT_CAPTURE_VIDEO_PATH, resUrl);
-                                        setResult(RESULT_OK, intent);
-                                        finish();
-                                    }
-                                }
-                            });
+                    Future.runAsync(() -> {
+                        String path = FileUtil.copy2DCIMAndroidQ(EasyCameraActivity.this, url, applicationName);
+                        return Uri.parse(path);
+                    }).onSuccess(imageUri -> {
+                        pbProgress.setVisibility(View.GONE);
+                        if (!isFinishing()) {
+                            Intent intent = new Intent();
+                            intent.putExtra(Key.EXTRA_RESULT_CAPTURE_VIDEO_PATH, imageUri);
+                            setResult(RESULT_OK, intent);
+                            finish();
                         }
-                    }).start();
+                    });
                 }
-
             }
         });
 
@@ -338,9 +344,9 @@ public class EasyCameraActivity extends AppCompatActivity {
             finish();
             return;
         }
-        if (resultCode == RESULT_OK && Code.REQUEST_CAMERA == requestCode && cameraPath != null) {
+        if (resultCode == RESULT_OK && Code.REQUEST_CAMERA == requestCode && imageUri != null) {
             Intent intent = new Intent();
-            intent.putExtra(Key.EXTRA_RESULT_CAPTURE_IMAGE_PATH, cameraPath);
+            intent.putExtra(Key.EXTRA_RESULT_CAPTURE_IMAGE_PATH, imageUri);
             setResult(RESULT_OK, intent);
             finish();
         }

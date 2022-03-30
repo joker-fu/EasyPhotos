@@ -25,9 +25,9 @@ import java.util.ArrayList;
 public class PuzzleSelectorPreviewAdapter extends RecyclerView.Adapter {
 
 
-    private ArrayList<Photo> dataList;
-    private LayoutInflater mInflater;
-    private OnClickListener listener;
+    private final ArrayList<Photo> dataList;
+    private final LayoutInflater mInflater;
+    private final OnClickListener listener;
 
 
     public PuzzleSelectorPreviewAdapter(Context cxt, ArrayList<Photo> dataList, OnClickListener listener) {
@@ -47,10 +47,10 @@ public class PuzzleSelectorPreviewAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
         final int p = position;
-        Photo photo = dataList.get(position);
-        String path = photo.path;
-        String type = photo.type;
-        long duration = photo.duration;
+        final Photo photo = dataList.get(position);
+        final String path = photo.filePath;
+        final String type = photo.type;
+        final long duration = photo.duration;
         final boolean isGif = path.endsWith(Type.GIF) || type.endsWith(Type.GIF);
         if (Setting.showGif && isGif) {
             Setting.imageEngine.loadGifAsBitmap(((PhotoViewHolder) holder).ivPhoto.getContext(), path, ((PhotoViewHolder) holder).ivPhoto);
@@ -64,13 +64,7 @@ public class PuzzleSelectorPreviewAdapter extends RecyclerView.Adapter {
             Setting.imageEngine.loadPhoto(((PhotoViewHolder) holder).ivPhoto.getContext(), path, ((PhotoViewHolder) holder).ivPhoto);
             ((PhotoViewHolder) holder).tvType.setVisibility(View.GONE);
         }
-
-        ((PhotoViewHolder) holder).ivDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onDeleteClick(p);
-            }
-        });
+        ((PhotoViewHolder) holder).ivDelete.setOnClickListener(v -> listener.onDeleteClick(p));
     }
 
 
@@ -84,7 +78,7 @@ public class PuzzleSelectorPreviewAdapter extends RecyclerView.Adapter {
         void onDeleteClick(int position);
     }
 
-    public class PhotoViewHolder extends RecyclerView.ViewHolder {
+    public static class PhotoViewHolder extends RecyclerView.ViewHolder {
         ImageView ivPhoto;
         ImageView ivDelete;
         TextView tvType;

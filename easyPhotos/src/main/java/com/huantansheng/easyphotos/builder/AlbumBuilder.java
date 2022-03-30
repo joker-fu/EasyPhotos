@@ -18,6 +18,7 @@ import com.huantansheng.easyphotos.models.ad.AdListener;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.result.Result;
 import com.huantansheng.easyphotos.setting.Setting;
+import com.huantansheng.easyphotos.utils.Future;
 import com.huantansheng.easyphotos.utils.result.EasyResult;
 
 import java.lang.ref.WeakReference;
@@ -249,27 +250,6 @@ public class AlbumBuilder {
         Setting.selectedOriginal = selectedPhotos.get(0).selectedOriginal;
         return AlbumBuilder.this;
     }
-
-    /**
-     * 设置默认选择图片地址集合
-     *
-     * @param selectedPhotoPaths 默认选择图片地址集合
-     * @return AlbumBuilder
-     */
-    public AlbumBuilder setSelectedPhotoPaths(ArrayList<String> selectedPhotoPaths) {
-        if (selectedPhotoPaths.isEmpty()) {
-            return AlbumBuilder.this;
-        }
-        Setting.selectedPhotos.clear();
-        ArrayList<Photo> selectedPhotos = new ArrayList<>();
-        for (String path : selectedPhotoPaths) {
-            Photo photo = new Photo(null, path, 0, 0, 0, 0, 0, null);
-            selectedPhotos.add(photo);
-        }
-        Setting.selectedPhotos.addAll(selectedPhotos);
-        return AlbumBuilder.this;
-    }
-
 
     /**
      * 原图按钮设置,不调用该方法不显示原图按钮
@@ -667,20 +647,15 @@ public class AlbumBuilder {
             return;
         }
         if (null == instance.adListener) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (null != instance && null != instance.adListener) {
-                        Setting.photoAdIsOk = true;
-                        instance.adListener.get().onPhotosAdLoaded();
-                    }
+            Future.runAsync(() -> {
+                Thread.sleep(2000);
+                return null;
+            }).onCompleted(() -> {
+                if (null != instance && null != instance.adListener) {
+                    Setting.photoAdIsOk = true;
+                    instance.adListener.get().onPhotosAdLoaded();
                 }
-            }).start();
+            });
             return;
         }
         Setting.photoAdIsOk = true;
@@ -702,20 +677,15 @@ public class AlbumBuilder {
             return;
         }
         if (null == instance.adListener) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (null != instance && null != instance.adListener) {
-                        Setting.albumItemsAdIsOk = true;
-                        instance.adListener.get().onAlbumItemsAdLoaded();
-                    }
+            Future.runAsync(() -> {
+                Thread.sleep(2000);
+                return null;
+            }).onCompleted(() -> {
+                if (null != instance && null != instance.adListener) {
+                    Setting.albumItemsAdIsOk = true;
+                    instance.adListener.get().onAlbumItemsAdLoaded();
                 }
-            }).start();
+            });
             return;
         }
         Setting.albumItemsAdIsOk = true;

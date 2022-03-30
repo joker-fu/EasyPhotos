@@ -1,6 +1,7 @@
 package com.huantansheng.easyphotos.ui.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.huantansheng.easyphotos.R;
 import com.huantansheng.easyphotos.constant.Type;
+import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.result.Result;
 import com.huantansheng.easyphotos.setting.Setting;
 import com.huantansheng.easyphotos.ui.widget.PressedImageView;
@@ -21,8 +23,8 @@ import com.huantansheng.easyphotos.utils.media.MediaUtils;
  */
 
 public class PreviewPhotosFragmentAdapter extends RecyclerView.Adapter<PreviewPhotosFragmentAdapter.PreviewPhotoVH> {
-    private LayoutInflater inflater;
-    private OnClickListener listener;
+    private final LayoutInflater inflater;
+    private final OnClickListener listener;
     private int checkedPosition = -1;
 
     public PreviewPhotosFragmentAdapter(Context context, OnClickListener listener) {
@@ -39,9 +41,10 @@ public class PreviewPhotosFragmentAdapter extends RecyclerView.Adapter<PreviewPh
     @Override
     public void onBindViewHolder(PreviewPhotoVH holder, int position) {
         final int p = position;
-        String path = Result.getPhotoPath(position);
-        String type = Result.getPhotoType(position);
-        long duration = Result.getPhotoDuration(position);
+        final Photo photo = Result.getPhoto(p);
+        final String path = photo.filePath;
+        final String type = photo.type;
+        final long duration = photo.duration;
 
         final boolean isGif = path.endsWith(Type.GIF) || type.endsWith(Type.GIF);
         if (Setting.showGif && isGif) {
@@ -62,12 +65,9 @@ public class PreviewPhotosFragmentAdapter extends RecyclerView.Adapter<PreviewPh
         } else {
             holder.frame.setVisibility(View.GONE);
         }
-        holder.ivPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onPhotoClick(p);
-            }
-        });
+        holder.ivPhoto.setOnClickListener(view ->
+                listener.onPhotoClick(p)
+        );
     }
 
     @Override
@@ -90,9 +90,9 @@ public class PreviewPhotosFragmentAdapter extends RecyclerView.Adapter<PreviewPh
 
         public PreviewPhotoVH(View itemView) {
             super(itemView);
-            ivPhoto = (PressedImageView) itemView.findViewById(R.id.iv_photo);
+            ivPhoto = itemView.findViewById(R.id.iv_photo);
             frame = itemView.findViewById(R.id.v_selector);
-            tvType = (TextView) itemView.findViewById(R.id.tv_type);
+            tvType = itemView.findViewById(R.id.tv_type);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.huantansheng.easyphotos.models.album;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,9 +13,9 @@ import com.huantansheng.easyphotos.models.album.entity.Album;
 import com.huantansheng.easyphotos.models.album.entity.AlbumItem;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.setting.Setting;
+import com.huantansheng.easyphotos.utils.Future;
 import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -37,17 +38,21 @@ public class AlbumModel {
 
     private static final Uri CONTENT_URI = MediaStore.Files.getContentUri("external");
 
+    public static final String BUCKET_DISPLAY_NAME = "bucket_display_name";
+    public static final String ORIENTATION = "orientation";
+
     private static final String[] PROJECTIONS = new String[]{
             MediaStore.Files.FileColumns._ID,
             MediaStore.MediaColumns.DISPLAY_NAME,
-            MediaStore.MediaColumns.BUCKET_DISPLAY_NAME,
+            BUCKET_DISPLAY_NAME,
             MediaStore.MediaColumns.MIME_TYPE,
             MediaStore.MediaColumns.DATE_MODIFIED,
             MediaStore.MediaColumns.SIZE,
             MediaStore.Video.Media.DURATION,
             MediaStore.MediaColumns.DATA,
             MediaStore.MediaColumns.WIDTH,
-            MediaStore.MediaColumns.HEIGHT
+            MediaStore.MediaColumns.HEIGHT,
+            ORIENTATION,
     };
 
     private static final String SORT_ORDER = MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC";
@@ -80,13 +85,11 @@ public class AlbumModel {
      */
     public void query(final Context context, final CallBack callBack) {
         isQuery = true;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                album.clear();
-                initAlbum(context, callBack);
-            }
-        }).start();
+        Future.runAsync(() -> {
+            album.clear();
+            initAlbum(context, callBack);
+            return null;
+        });
     }
 
     public void stopQuery() {
@@ -152,40 +155,49 @@ public class AlbumModel {
 
         if (cursor == null) {
             // Log.d(TAG, "call: " + "Empty photos");
-        } else if (cursor.moveToFirst()) {
-            final String albumItem_all_name = getAllAlbumName(context);
-            final String albumItem_video_name = context.getString(R.string.selector_folder_video_easy_photos);
-            final int idCol = cursor.getColumnIndex(MediaStore.MediaColumns._ID);
-            final int pathCol = cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
-            final int nameCol = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
-            final int bucketNameCol = cursor.getColumnIndex(MediaStore.MediaColumns.BUCKET_DISPLAY_NAME);
-            final int dateCol = cursor.getColumnIndex(MediaStore.MediaColumns.DATE_MODIFIED);
-            final int mimeTypeCol = cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE);
-            final int sizeCol = cursor.getColumnIndex(MediaStore.MediaColumns.SIZE);
-            final int durationCol = cursor.getColumnIndex(MediaStore.Video.Media.DURATION);
-            final int widthCol = cursor.getColumnIndex(MediaStore.MediaColumns.WIDTH);
-            final int heightCol = cursor.getColumnIndex(MediaStore.MediaColumns.HEIGHT);
+        } else {
+            if (cursor.moveToFirst()) {
+                final String albumItem_all_name = getAllAlbumName(context);
+                final String albumItem_video_name = context.getString(R.string.selector_folder_video_easy_photos);
+                final int idCol = cursor.getColumnIndex(MediaStore.MediaColumns._ID);
+                final int pathCol = cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
+                final int nameCol = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
+                final int bucketNameCol = cursor.getColumnIndex(BUCKET_DISPLAY_NAME);
+                final int dateCol = cursor.getColumnIndex(MediaStore.MediaColumns.DATE_MODIFIED);
+                final int mimeTypeCol = cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE);
+                final int sizeCol = cursor.getColumnIndex(MediaStore.MediaColumns.SIZE);
+                final int durationCol = cursor.getColumnIndex(MediaStore.Video.Media.DURATION);
+                final int widthCol = cursor.getColumnIndex(MediaStore.MediaColumns.WIDTH);
+                final int heightCol = cursor.getColumnIndex(MediaStore.MediaColumns.HEIGHT);
+                final int orientationCol = cursor.getColumnIndex(ORIENTATION);
 
-            boolean equalsAlbumName = albumItem_video_name.equals(albumItem_all_name);
+                boolean equalsAlbumName = albumItem_video_name.equals(albumItem_all_name);
 
-            do {
-                final long id = cursor.getLong(idCol);
-                final String path;
-                final String type = cursor.getString(mimeTypeCol);
-                final long size = cursor.getLong(sizeCol);
-                final int width = cursor.getInt(widthCol);
-                final int height = cursor.getInt(heightCol);
-                final String name = cursor.getString(nameCol);
-                final String bucketName = cursor.getString(bucketNameCol);
-                final long dateTime = cursor.getLong(dateCol);
-                final long duration = cursor.getLong(durationCol);
+                do {
+                    final long id = cursor.getLong(idCol);
 
-                if (SystemUtils.beforeAndroidTen()) {
-                    path = cursor.getString(pathCol);
-                } else {
+                    String filePath;
+                    Uri fileUri;
+                    final String type = cursor.getString(mimeTypeCol);
+                    final String name = cursor.getString(nameCol);
+                    final String bucketName = cursor.getString(bucketNameCol);
+                    final int orientation = cursor.getInt(orientationCol);
+                    final int width;
+                    final int height;
+                    if (orientation == 90 || orientation == 270) {
+                        width = cursor.getInt(heightCol);
+                        height = cursor.getInt(widthCol);
+                    } else {
+                        width = cursor.getInt(widthCol);
+                        height = cursor.getInt(heightCol);
+                    }
+                    final long size = cursor.getLong(sizeCol);
+                    final long dateTime = cursor.getLong(dateCol);
+                    final long duration = cursor.getLong(durationCol);
                     final boolean isVideo = type.contains(Type.VIDEO);
                     final boolean isImage = type.contains(Type.IMAGE);
                     final boolean isGif = type.contains(Type.GIF);
+
                     final Uri contentUri;
                     if (isImage || isGif) {
                         contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
@@ -194,32 +206,32 @@ public class AlbumModel {
                     } else {
                         contentUri = MediaStore.Files.getContentUri("external");
                     }
-                    // final Uri uri = ContentUris.withAppendedId(contentUri, id);
-                    path = contentUri.buildUpon().appendPath(String.valueOf(id)).build().toString();
-                }
+                    filePath = cursor.getString(pathCol);
+                    fileUri = ContentUris.withAppendedId(contentUri, id);
 
-                final Photo imageItem = new Photo(name, path, dateTime, width, height, size, duration, type);
-                if (width < Setting.minWidth || height < Setting.minHeight) {
-                    continue;
-                }
-                // 把图片全部放进“全部”专辑
-                album.addAlbumItem(albumItem_all_name, path);
-                album.getAlbumItem(albumItem_all_name).addImageItem(imageItem);
-                if (type.contains(Type.VIDEO)) {
-                    // 把视频全部放进“所有视频”专辑
-                    if (Setting.showVideo() && !equalsAlbumName) {
-                        album.addAlbumItem(albumItem_video_name, path, 1);
-                        album.getAlbumItem(albumItem_video_name).addImageItem(imageItem);
+                    final Photo imageItem = new Photo(name, filePath, fileUri, dateTime, width, height, size, duration, type);
+                    if (width < Setting.minWidth || height < Setting.minHeight) {
+                        continue;
                     }
-                }
-                // 添加当前图片的专辑到专辑模型实体中
-                album.addAlbumItem(bucketName, path);
-                album.getAlbumItem(bucketName).addImageItem(imageItem);
-                index++;
-                if (index % 500 == 0) {
-                    callBack.onAlbumWorkedCallBack();
-                }
-            } while (isQuery && cursor.moveToNext());
+                    // 把图片全部放进“全部”专辑
+                    album.addAlbumItem(albumItem_all_name, fileUri, filePath);
+                    album.getAlbumItem(albumItem_all_name).addImageItem(imageItem);
+                    if (type.contains(Type.VIDEO)) {
+                        // 把视频全部放进“所有视频”专辑
+                        if (Setting.showVideo() && !equalsAlbumName) {
+                            album.addAlbumItem(albumItem_video_name, fileUri, filePath, 1);
+                            album.getAlbumItem(albumItem_video_name).addImageItem(imageItem);
+                        }
+                    }
+                    // 添加当前图片的专辑到专辑模型实体中
+                    album.addAlbumItem(bucketName, fileUri, filePath);
+                    album.getAlbumItem(bucketName).addImageItem(imageItem);
+                    index++;
+                    if (index % 200 == 0) {
+                        callBack.onAlbumWorkedCallBack();
+                    }
+                } while (isQuery && cursor.moveToNext());
+            }
             callBack.onAlbumWorkedCallBack();
             cursor.close();
         }
@@ -262,39 +274,4 @@ public class AlbumModel {
     public interface CallBack {
         void onAlbumWorkedCallBack();
     }
-
-    @Deprecated
-    public void fillPhoto(Context context, Photo photo) {
-        String filePath = photo.path;
-        final File file = new File(photo.path);
-        if (!file.exists()) return;
-        String where;
-        String[] selectionArgs = null;
-        if (filePath.startsWith("content://media/")) {
-            where = null;
-        } else {
-            where = MediaStore.MediaColumns.DATA + "=?";
-            selectionArgs = new String[]{filePath};
-        }
-        Cursor cursor = context.getContentResolver().query(CONTENT_URI, PROJECTIONS, where, selectionArgs, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            final int pathCol = cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
-            final int nameCol = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
-            final int dateCol = cursor.getColumnIndex(MediaStore.MediaColumns.DATE_MODIFIED);
-            final int mimeTypeCol = cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE);
-            final int sizeCol = cursor.getColumnIndex(MediaStore.MediaColumns.SIZE);
-            final int durationCol = cursor.getColumnIndex(MediaStore.Video.Media.DURATION);
-            final int widthCol = cursor.getColumnIndex(MediaStore.MediaColumns.WIDTH);
-            final int heightCol = cursor.getColumnIndex(MediaStore.MediaColumns.HEIGHT);
-            photo.path = cursor.getString(pathCol);
-            photo.type = cursor.getString(mimeTypeCol);
-            photo.size = cursor.getLong(sizeCol);
-            photo.width = cursor.getInt(widthCol);
-            photo.height = cursor.getInt(heightCol);
-            photo.name = cursor.getString(nameCol);
-            photo.time = cursor.getLong(dateCol);
-            photo.duration = cursor.getLong(durationCol);
-        }
-    }
 }
-

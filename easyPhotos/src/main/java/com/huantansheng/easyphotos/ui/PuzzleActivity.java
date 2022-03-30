@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,12 +45,11 @@ import com.huantansheng.easyphotos.models.sticker.StickerModel;
 import com.huantansheng.easyphotos.setting.Setting;
 import com.huantansheng.easyphotos.ui.adapter.PuzzleAdapter;
 import com.huantansheng.easyphotos.ui.adapter.TextStickerAdapter;
+import com.huantansheng.easyphotos.utils.Future;
 import com.huantansheng.easyphotos.utils.bitmap.SaveBitmapCallBack;
 import com.huantansheng.easyphotos.utils.media.MediaUtils;
 import com.huantansheng.easyphotos.utils.permission.PermissionUtil;
 import com.huantansheng.easyphotos.utils.settings.SettingsUtils;
-import com.huantansheng.easyphotos.utils.system.SystemUtils;
-import com.huantansheng.easyphotos.utils.uri.UriUtils;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -306,59 +305,30 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         fileTypeIsPhoto = intent.getBooleanExtra(Key.PUZZLE_FILE_IS_PHOTO, false);
         if (fileTypeIsPhoto) {
             photos = intent.getParcelableArrayListExtra(Key.PUZZLE_FILES);
-            fileCount = photos.size() > 9 ? 9 : photos.size();
+            fileCount = Math.min(photos.size(), 9);
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    for (int i = 0; i < fileCount; i++) {
-                        Bitmap bitmap = getScaleBitmap(photos.get(i).path);
-                        bitmaps.add(bitmap);
-                        degrees.add(0);
-                    }
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            puzzleView.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    loadPhoto();
-                                }
-                            });
-                        }
-                    });
-
+            Future.runAsync(() -> {
+                for (int i = 0; i < fileCount; i++) {
+                    final Photo photo = photos.get(i);
+                    final Bitmap bitmap = getScaleBitmap(photo.filePath);
+                    bitmaps.add(bitmap);
+                    degrees.add(0);
                 }
-            }).start();
-
-
+                return true;
+            }).onSuccess(result -> loadPhoto());
         } else {
             paths = intent.getStringArrayListExtra(Key.PUZZLE_FILES);
-            fileCount = paths.size() > 9 ? 9 : paths.size();
+            fileCount = Math.min(paths.size(), 9);
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    for (int i = 0; i < fileCount; i++) {
-                        Bitmap bitmap = getScaleBitmap(paths.get(i));
-                        bitmaps.add(bitmap);
-                        degrees.add(0);
-                    }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            puzzleView.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    loadPhoto();
-                                }
-                            });
-                        }
-                    });
+            Future.runAsync(() -> {
+                for (int i = 0; i < fileCount; i++) {
+                    final String path = paths.get(i);
+                    final Bitmap bitmap = getScaleBitmap(path);
+                    bitmaps.add(bitmap);
+                    degrees.add(0);
                 }
-            }).start();
-
+                return true;
+            }).onSuccess(result -> loadPhoto());
 
         }
     }
@@ -496,17 +466,10 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
             @SuppressWarnings("ConstantConditions")
             @Override
             public void onSuccess(String path) {
-                Photo photo;
-                if (SystemUtils.beforeAndroidTen()) {
-                    File file = new File((path));
-                    photo = new Photo(file.getName(), file.getAbsolutePath(), file.lastModified() / 1000, puzzleView.getWidth(), puzzleView.getHeight(), file.length(), MediaUtils.getDuration(file.getAbsolutePath()), "image/png");
-                } else {
-                    path = UriUtils.getPathByUri(PuzzleActivity.this, Uri.parse(path));
-                    photo = MediaUtils.getPhoto(PuzzleActivity.this, new File(path)).second;
-                }
+                final Pair<String, Photo> pair = MediaUtils.getPhoto(new File(path));
                 Intent intent = new Intent();
                 intent.putExtra(EasyPhotos.RESULT_PATHS, path);
-                intent.putExtra(EasyPhotos.RESULT_PHOTOS, photo);
+                intent.putExtra(EasyPhotos.RESULT_PHOTOS, pair.second);
                 setResult(RESULT_OK, intent);
                 PuzzleActivity.this.finish();
             }
@@ -577,15 +540,11 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         }
         switch (resultCode) {
             case RESULT_OK:
-
                 ArrayList<Photo> photos = data.getParcelableArrayListExtra(EasyPhotos.RESULT_PHOTOS);
                 ArrayList<String> paths = data.getStringArrayListExtra(EasyPhotos.RESULT_PATHS);
-
                 dealResult(photos, paths);
-
                 break;
             case RESULT_CANCELED:
-                break;
             default:
                 break;
         }
@@ -595,28 +554,19 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         degrees.remove(degreeIndex);
         degrees.add(degreeIndex, 0);
 
-        String tempPath = "";
+        final String path;
         if (fileTypeIsPhoto) {
             Photo photo = photos.get(0);
-            tempPath = photo.path;
-
+            path = photo.filePath;
         } else {
-            tempPath = paths.get(0);
+            path = paths.get(0);
         }
 
-        final String path = tempPath;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final Bitmap bitmap = getScaleBitmap(path);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        puzzleView.replace(bitmap);
-                    }
-                });
-            }
-        }).start();
+        Future.runAsync(() ->
+                getScaleBitmap(path)
+        ).onSuccess(bitmap ->
+                puzzleView.replace(bitmap)
+        );
     }
 
     protected String[] getNeedPermissions() {

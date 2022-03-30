@@ -6,7 +6,7 @@ android {
     defaultConfig {
         applicationId "com.huantansheng.easyphotos.demo"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 2
         versionName "1.0.2"
         multiDexEnabled true
