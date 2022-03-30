@@ -310,7 +310,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
             Future.runAsync(() -> {
                 for (int i = 0; i < fileCount; i++) {
                     final Photo photo = photos.get(i);
-                    final Bitmap bitmap = getScaleBitmap(photo.filePath);
+                    final Bitmap bitmap = getScaleBitmap(photo.getAvailablePath());
                     bitmaps.add(bitmap);
                     degrees.add(0);
                 }
@@ -557,7 +557,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         final String path;
         if (fileTypeIsPhoto) {
             Photo photo = photos.get(0);
-            path = photo.filePath;
+            path = photo.getAvailablePath();
         } else {
             path = paths.get(0);
         }

@@ -42,7 +42,7 @@ public class PreviewPhotosFragmentAdapter extends RecyclerView.Adapter<PreviewPh
     public void onBindViewHolder(PreviewPhotoVH holder, int position) {
         final int p = position;
         final Photo photo = Result.getPhoto(p);
-        final String path = photo.filePath;
+        final String path = photo.getAvailablePath();
         final String type = photo.type;
         final long duration = photo.duration;
 

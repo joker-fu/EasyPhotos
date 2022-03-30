@@ -49,7 +49,7 @@ public class PuzzleSelectorAdapter extends RecyclerView.Adapter {
 
         final int p = position;
         final Photo photo = dataList.get(position);
-        final String path = photo.filePath;
+        final String path = photo.getAvailablePath();
         final String type = photo.type;
         final long duration = photo.duration;
         final boolean isGif = path.endsWith(Type.GIF) || type.endsWith(Type.GIF);

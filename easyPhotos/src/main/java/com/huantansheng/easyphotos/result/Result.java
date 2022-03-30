@@ -21,7 +21,7 @@ public class Result {
      * @return 0：添加成功 -4：选择结果互斥 -3：文件不存在 -2：超过视频选择数 -1：超过图片选择数
      */
     public static int addPhoto(Photo photo) {
-        final String path = photo.filePath;
+        final String path = photo.getAvailablePath();
         if (TextUtils.isEmpty(path)) {
             return -3;
         }

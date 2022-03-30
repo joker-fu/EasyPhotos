@@ -74,18 +74,19 @@ public class PhotosAdapter extends RecyclerView.Adapter {
             if (item == null) return;
             boolean isSelected = Result.isSelected(item);
             updateSelector(((PhotoViewHolder) holder).tvSelector, isSelected, item, p);
-            long duration = item.duration;
-            final boolean isGif = item.filePath.endsWith(Type.GIF) || item.type.endsWith(Type.GIF);
+            final long duration = item.duration;
+            final String path = item.getAvailablePath();
+            final boolean isGif = path.endsWith(Type.GIF) || item.type.endsWith(Type.GIF);
             if (Setting.showGif && isGif) {
-                Setting.imageEngine.loadGifAsBitmap(((PhotoViewHolder) holder).ivPhoto.getContext(), item.filePath, ((PhotoViewHolder) holder).ivPhoto);
+                Setting.imageEngine.loadGifAsBitmap(((PhotoViewHolder) holder).ivPhoto.getContext(), path, ((PhotoViewHolder) holder).ivPhoto);
                 ((PhotoViewHolder) holder).tvType.setText(R.string.gif_easy_photos);
                 ((PhotoViewHolder) holder).tvType.setVisibility(View.VISIBLE);
             } else if (Setting.showVideo() && item.type.contains(Type.VIDEO)) {
-                Setting.imageEngine.loadPhoto(((PhotoViewHolder) holder).ivPhoto.getContext(), item.filePath, ((PhotoViewHolder) holder).ivPhoto);
+                Setting.imageEngine.loadPhoto(((PhotoViewHolder) holder).ivPhoto.getContext(), path, ((PhotoViewHolder) holder).ivPhoto);
                 ((PhotoViewHolder) holder).tvType.setText(MediaUtils.format(duration));
                 ((PhotoViewHolder) holder).tvType.setVisibility(View.VISIBLE);
             } else {
-                Setting.imageEngine.loadPhoto(((PhotoViewHolder) holder).ivPhoto.getContext(), item.filePath, ((PhotoViewHolder) holder).ivPhoto);
+                Setting.imageEngine.loadPhoto(((PhotoViewHolder) holder).ivPhoto.getContext(), path, ((PhotoViewHolder) holder).ivPhoto);
                 ((PhotoViewHolder) holder).tvType.setVisibility(View.GONE);
             }
 
