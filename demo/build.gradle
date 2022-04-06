@@ -37,9 +37,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0'
     testImplementation 'junit:junit:4.13.2'
 
-    implementation project(':easyPhotos')
+//    implementation project(':easyPhotos')
 
-    //implementation 'com.joker.HuanTanSheng:EasyPhotos:andX-2.5.2'
+    implementation 'io.github.joker-fu:EasyPhotos:andX-2.5.7'
 
     implementation 'com.tencent.bugly:crashreport:3.3.92'
 
