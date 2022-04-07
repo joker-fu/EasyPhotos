@@ -3,12 +3,12 @@ buildscript {
     repositories {
         google()
         jcenter()
+        mavenCentral()
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
-        //bintray 插件
-        classpath 'com.novoda:bintray-release:0.9'
+        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.4.30" //新添加的这一classpath
     }
 }
 
@@ -16,6 +16,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        mavenCentral()
         maven { url "https://jitpack.io" }
     }
 }

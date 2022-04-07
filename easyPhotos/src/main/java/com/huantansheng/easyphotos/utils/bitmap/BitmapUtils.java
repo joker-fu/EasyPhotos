@@ -20,7 +20,9 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.huantansheng.easyphotos.EasyPhotos;
+import com.huantansheng.easyphotos.utils.Future;
 import com.huantansheng.easyphotos.utils.system.SystemUtils;
+import com.huantansheng.easyphotos.utils.uri.UriUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -162,16 +164,14 @@ public class BitmapUtils {
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(act.getPackageName(), 0);
             final String applicationName = (String) packageManager.getApplicationLabel(applicationInfo);
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    if (SystemUtils.beforeAndroidTen()) {
-                        saveBitmapBeforeAndroidQ(act, applicationName, bitmap, callBack);
-                    } else {
-                        saveBitmapAndroidQ(act, applicationName, bitmap, callBack);
-                    }
+            Future.runAsync(() -> {
+                if (SystemUtils.beforeAndroidTen()) {
+                    saveBitmapBeforeAndroidQ(act, applicationName, bitmap, callBack);
+                } else {
+                    saveBitmapAndroidQ(act, applicationName, bitmap, callBack);
                 }
-            }).start();
+                return null;
+            });
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -179,14 +179,9 @@ public class BitmapUtils {
     }
 
     private static void saveBitmapBeforeAndroidQ(Activity act, String dir, Bitmap b, final SaveBitmapCallBack callBack) {
-        final String dirPath;
-        if (SystemUtils.beforeAndroidTen()) {
-            dirPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + File.separator + dir;
-        } else {
-            dirPath = act.getExternalFilesDir(Environment.DIRECTORY_DCIM) + File.separator + dir;
-        }
-        File dirF = new File(dirPath);
+        final String dirPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + File.separator + dir;
 
+        File dirF = new File(dirPath);
         if (!dirF.exists() || !dirF.isDirectory()) {
             if (!dirF.mkdirs()) {
                 act.runOnUiThread(new Runnable() {
@@ -266,7 +261,8 @@ public class BitmapUtils {
             act.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    callBack.onSuccess(insertUri.toString());
+                    String path = UriUtils.getPathByUri(insertUri);
+                    callBack.onSuccess(path);
                 }
             });
         } catch (final IOException e) {

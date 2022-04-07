@@ -1,7 +1,9 @@
 package com.huantansheng.easyphotos.demo;
 
 import android.content.Context;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,9 +40,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainVH> {
     @Override
     public void onBindViewHolder(MainVH holder, int position) {
         Photo photo = list.get(position);
-        String path = photo.cropPath == null || photo.cropPath.isEmpty() ? photo.path : photo.cropPath;
+        String path = photo.getAvailablePath();
         mGlide.load(path).into(holder.ivPhoto);
-        holder.tvMessage.setText("[图片名称]： " + photo.name + "\n[宽]：" + photo.width + "\n[高]：" + photo.height + "\n[文件大小,单位bytes]：" + photo.size + "\n[日期，时间戳，毫秒]：" + photo.time + "\n[图片压缩地址]：" + photo.compressPath +  "\n[图片裁剪地址]：" + photo.cropPath + "\n[图片地址]：" + photo.path + "\n[图片类型]：" + photo.type + "\n[是否选择原图]：" + photo.selectedOriginal);
+        holder.tvMessage.setText("[图片名称]： " + photo.name + "\n[宽]：" + photo.width + "\n[高]：" + photo.height + "\n[文件大小,单位bytes]：" + photo.size + "\n[日期，时间戳，毫秒]：" + photo.time + "\n[图片压缩地址]：" + photo.compressPath + "\n[图片裁剪地址]：" + photo.cropPath + "\n[图片地址]：" + photo.filePath + "\n[有效地址]：" + photo.getAvailablePath() + "\n[图片类型]：" + photo.type + "\n[是否选择原图]：" + photo.selectedOriginal);
     }
 
     @Override

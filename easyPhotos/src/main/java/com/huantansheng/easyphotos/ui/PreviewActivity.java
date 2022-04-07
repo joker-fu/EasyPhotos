@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
@@ -37,7 +36,6 @@ import com.huantansheng.easyphotos.setting.Setting;
 import com.huantansheng.easyphotos.ui.adapter.PreviewPhotosAdapter;
 import com.huantansheng.easyphotos.ui.widget.PressedTextView;
 import com.huantansheng.easyphotos.ui.widget.PreviewRecyclerView;
-import com.huantansheng.easyphotos.ui.widget.subscaleview.SubsamplingScaleImageView;
 import com.huantansheng.easyphotos.utils.color.ColorUtils;
 import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
@@ -100,13 +98,14 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
     private ImageView ivSelector;
     private PreviewRecyclerView rvPhotos;
     private PreviewPhotosAdapter adapter;
+    private RecyclerView.OnScrollListener onScrollListener;
     private PagerSnapHelper snapHelper;
     private LinearLayoutManager lm;
     private int index;
-    private ArrayList<Photo> photos = new ArrayList<>();
+    private final ArrayList<Photo> photos = new ArrayList<>();
     private int resultCode = RESULT_CANCELED;
     private int lastPosition = 0;//记录recyclerView最后一次角标位置，用于判断是否转换了item
-    private boolean isSingle = Setting.count == 1;
+    private final boolean isSingle = Setting.count == 1;
     private boolean unable = Result.count() == Setting.count;
 
     private FrameLayout flFragment;
@@ -153,7 +152,6 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
         }
     }
 
-
     private void initData() {
         Intent intent = getIntent();
         int albumItemIndex = intent.getIntExtra(Key.PREVIEW_ALBUM_ITEM_INDEX, 0);
@@ -190,6 +188,12 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
     protected void onDestroy() {
         if (hasExternalPhotos) {
             Setting.clear();
+        }
+        if (adapter != null) {
+            adapter.destroy();
+        }
+        if (rvPhotos != null) {
+            rvPhotos.removeOnScrollListener(onScrollListener);
         }
         super.onDestroy();
     }
@@ -253,8 +257,7 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
 
     @Override
     public void onPhotoScaleChanged() {
-        if (mVisible)
-            hide();
+        if (mVisible) hide();
     }
 
     @Override
@@ -317,7 +320,7 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
         toggleSelector();
         snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(rvPhotos);
-        rvPhotos.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        onScrollListener = new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -334,18 +337,13 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
                 previewFragment.setSelectedPosition(-1);
                 tvNumber.setText(getString(R.string.preview_current_number_easy_photos, lastPosition + 1, photos.size()));
                 toggleSelector();
-                PreviewPhotosAdapter.PreviewPhotosViewHolder holder = (PreviewPhotosAdapter.PreviewPhotosViewHolder) rvPhotos.getChildViewHolder(view);
-                if (holder == null) {
-                    return;
-                }
-                if (holder.ivPhoto != null && holder.ivPhoto.getScale() != 1f) {
-                    holder.ivPhoto.setScale(1f, true);
-                }
-                if (holder.ivBigPhoto != null && holder.ivBigPhoto.getScale() != 1f) {
-                    holder.ivBigPhoto.resetScaleAndTop();
+                PreviewPhotosAdapter.PreviewViewHolder holder = (PreviewPhotosAdapter.PreviewViewHolder) rvPhotos.getChildViewHolder(view);
+                if (holder != null) {
+                    holder.reset();
                 }
             }
-        });
+        };
+        rvPhotos.addOnScrollListener(onScrollListener);
         tvNumber.setText(getString(R.string.preview_current_number_easy_photos, index + 1,
                 photos.size()));
     }
@@ -395,7 +393,7 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
             ivSelector.setImageResource(R.drawable.ic_selector_true_easy_photos);
             if (!Result.isEmpty()) {
                 for (int i = 0; i < Result.count(); i++) {
-                    if (photos.get(lastPosition).path.equals(Result.getPhotoPath(i))) {
+                    if (photos.get(lastPosition).equals(Result.getPhoto(i))) {
                         previewFragment.setSelectedPosition(i);
                         break;
                     }
@@ -463,18 +461,16 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
 
     private void singleSelector(Photo photo) {
         if (!Result.isEmpty()) {
-            if (Result.getPhotoPath(0).equals(photo.path)) {
+            if (Result.getPhoto(0).equals(photo)) {
                 Result.removePhoto(photo);
-                toggleSelector();
             } else {
                 Result.removePhoto(0);
                 Result.addPhoto(photo);
-                toggleSelector();
             }
         } else {
             Result.addPhoto(photo);
-            toggleSelector();
         }
+        toggleSelector();
     }
 
     private void shouldShowMenuDone() {
@@ -511,9 +507,9 @@ public class PreviewActivity extends AppCompatActivity implements PreviewPhotosA
 
     @Override
     public void onPreviewPhotoClick(int position) {
-        String path = Result.getPhotoPath(position);
+        Photo photo = Result.getPhoto(position);
         for (int i = 0, length = photos.size(); i < length; i++) {
-            if (TextUtils.equals(path, photos.get(i).path)) {
+            if (photo.equals(photos.get(i))) {
                 rvPhotos.scrollToPosition(i);
                 lastPosition = i;
                 tvNumber.setText(getString(R.string.preview_current_number_easy_photos, lastPosition + 1, photos.size()));

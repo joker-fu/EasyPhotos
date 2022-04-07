@@ -1,8 +1,10 @@
 package com.huantansheng.easyphotos.demo;
 
 import android.app.Application;
+import android.content.Context;
 
-import com.squareup.leakcanary.LeakCanary;
+import androidx.multidex.MultiDex;
+
 import com.tencent.bugly.crashreport.CrashReport;
 
 /**
@@ -11,15 +13,16 @@ import com.tencent.bugly.crashreport.CrashReport;
  */
 
 public class MyApplication extends Application {
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
         CrashReport.initCrashReport(getApplicationContext(), "4c251b8f40", false);
-        LeakCanary.install(this);
     }
 }

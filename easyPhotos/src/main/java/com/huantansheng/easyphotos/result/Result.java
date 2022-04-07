@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import com.huantansheng.easyphotos.constant.Type;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.setting.Setting;
-import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,19 +21,16 @@ public class Result {
      * @return 0：添加成功 -4：选择结果互斥 -3：文件不存在 -2：超过视频选择数 -1：超过图片选择数
      */
     public static int addPhoto(Photo photo) {
-        final String path = photo.path;
+        final String path = photo.getAvailablePath();
         if (TextUtils.isEmpty(path)) {
             return -3;
         }
-        if (SystemUtils.beforeAndroidTen()) {
-            final File file = new File(path);
-            if (!file.exists() || !file.isFile()) {
-                return -3;
-            }
-        } else {
-            //TODO 判断文件是否存在
-            //if(AndroidQUtils.isAndroidQFileExists())
+
+        final File file = new File(path);
+        if (!file.exists() || !file.isFile()) {
+            return -3;
         }
+
         if (Setting.selectMutualExclusion && photos.size() > 0) {
             if (photo.type.contains(Type.VIDEO) != photos.get(0).type.contains(Type.VIDEO)) {
                 return -4;
@@ -111,21 +107,13 @@ public class Result {
         return String.valueOf(photos.indexOf(photo) + 1);
     }
 
-    public static String getPhotoPath(int position) {
-        return photos.get(position).path;
-    }
-
-    public static String getPhotoType(int position) {
-        return photos.get(position).type;
-    }
-
-    public static long getPhotoDuration(int position) {
-        return photos.get(position).duration;
+    public static Photo getPhoto(int position) {
+        return photos.get(position);
     }
 
     public static boolean isSelected(Photo photo) {
         for (Photo p : Result.photos) {
-            if (p.path != null && p.path.equals(photo.path)) return true;
+            if (p.equals(photo)) return true;
         }
         return false;
     }

@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * @author joker
  * @date 2019/4/9.
  */
-public class HolderFragment extends Fragment {
+public final class HolderFragment extends Fragment {
 
     private static final int HOLDER_SELECT_REQUEST_CODE = 0x44;
     private static final int HOLDER_PUZZLE_REQUEST_CODE = 0x55;

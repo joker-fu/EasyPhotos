@@ -1,14 +1,11 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 32
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 32
         vectorDrawables.useSupportLibrary = true
     }
     lintOptions {
@@ -20,22 +17,21 @@ android {
 
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.exifinterface:exifinterface:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.exifinterface:exifinterface:1.3.3'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-    //implementation 'com.github.yalantis:ucrop:2.2.4'
-    api 'com.joker.HuanTanSheng:UCrop:andX-2.5.1'
+    implementation 'com.github.yalantis:ucrop:2.2.6'
+    implementation "com.google.android.exoplayer:exoplayer:2.17.1"
 }
 
-publish {
-    userOrg = 'wrap0673' //bintray注册的用户名
-    repoName = "maven"  //仓库名
-    groupId = 'com.joker.HuanTanSheng'  //compile引用时的第1部分groupId
-    artifactId = 'EasyPhotos'  //compile引用时的第2部分项目名
-    publishVersion = "andX-2.5.6"  //compile引用时的第3部分版本号
-    desc = 'Select Photo For Android'
-    website = 'https://github.com/joker-fu/EasyPhotos'
+ext {
+    artifact = 'EasyPhotos'
+    libraryName = 'EasyPhotos'
+    libraryDescription = 'EasyPhotos 2.5.3'
+    libraryVersion = 'andX-2.5.7'
 }
+
+apply from: '../publish-mavencentral.gradle'

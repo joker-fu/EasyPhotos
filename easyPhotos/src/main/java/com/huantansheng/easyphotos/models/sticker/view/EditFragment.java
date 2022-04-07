@@ -3,11 +3,6 @@ package com.huantansheng.easyphotos.models.sticker.view;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.annotation.IdRes;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -19,6 +14,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.huantansheng.easyphotos.R;
 
@@ -119,7 +120,11 @@ public class EditFragment extends DialogFragment implements View.OnClickListener
             WindowManager.LayoutParams attrs = dialogWindow.getAttributes();
             attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
             dialogWindow.setAttributes(attrs);
-            dialogWindow.requestFeature(Window.FEATURE_NO_TITLE);
+            try {
+                dialogWindow.requestFeature(Window.FEATURE_NO_TITLE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         super.onActivityCreated(savedInstanceState);

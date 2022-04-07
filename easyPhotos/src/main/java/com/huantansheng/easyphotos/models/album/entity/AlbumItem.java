@@ -1,5 +1,7 @@
 package com.huantansheng.easyphotos.models.album.entity;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 
 /**
@@ -9,11 +11,13 @@ import java.util.ArrayList;
 
 public class AlbumItem {
     public String name;
+    public Uri coverImageUri;
     public String coverImagePath;
     public ArrayList<Photo> photos;
 
-    AlbumItem(String name, String coverImagePath) {
+    AlbumItem(String name, Uri coverImageUri, String coverImagePath) {
         this.name = name;
+        this.coverImageUri = coverImageUri;
         this.coverImagePath = coverImagePath;
         this.photos = new ArrayList<>();
     }
@@ -23,7 +27,8 @@ public class AlbumItem {
     }
 
     public void addImageItem(int index, Photo imageItem) {
-        this.coverImagePath = imageItem.path;
+        this.coverImageUri = imageItem.fileUri;
+        this.coverImagePath = imageItem.filePath;
         this.photos.add(index, imageItem);
     }
 }

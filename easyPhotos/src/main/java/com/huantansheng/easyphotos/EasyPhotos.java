@@ -1,6 +1,8 @@
 package com.huantansheng.easyphotos;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
@@ -32,12 +34,23 @@ import java.util.List;
  * EasyPhotos的启动管理器
  * Created by huan on 2017/10/18.
  */
-public class EasyPhotos {
+public final class EasyPhotos {
+    @SuppressLint("StaticFieldLeak")
+    private static Application sApp;
 
     //easyPhotos的返回数据Key
     public static final String RESULT_PHOTOS = "keyOfEasyPhotosResult";
     public static final String RESULT_PATHS = "keyOfEasyPhotosResultPaths";
     public static final String RESULT_SELECTED_ORIGINAL = "keyOfEasyPhotosResultSelectedOriginal";
+
+    public static void init(Application app) {
+        sApp = app;
+    }
+
+    public static Application getApp() {
+        if (sApp != null) return sApp;
+        throw new NullPointerException("the sApp is null.");
+    }
 
     /**
      * 创建相机
@@ -46,10 +59,12 @@ public class EasyPhotos {
      * @return AlbumBuilder
      */
     public static AlbumBuilder createCamera(FragmentActivity activity) {
+        if (sApp == null) sApp = activity.getApplication();
         return AlbumBuilder.createCamera(activity);
     }
 
     public static AlbumBuilder createCamera(Fragment fragmentV) {
+        if (sApp == null) sApp = fragmentV.requireActivity().getApplication();
         return AlbumBuilder.createCamera(fragmentV);
     }
 
@@ -62,10 +77,12 @@ public class EasyPhotos {
      * @return
      */
     public static AlbumBuilder createAlbum(FragmentActivity activity, boolean isShowCamera, @NonNull ImageEngine imageEngine) {
+        if (sApp == null) sApp = activity.getApplication();
         return AlbumBuilder.createAlbum(activity, isShowCamera, imageEngine);
     }
 
     public static AlbumBuilder createAlbum(Fragment fragmentV, boolean isShowCamera, @NonNull ImageEngine imageEngine) {
+        if (sApp == null) sApp = fragmentV.requireActivity().getApplication();
         return AlbumBuilder.createAlbum(fragmentV, isShowCamera, imageEngine);
     }
 
@@ -236,7 +253,7 @@ public class EasyPhotos {
     public static void startPreviewPaths(FragmentActivity act, @NonNull ImageEngine imageEngine, @NonNull ArrayList<String> paths, boolean bottomPreview) {
         ArrayList<Photo> photos = new ArrayList<>();
         for (String path : paths) {
-            Photo photo = new Photo(null, path, 0, 0, 0, 0, 0, "");
+            Photo photo = new Photo(null, path, null, 0, 0, 0, 0, 0, "");
             photos.add(photo);
         }
         EasyPhotos.startPreviewPhotos(act, imageEngine, photos, bottomPreview, 0);
@@ -255,7 +272,7 @@ public class EasyPhotos {
     public static void startPreviewPaths(FragmentActivity act, @NonNull ImageEngine imageEngine, @NonNull ArrayList<String> paths, boolean bottomPreview, int currIndex) {
         ArrayList<Photo> photos = new ArrayList<>();
         for (String path : paths) {
-            Photo photo = new Photo(null, path, 0, 0, 0, 0, 0, "");
+            Photo photo = new Photo(null, path, null, 0, 0, 0, 0, 0, "");
             photos.add(photo);
         }
         EasyPhotos.startPreviewPhotos(act, imageEngine, photos, bottomPreview, currIndex);

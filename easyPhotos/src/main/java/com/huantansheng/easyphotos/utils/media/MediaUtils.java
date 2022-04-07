@@ -1,5 +1,6 @@
 package com.huantansheng.easyphotos.utils.media;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,10 +12,13 @@ import android.text.format.DateUtils;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.core.util.Pair;
 
+import com.huantansheng.easyphotos.EasyPhotos;
 import com.huantansheng.easyphotos.constant.Type;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
+import com.huantansheng.easyphotos.setting.Setting;
 import com.huantansheng.easyphotos.utils.uri.UriUtils;
 import com.huantansheng.easyphotos.utils.system.SystemUtils;
 
@@ -100,13 +104,14 @@ public class MediaUtils {
         }
     }
 
+    @SuppressLint("Range")
     @Nullable
-    public static Pair<String, Photo> getPhoto(Context context, File file) {
-        Uri uri = UriUtils.getUriByPath(context, file.getPath());
+    public static Pair<String, Photo> getPhoto(File file) {
+        Uri uri = UriUtils.getUriByPath(file.getPath());
         if (uri == null) {
             return null;
         }
-        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        Cursor cursor = EasyPhotos.getApp().getContentResolver().query(uri, null, null, null, null);
         if (cursor == null) {
             return null;
         }
@@ -124,21 +129,7 @@ public class MediaUtils {
             //final long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
             final long duration = getDuration(file.getAbsolutePath());
             final String bucketName = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.BUCKET_DISPLAY_NAME));
-            if (!SystemUtils.beforeAndroidTen()) {
-                final boolean isVideo = type.contains(Type.VIDEO);
-                final boolean isImage = type.contains(Type.IMAGE);
-                final boolean isGif = type.contains(Type.GIF);
-                final Uri contentUri;
-                if (isImage || isGif) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if (isVideo) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else {
-                    contentUri = MediaStore.Files.getContentUri("external");
-                }
-                path = contentUri.buildUpon().appendPath(String.valueOf(id)).build().toString();
-            }
-            Photo photo = new Photo(name, path, dateTime, width, height, size, duration, type);
+            Photo photo = new Photo(name, path, uri, dateTime, width, height, size, duration, type);
             pair = new Pair<>(bucketName, photo);
         }
         cursor.close();
