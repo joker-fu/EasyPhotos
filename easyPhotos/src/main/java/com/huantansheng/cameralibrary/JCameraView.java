@@ -155,7 +155,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         setWillNotDraw(false);
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.camera_view, this);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_camera_view_easy_photos, this);
         mVideoView = (VideoView) view.findViewById(R.id.video_preview);
         mPhoto = (ImageView) view.findViewById(R.id.image_photo);
         mSwitchCamera = (ImageView) view.findViewById(R.id.image_switch);
@@ -646,15 +646,15 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     private void setFlashRes() {
         switch (type_flash) {
             case TYPE_FLASH_AUTO:
-                mFlashLamp.setImageResource(R.drawable.ic_camera_view_flash_auto);
+                mFlashLamp.setImageResource(R.drawable.ic_camera_view_flash_auto_easy_photos);
                 machine.flash(Camera.Parameters.FLASH_MODE_AUTO);
                 break;
             case TYPE_FLASH_ON:
-                mFlashLamp.setImageResource(R.drawable.ic_camera_view_flash_on);
+                mFlashLamp.setImageResource(R.drawable.ic_camera_view_flash_on_easy_photos);
                 machine.flash(Camera.Parameters.FLASH_MODE_ON);
                 break;
             case TYPE_FLASH_OFF:
-                mFlashLamp.setImageResource(R.drawable.ic_camera_view_flash_off);
+                mFlashLamp.setImageResource(R.drawable.ic_camera_view_flash_off_easy_photos);
                 machine.flash(Camera.Parameters.FLASH_MODE_OFF);
                 break;
         }

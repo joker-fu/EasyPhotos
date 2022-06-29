@@ -160,7 +160,7 @@ public class EasyCameraActivity extends AppCompatActivity {
             getWindow().setAttributes(lp);
         }
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.activity_camera);
+        setContentView(R.layout.activity_camera_easy_photos);
         pbProgress = findViewById(R.id.pb_progress);
         jCameraView = findViewById(R.id.jCameraView);
         jCameraView.enableCameraTip(Setting.enableCameraTip);

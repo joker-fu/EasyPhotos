@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            app:srcCompat="@drawable/ic_camera_view_flash_on" />
+            app:srcCompat="@drawable/ic_camera_view_flash_on_easy_photos" />
 
         <ImageView
             android:id="@+id/image_switch"
