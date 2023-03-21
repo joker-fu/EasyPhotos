@@ -1,0 +1,63 @@
+apply plugin: 'maven-publish'
+//在 lib project 添加 build.gradle
+//添加如下参数即可
+//ext {
+//    MGROUP="com.e9ab98e991ab"
+//    MARTIFACTID="xxx"
+//    MVERSION = "1.0.0" //build_versions.versionCode
+//}
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set("sources")
+    from android.sourceSets.main.java.source
+    exclude "**/R.class"
+    exclude "**/BuildConfig.class"
+}
+// 强制 Java/JavaDoc 等的编码为 UTF-8
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+tasks.withType(Javadoc) {
+    options.encoding = "UTF-8"
+}
+publishing {
+    publications {
+        mavenPlugin(MavenPublication) {
+            groupId "io.github.joker-fu"
+            artifactId "EasyPhotos"
+            version 'andX-2.5.8'
+            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+            artifact androidSourcesJar
+
+            pom {
+                // 解决依赖关系
+                withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+                    project.configurations.all { configuration ->
+                        def name = configuration.name
+                        if (name != "implementation" && name != "compile" && name != "api") {
+                            return
+                        }
+                        println(configuration)
+                        configuration.dependencies.each {
+                            println(it)
+                            if (it.name == "unspecified") {
+                                // 忽略无法识别的
+                                return
+                            }
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', it.group)
+                            dependencyNode.appendNode('artifactId', it.name)
+                            dependencyNode.appendNode('version', it.version)
+                            if (name == "api" || name == "compile") {
+                                dependencyNode.appendNode("scope", "compile")
+                            } else { // implementation
+                                dependencyNode.appendNode("scope", "runtime")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
