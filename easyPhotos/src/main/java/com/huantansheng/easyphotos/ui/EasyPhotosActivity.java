@@ -411,14 +411,16 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         options.setHideBottomControls(Setting.isHideUCropControls);
         //toolbar
         options.setToolbarCancelDrawable(R.drawable.ic_arrow_back_easy_photos);
-
+        //裁剪时设置最大宽高
+        if (Setting.isCrop && Setting.maxWidthAndHeight !=null){
+            options.withMaxResultSize(Setting.maxWidthAndHeight.first,Setting.maxWidthAndHeight.second);
+        }
 //        Uri uri;
 //        if (SystemUtils.beforeAndroidTen()) {
 //            uri = Uri.fromFile(new File(source));
 //        } else {
 //            uri = Uri.parse(source);
 //        }
-
         File cacheFile = new File(context.getCacheDir(), destinationFileName);
         UCrop.of(photo.fileUri, Uri.fromFile(cacheFile))
                 .withAspectRatio(Setting.aspectRatio[0], Setting.aspectRatio[1])
