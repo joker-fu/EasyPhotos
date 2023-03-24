@@ -1,6 +1,7 @@
 package com.huantansheng.easyphotos.builder;
 
 import android.app.Activity;
+import android.util.Pair;
 import android.view.View;
 
 import androidx.annotation.IntRange;
@@ -418,6 +419,10 @@ public class AlbumBuilder {
      */
     public AlbumBuilder isCrop(boolean isCrop) {
         Setting.isCrop = isCrop;
+        return AlbumBuilder.this;
+    }
+    public AlbumBuilder setCropMaxWidthAndHeight(Pair<Integer,Integer> maxWidthAndHeight){
+        Setting.maxWidthAndHeight = maxWidthAndHeight;
         return AlbumBuilder.this;
     }
 

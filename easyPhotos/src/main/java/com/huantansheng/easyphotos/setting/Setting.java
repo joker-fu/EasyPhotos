@@ -1,5 +1,6 @@
 package com.huantansheng.easyphotos.setting;
 
+import android.util.Pair;
 import android.view.View;
 
 import androidx.annotation.IntDef;
@@ -27,6 +28,7 @@ import java.util.List;
 public class Setting {
     public static int minWidth = 1;
     public static int minHeight = 1;
+    public static Pair<Integer,Integer> maxWidthAndHeight;
     public static long minSize = 1;
     public static long maxSize = Long.MAX_VALUE;
     public static boolean selectMutualExclusion = false;
